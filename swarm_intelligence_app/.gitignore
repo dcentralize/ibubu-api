@@ -9,6 +9,10 @@
 .idea/modules.xml
 .idea.swarm-intelligence.iml
 .idea/
+__pycache__/
+common/__pycache__
+models/__pycache__
+resources/__pycache__
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
