@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
-from swarm_intelligence.models.models import db
-from swarm_intelligence.models.user import User as UserModel
-from swarm_intelligence.common import errors
+from swarm_intelligence_app.models.models import db
+from swarm_intelligence_app.models.user import User as UserModel
+from swarm_intelligence_app.common import errors
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('firstname', required=True)

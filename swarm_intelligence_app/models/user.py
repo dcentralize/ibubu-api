@@ -1,4 +1,4 @@
-from swarm_intelligence.models.models import db
+from swarm_intelligence_app.models.models import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
