@@ -15,9 +15,9 @@ Organization
 
 Partner
 -------
-/partner/<partner_id> - GET, PUT
-/partner/<partner_id>/metrics - POST, GET
-/partner/<partner_id>/checklists - POST, GET
+/partners/<partner_id> - GET, PUT
+/partners/<partner_id>/metrics - POST, GET
+/partners/<partner_id>/checklists - POST, GET
 
 Invitation
 ----------
