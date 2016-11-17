@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
 
+
 class Circle(Resource):
     # get a circle
     # permissions: login_required
@@ -17,6 +18,7 @@ class Circle(Resource):
     def delete(self, circle_id):
         raise errors.MethodNotImplementedError()
 
+
 class CircleRoles(Resource):
     # create a new role within a circle
     # permissions: login_required
@@ -27,6 +29,7 @@ class CircleRoles(Resource):
     # permissions: login_required
     def get(self, circle_id):
         raise errors.MethodNotImplementedError()
+
 
 class CircleMembers(Resource):
     # assign a member to a circle

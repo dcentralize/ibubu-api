@@ -4,6 +4,7 @@ from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 
+
 class Partner(Resource):
     # get a partner
     # permissions: login_required, organization_partner
@@ -22,7 +23,7 @@ class Partner(Resource):
     @auth.login_required
     def put(self, partner_id):
         partner = PartnerModel.query.get(partner_id)
-        if partner == None:
+        if partner is None:
             raise errors.EntityNotFoundError('partner', partner_id)
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -41,6 +42,7 @@ class Partner(Resource):
             'data': partner.serialize
         }
 
+
 class PartnerMetrics(Resource):
     # create a new metric for a partner
     # permissions: login_required, organization_partner
@@ -51,6 +53,7 @@ class PartnerMetrics(Resource):
     # permissions: login_required, organization_partner
     def get(self, partner_id):
         raise errors.MethodNotImplementedError()
+
 
 class PartnerChecklists(Resource):
     # create a new checklist for a partner

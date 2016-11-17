@@ -1,10 +1,13 @@
 from flask_restful import Resource, reqparse
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.organization import Organization as OrganizationModel
-from swarm_intelligence_app.models.invitation import Invitation as InvitationModel
+from swarm_intelligence_app.models.organization import \
+    Organization as OrganizationModel
+from swarm_intelligence_app.models.invitation import \
+    Invitation as InvitationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
+
 
 class Organization(Resource):
     # get an organization
@@ -24,7 +27,7 @@ class Organization(Resource):
     @auth.login_required
     def put(self, organization_id):
         organization = OrganizationModel.query.get(organization_id)
-        if organization == None:
+        if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
@@ -41,11 +44,13 @@ class Organization(Resource):
     def delete(self, organization_id):
         raise errors.MethodNotImplementedError()
 
+
 class OrganizationOwner(Resource):
     # change the owner of an organization
     # permissions: login_required, organization_owner
     def put(self, organization_id):
-        raise errors.MethodNotImplementedError();
+        raise errors.MethodNotImplementedError()
+
 
 class OrganizationPartners(Resource):
     # get a list of partners of an organization
@@ -53,14 +58,16 @@ class OrganizationPartners(Resource):
     @auth.login_required
     def get(self, organization_id):
         organization = OrganizationModel.query.get(organization_id)
-        if organization == None:
+        if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
-        partners = PartnerModel.query.filter_by(organization_id=organization.id)
+        partners = PartnerModel.query.filter_by(
+            organization_id=organization.id)
         data = [i.serialize for i in partners]
         return {
             'success': True,
             'data': data
         }
+
 
 class OrganizationInvitations(Resource):
     # create a new invitation to an organization
@@ -68,7 +75,7 @@ class OrganizationInvitations(Resource):
     @auth.login_required
     def post(self, organization_id):
         organization = OrganizationModel.query.get(organization_id)
-        if organization == None:
+        if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -93,9 +100,10 @@ class OrganizationInvitations(Resource):
     @auth.login_required
     def get(self, organization_id):
         organization = OrganizationModel.query.get(organization_id)
-        if organization == None:
+        if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
-        invitations = InvitationModel.query.filter_by(organization_id=organization.id)
+        invitations = InvitationModel.query.filter_by(
+            organization_id=organization.id)
         data = [i.serialize for i in invitations]
         return {
             'success': True,

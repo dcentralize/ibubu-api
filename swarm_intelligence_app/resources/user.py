@@ -1,14 +1,14 @@
-import json
 from flask import g
 from flask_restful import Resource, reqparse
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.user import User as UserModel
-from swarm_intelligence_app.models.organization import Organization as OrganizationModel
+from swarm_intelligence_app.models.organization import \
+    Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
-from swarm_intelligence_app.models.invitation import Invitation as InvitationModel
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
+
 
 class User(Resource):
     # create a new user
@@ -16,7 +16,7 @@ class User(Resource):
     @auth.login_required
     def post(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user != None:
+        if user is not None:
             return 'User already exists.'
 
         user = UserModel(
@@ -38,7 +38,7 @@ class User(Resource):
     @auth.login_required
     def get(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user == None:
+        if user is None:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
         return {
             'success': True,
@@ -50,7 +50,7 @@ class User(Resource):
     @auth.login_required
     def put(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user == None:
+        if user is None:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -74,7 +74,7 @@ class User(Resource):
     @auth.login_required
     def delete(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user == None:
+        if user is None:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         user.is_deleted = True
@@ -85,13 +85,14 @@ class User(Resource):
             'data': user.serialize
         }
 
+
 class UserOrganizations(Resource):
     # add a new organization to the authenticated user as owner
     # permissions: login_required
     @auth.login_required
     def post(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user == None:
+        if user is None:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -120,15 +121,18 @@ class UserOrganizations(Resource):
             'data': organization.serialize
         }
 
-    # get a list of organizations with the authenticated user as its owner or partner
+    # get a list of organizations with the authenticated user as its owner
+    # or partner
     # permissions: login_required
     @auth.login_required
     def get(self):
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-        if user == None:
+        if user is None:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
-        organizations = OrganizationModel.query.join(PartnerModel, (PartnerModel.organization_id == OrganizationModel.id)).filter(PartnerModel.user_id == user.id).all()
+        organizations = OrganizationModel.query.join(PartnerModel, (
+            PartnerModel.organization_id == OrganizationModel.id)).filter(
+            PartnerModel.user_id == user.id).all()
 
         data = [i.serialize for i in organizations]
         return {
