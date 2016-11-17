@@ -9,6 +9,7 @@ install:
   - pip3 install flask-restful
   - pip3 install flask-sqlalchemy
   - pip3 install flask-httpauth
+  - pip3 install tox
   
 # command to run tests
-script: echo foo
+script: tox
