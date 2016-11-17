@@ -1,6 +1,0 @@
-python ~= 3.4.3
-flask ~= 0.11.1
-flask-restful ~= 0.3.5
-flask-sqlalchemy ~= 2.1
-flask-httpauth ~= 3.2.1
-oauth2client ~= 4.0.0
