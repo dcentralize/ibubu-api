@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
 
+
 class Role(Resource):
     # get a role
     # permissions: login_required
@@ -16,6 +17,7 @@ class Role(Resource):
     # permissions: login_required
     def delete(self, role_id):
         raise errors.MethodNotImplementedError()
+
 
 class RoleMembers(Resource):
     # assign a member to a role
