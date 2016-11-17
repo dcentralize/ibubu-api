@@ -11,4 +11,4 @@ install:
   - pip3 install flask-httpauth
   
 # command to run tests
-#script: pytest
+script: echo foo
