@@ -1,0 +1,8 @@
+status: 200
+content-type: text/html; charset=utf-8
+server: Werkzeug/0.11.11 Python/3.4.3
+content-length: 21
+date: Thu, 17 Nov 2016 10:11:00 GMT
+content-location: http://localhost:5000/setup
+
+Setup Database Tables
