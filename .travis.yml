@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.4"
+
+# command to install dependencies
+install:
+#  - pip3 install -r requirements.txt
+  - pip3 install flask
+  - pip3 install flask-restful
+  - pip3 install flask-sqlalchemy
+  - pip3 install flask-httpauth
+  
+# command to run tests
+#script: pytest
