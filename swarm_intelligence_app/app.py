@@ -59,6 +59,7 @@ def create_app():
     register_error_handlers(app)
     return app
 
+
 application = create_app()
 
 
@@ -73,6 +74,7 @@ def setup():
 @application.route("/populate")
 def populate():
     return "Populate Database Tables"
+
 
 if __name__ == "__main__":
     application.run(debug=True)

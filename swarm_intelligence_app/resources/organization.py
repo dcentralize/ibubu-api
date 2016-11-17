@@ -15,7 +15,7 @@ class Organization(Resource):
     @auth.login_required
     def get(self, organization_id):
         organization = OrganizationModel.query.get(organization_id)
-        if organization == None:
+        if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
         return {
             'success': True,

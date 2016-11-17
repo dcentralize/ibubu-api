@@ -11,7 +11,7 @@ class Partner(Resource):
     @auth.login_required
     def get(self, partner_id):
         partner = PartnerModel.query.get(partner_id)
-        if partner == None:
+        if partner is None:
             raise errors.EntityNotFoundError('partner', partner_id)
         return {
             'success': True,
