@@ -1,0 +1,18 @@
+language: python
+
+# command to enable and disable notifications
+notifications:
+  email: false
+
+# command to set the python version
+python:
+  - "3.4"
+
+# command to install dependencies
+install:
+  - pip3 install -r .travis.requirements.txt
+  
+# command to run python scripts and tests
+script:
+  - tox
+#  - python tests/all_tests.py
