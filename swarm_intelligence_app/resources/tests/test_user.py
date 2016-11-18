@@ -40,11 +40,11 @@ class TestUser(TestCase):
         is_deleted = json_post_response['is_deleted']
 
         self.assertFalse(is_deleted)
-        # Delete Request Execution
-        delete_response = requests.request(
-            method='DELETE',
-            url="http://localhost:5000/me",
-            headers={'Authorization': 'Token ' + self.token}).json()['data']
+        #
+        #  Delete Request Execution
+
+        requests.delete(url="http://localhost:5000/me",
+                        headers={'Authorization': 'Token ' + self.token})
 
         json_get_response = requests.request(
             method='GET',
@@ -71,7 +71,6 @@ class TestUser(TestCase):
         first_name_post = json_post_response['firstname']
         last_name_post = json_post_response['lastname']
         email_post = json_post_response['email']
-        id_post = json_post_response['google_id']
 
         # PUT Request Execution
         json_put_response = requests.request(
