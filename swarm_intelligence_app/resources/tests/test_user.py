@@ -2,6 +2,7 @@ from unittest import TestCase
 from flask import Flask
 import urllib
 import requests
+import unittest
 
 app = Flask(__name__)
 
@@ -139,3 +140,7 @@ class TestUser(TestCase):
         self.assertEqual(last_name_post, last_name)
         self.assertEqual(email_post, email)
         self.assertEqual(id_post, id)
+
+
+if __name__ == "__main__":
+    unittest.main()
