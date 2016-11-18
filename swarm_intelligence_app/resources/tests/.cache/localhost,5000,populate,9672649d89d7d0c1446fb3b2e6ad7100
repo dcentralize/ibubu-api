@@ -1,0 +1,8 @@
+status: 200
+content-location: http://localhost:5000/populate
+content-type: text/html; charset=utf-8
+date: Tue, 15 Nov 2016 15:36:42 GMT
+content-length: 24
+server: Werkzeug/0.11.11 Python/3.4.3
+
+Populate Database Tables
