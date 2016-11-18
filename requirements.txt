@@ -1,4 +1,7 @@
-python ~= 3.4.3
-flask ~= 0.11.1
-flask-restful ~= 0.3.5
-flask-sqlalchemy ~= 2.1
+pip3 install flask 0.11.1
+pip3 install flask-restful 0.3.5
+pip3 install flask-sqlalchemy 2.1
+pip3 install flask-httpauth 3.2.1
+pip3 install requests 2.12.0
+pip3 install pymysql 0.7.9
+pip3 install tox
