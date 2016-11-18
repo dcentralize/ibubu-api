@@ -1,6 +1,6 @@
-flask 0.11.1
-flask-restful 0.3.5
-flask-sqlalchemy 2.1
-flask-httpauth 3.2.1
-pymysql 0.7.9
-requests 2.12.0
+flask==0.11.1
+flask-restful==0.3.5
+flask-sqlalchemy==2.1
+flask-httpauth==3.2.1
+pymysql==0.7.9
+requests==2.12.0
