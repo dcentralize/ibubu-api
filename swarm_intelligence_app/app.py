@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Api
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.resources import user
@@ -63,17 +63,23 @@ def create_app():
 application = create_app()
 
 
+# Google Sign-In Helper
+@application.route('/signin')
+def signin():
+    return render_template('google_signin.html')
+
+
 # Setup Database Tables
-@application.route("/setup")
+@application.route('/setup')
 def setup():
     db.create_all()
-    return "Setup Database Tables"
+    return 'Setup Database Tables'
 
 
 # Populate Database Tables
-@application.route("/populate")
+@application.route('/populate')
 def populate():
-    return "Populate Database Tables"
+    return 'Populate Database Tables'
 
 
 if __name__ == "__main__":
