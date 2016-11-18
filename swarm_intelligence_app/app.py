@@ -82,5 +82,12 @@ def populate():
     return 'Populate Database Tables'
 
 
+# Drop Database Table (Only for testing purposes)
+@application.route('/drop')
+def drop():
+    db.drop_all()
+    return 'Drop Database'
+
+
 if __name__ == "__main__":
-    application.run(host='localhost', port=5000, debug=True)
+    application.run(debug=True)

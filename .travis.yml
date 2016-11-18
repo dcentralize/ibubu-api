@@ -15,4 +15,4 @@ install:
 # command to run python scripts and tests
 script:
   - tox
-#  - python tests/all_tests.py
+  - python swarm_intelligence_app/resources/tests
