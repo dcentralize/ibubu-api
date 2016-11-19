@@ -15,4 +15,4 @@ install:
 # command to run python scripts and tests
 script:
   - tox
-  - python swarm_intelligence_app/resources/tests
+  - py.test -v --cov-config .coveragerc --cov=swarm_intelligence_app swarm_intelligence_app/resources/tests/*
