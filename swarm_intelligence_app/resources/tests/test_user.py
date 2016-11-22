@@ -20,12 +20,12 @@ class TestUser(TestCase):
         return params
 
     def tearDown(self):
-        url = "http://localhost/drop"
+        url = "http://localhost:5432/drop"
         response = requests.get(url)
         self.assertEqual(response.status_code, 200, "drop database")
 
     def setUp(self):
-        url = "http://localhost/drop"
+        url = "http://localhost:5432/drop"
 
         response = requests.get(url)
         sleep(10)
