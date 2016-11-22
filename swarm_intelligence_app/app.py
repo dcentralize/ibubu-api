@@ -85,7 +85,6 @@ def populate():
 # Drop Database Table (Only for testing purposes)
 @application.route('/drop')
 def drop():
-    print("DEINE MAMA")
     db.drop_all()
     return 'Drop Database'
 
