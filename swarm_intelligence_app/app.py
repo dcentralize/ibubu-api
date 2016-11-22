@@ -1,17 +1,25 @@
+"""
+Define the main entry point for the app.
+
+"""
 from flask import Flask, render_template
 from flask_restful import Api
-from swarm_intelligence_app.models import db
-from swarm_intelligence_app.resources import user
-from swarm_intelligence_app.resources import organization
-from swarm_intelligence_app.resources import partner
-from swarm_intelligence_app.resources import invitation
-from swarm_intelligence_app.resources import circle
-from swarm_intelligence_app.resources import role
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
+from swarm_intelligence_app.models import db
+from swarm_intelligence_app.resources import circle
+from swarm_intelligence_app.resources import invitation
+from swarm_intelligence_app.resources import organization
+from swarm_intelligence_app.resources import partner
+from swarm_intelligence_app.resources import role
+from swarm_intelligence_app.resources import user
 
 
 def load_config(app):
+    """
+    Load configuration for the given app.
+
+    """
     app.config['SQLALCHEMY_DATABASE_URI'] = \
         'mysql+pymysql://root@localhost:3306/swarm_intelligence'
     app.config['GOOGLE_CLIENT_ID'] = \
@@ -20,6 +28,10 @@ def load_config(app):
 
 
 def register_error_handlers(app):
+    """
+    Register error handlers for the given app.
+
+    """
     app.register_error_handler(errors.EntityNotFoundError,
                                handlers.handle_entity_not_found)
     app.register_error_handler(errors.EntityAlreadyExistsError,
@@ -31,6 +43,10 @@ def register_error_handlers(app):
 
 
 def create_app():
+    """
+    Create the main flask app.
+
+    """
     app = Flask(__name__)
     load_config(app)
     api = Api(app)
@@ -76,22 +92,31 @@ def create_app():
 application = create_app()
 
 
-# Google Sign-In Helper
 @application.route('/signin')
 def signin():
+    """
+    Provide a Google Sign-In Page.
+
+    """
     return render_template('google_signin.html')
 
 
-# Setup Database Tables
 @application.route('/setup')
 def setup():
+    """
+    Setup the database.
+
+    """
     db.create_all()
     return 'Setup Database Tables'
 
 
-# Populate Database Tables
 @application.route('/populate')
 def populate():
+    """
+    Populate the database.
+
+    """
     return 'Populate Database Tables'
 
 
