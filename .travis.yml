@@ -20,6 +20,7 @@ install:
 before_script:
   - mysql -u root -e 'CREATE DATABASE swarm_intelligence'
   - mysqladmin -u root status
+  - ping -c 3 localhost
 
 # command to run python scripts and tests
 script:

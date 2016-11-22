@@ -3,6 +3,7 @@ from flask import Flask
 import urllib
 import requests
 import unittest
+from time import sleep
 
 app = Flask(__name__)
 
@@ -19,14 +20,15 @@ class TestUser(TestCase):
         return params
 
     def tearDown(self):
-        url = "http://127.0.0.1:5000/drop"
+        url = "http://localhost/drop"
         response = requests.get(url)
         self.assertEqual(response.status_code, 200, "drop database")
 
     def setUp(self):
-        url = "http://127.0.0.1:5000/drop"
+        url = "http://localhost/drop"
 
         response = requests.get(url)
+        sleep(10)
         self.assertEqual(response.status_code, 200, "drop database")
         response = requests.get(url="http://localhost:5000/setup")
         self.assertEqual(response.status_code, 200, "setup database")
