@@ -8,7 +8,7 @@ notifications:
 python:
   - "2.7"
   
- sudo: required
+sudo: required
   
 # command to use mariadb
 services:
