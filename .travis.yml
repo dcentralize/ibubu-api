@@ -8,17 +8,14 @@ notifications:
 python:
   - "3.4"
 
+# command to use mariadb
+addons:
+  mariadb: '10.0'  
+  
 # command to install dependencies
 install:
   - pip3 install -r .travis.requirements.txt
   - pip install pytest-cov
-  
-  # command to set up db
-  - apt-get install software-properties-common
-  - apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-  - add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirrors.supportex.net/mariadb/repo/10.1/ubuntu trusty main'
-  - apt-get install mariadb-server
-  - service mysql start
   
 # command to run python scripts and tests
 script:
