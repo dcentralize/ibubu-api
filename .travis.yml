@@ -18,6 +18,9 @@ services:
 install:
   - pip install -r requirements.txt
   
+before_script:
+  - psql postgres -c 'CREATE DATABASE flaskexample'
+  
 # command to run python scripts and tests
 script:
   - nosetests
