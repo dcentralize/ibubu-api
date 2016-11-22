@@ -17,6 +17,9 @@ install:
   - pip3 install -r .travis.requirements.txt
   - pip install pytest-cov
   
+before_script:
+  - mysql -u root -e 'CREATE DATABASE swarm_intelligence'  
+  
 # command to run python scripts and tests
 script:
   - tox
