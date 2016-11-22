@@ -1,20 +1,20 @@
 from flask import g
-from flask_restful import Resource, reqparse
-from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.user import User as UserModel
-from swarm_intelligence_app.models.organization import \
-    Organization as OrganizationModel
-from swarm_intelligence_app.models.partner import Partner as PartnerModel
-from swarm_intelligence_app.models.partner import PartnerType
+from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
+from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.organization import \
+    Organization as OrganizationModel
+from swarm_intelligence_app.models.user import User as UserModel
+from swarm_intelligence_app.models.partner import Partner as PartnerModel
+from swarm_intelligence_app.models.partner import PartnerType
 
 
 class User(Resource):
     @auth.login_required
     def post(self):
         """
-        Create a user
+        Create a user.
 
         To create a user the data provided by google is taken into
         consideration. If a user with the provided google id does not exist,
@@ -48,7 +48,7 @@ class User(Resource):
     @auth.login_required
     def get(self):
         """
-        Retrieve the authenticated user
+        Retrieve the authenticated user.
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -63,7 +63,7 @@ class User(Resource):
     @auth.login_required
     def put(self):
         """
-        Edit the authenticated user
+        Edit the authenticated user.
 
         Params:
             firstname: The firstname of the authenticated user
@@ -94,7 +94,7 @@ class User(Resource):
     @auth.login_required
     def delete(self):
         """
-        Delete the authenticated user
+        Delete the authenticated user.
 
         This endpoint sets the authenticated user's account to 'closed' and
         the user's partnerships with organizations to 'inactive'. By signin-up
@@ -107,6 +107,10 @@ class User(Resource):
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         user.is_deleted = True
+
+        for partner in user.partners:
+            partner.is_deleted = True
+
         db.session.commit()
 
         return {
@@ -119,7 +123,7 @@ class UserOrganizations(Resource):
     @auth.login_required
     def post(self):
         """
-        Create an organization
+        Create an organization.
 
         This endpoint creates a new organization and adds the authenticated
         user as an admin to the organization.
@@ -149,7 +153,7 @@ class UserOrganizations(Resource):
     @auth.login_required
     def get(self):
         """
-        List organizations for the authenticated user
+        List organizations for the authenticated user.
 
         This endpoint only lists organizations that the authenticated user is
         allowed to operate on as a member or an admin.
