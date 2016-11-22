@@ -20,4 +20,4 @@ install:
   
 # command to run python scripts and tests
 script:
-  - nosetests runtests.sh
+  - nosetests runtests.py
