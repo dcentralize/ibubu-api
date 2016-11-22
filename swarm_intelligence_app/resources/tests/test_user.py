@@ -30,14 +30,14 @@ class TestUser(TestCase):
         status_code = response.status_code
 
         self.assertEqual(status_code, 200, "drop database")
-        response = requests.get(url="http://localhost:5000/setup")
+        response = requests.get(url="http://localhost:5432/setup")
         self.assertEqual(response.status_code, 200, "setup database")
 
     def test_delete_user(self):
         # Post Request Execution
         json_post_response = requests.request(
             method='POST',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()['data']
 
         first_name_post = json_post_response['firstname']
@@ -49,12 +49,12 @@ class TestUser(TestCase):
         #
         #  Delete Request Execution
 
-        requests.delete(url="http://localhost:5000/me",
+        requests.delete(url="http://localhost:5432/me",
                         headers={'Authorization': 'Token ' + self.token})
 
         json_get_response = requests.request(
             method='GET',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()['data']
 
         first_name_get = json_get_response['firstname']
@@ -71,7 +71,7 @@ class TestUser(TestCase):
         # POST Request Execution
         json_post_response = requests.request(
             method='POST',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()['data']
 
         first_name_post = json_post_response['firstname']
@@ -81,7 +81,7 @@ class TestUser(TestCase):
         # PUT Request Execution
         json_put_response = requests.request(
             method='PUT',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token},
             params={'firstname': 'Daisy',
                     'lastname': 'Ducks',
@@ -101,7 +101,7 @@ class TestUser(TestCase):
         # GET Request Execution
         json_response = requests.request(
             method='GET',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()[
             'data']
 
@@ -120,7 +120,7 @@ class TestUser(TestCase):
         # POST Request Execution
         json_post_response = requests.request(
             method='POST',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()['data']
 
         first_name_post = json_post_response['firstname']
@@ -131,7 +131,7 @@ class TestUser(TestCase):
         # GET Request Execution
         json_response = requests.request(
             method='GET',
-            url="http://localhost:5000/me",
+            url="http://localhost:5432/me",
             headers={'Authorization': 'Token ' + self.token}).json()[
             'data']
 
