@@ -5,6 +5,7 @@ import requests
 
 app = Flask(__name__)
 
+
 class TestUser(TestCase):
     token = "mock_user_001"
     changeToken = "mock_user_002"
@@ -22,10 +23,9 @@ class TestUser(TestCase):
 
     def setUp(self):
         response = requests.get(url="http://localhost:5000/drop")
-        self.assertEqual(response.status_code,200, "drop database")
+        self.assertEqual(response.status_code, 200, "drop database")
         response = requests.get(url="http://localhost:5000/setup")
         self.assertEqual(response.status_code, 200, "setup database")
-
 
     def test_delete_user(self):
         # Post Request Execution
@@ -44,25 +44,25 @@ class TestUser(TestCase):
         delete_response = requests.request(
             method='DELETE',
             url="http://localhost:5000/me",
-            headers={'Authorization': 'Token ' +  self.token}).json()['data']
+            headers={'Authorization': 'Token ' + self.token}).json()['data']
 
         json_get_response = requests.request(
             method='GET',
             url="http://localhost:5000/me",
             headers={'Authorization': 'Token ' + self.token}).json()['data']
 
-        first_name_get= json_get_response['firstname']
+        first_name_get = json_get_response['firstname']
         last_name_get = json_get_response['lastname']
         email_get = json_get_response['email']
         is_deleted_get = json_get_response['is_deleted']
 
-        self.assertEqual(first_name_post,first_name_get)
-        self.assertEqual(last_name_post,last_name_get)
-        self.assertEqual(email_post,email_get)
+        self.assertEqual(first_name_post, first_name_get)
+        self.assertEqual(last_name_post, last_name_get)
+        self.assertEqual(email_post, email_get)
         self.assertTrue(is_deleted_get)
 
     def test_update_user(self):
-       # POST Request Execution
+        # POST Request Execution
         json_post_response = requests.request(
             method='POST',
             url="http://localhost:5000/me",

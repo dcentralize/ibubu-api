@@ -1,1 +1,3 @@
-{}
+{
+  "test_organization.py::TestOrganization::test_delete_organization": true
+}
