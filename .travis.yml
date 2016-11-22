@@ -8,6 +8,8 @@ notifications:
 python:
   - "2.7"
   
+ sudo: required
+  
 # command to use mariadb
 services:
   - postgresql
@@ -18,4 +20,4 @@ install:
   
 # command to run python scripts and tests
 script:
-  - ./runtests.sh
+  - sudo bash ./runtests.sh
