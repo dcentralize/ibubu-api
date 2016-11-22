@@ -10,7 +10,7 @@ python:
   
 # command to use mariadb
 services:
-  - mariadb: '10.0'  
+  - postgresql
   
 # command to install dependencies
 install:
