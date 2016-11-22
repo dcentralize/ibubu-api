@@ -8,6 +8,9 @@ notifications:
 python:
   - "3.4"
 
+addons:
+  - mariadb: '10.0'    
+  
 # command to use mariadb
 services:
   - mariadb: '10.0'  
@@ -19,9 +22,6 @@ install:
   
 before_script:
   - mysql -u root -e 'CREATE DATABASE swarm_intelligence'  
-  - mysql --print-defaults
-  - mysql -u root -p ""
-  - SHOW DATABASES;
 
 # command to run python scripts and tests
 script:
