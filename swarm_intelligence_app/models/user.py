@@ -1,5 +1,5 @@
-from swarm_intelligence_app.models import db
 from sqlalchemy.ext.associationproxy import association_proxy
+from swarm_intelligence_app.models import db
 
 
 class User(db.Model):
