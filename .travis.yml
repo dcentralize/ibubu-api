@@ -19,6 +19,9 @@ install:
   
 before_script:
   - mysql -u root -e 'CREATE DATABASE swarm_intelligence'
+  - mysql -u root
+  - SHOW VARIABLES WHERE Variable_Name='port';
+  - EXIT;
   - mysqladmin -u root status
   - ping -c 3 localhost
 
