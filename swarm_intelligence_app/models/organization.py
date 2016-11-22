@@ -6,6 +6,10 @@ class Organization(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
 
+    partners = db.relationship('Partner', backref='organization')
+    invitations = db.relationship('Invitation', backref='organization',
+                                  lazy='dynamic')
+
     def __init__(self, name):
         self.name = name
         self.is_deleted = False

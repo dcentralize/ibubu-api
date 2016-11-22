@@ -3,8 +3,8 @@ from swarm_intelligence_app.models import db
 
 
 class PartnerType(Enum):
-    OWNER = 'owner'
-    PARTNER = 'partner'
+    ADMIN = 'admin'
+    MEMBER = 'member'
 
 
 class Partner(db.Model):
@@ -24,15 +24,15 @@ class Partner(db.Model):
                                           name='UNIQUE_organization_id_user_id'
                                           ),)
 
-    def __init__(self, type, firstname, lastname, email, user_id,
-                 organization_id, invitation_id=None):
+    def __init__(self, type, firstname, lastname, email, user, organization,
+                 invitation_id=None):
         self.type = type
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.is_deleted = False
-        self.user_id = user_id
-        self.organization_id = organization_id
+        self.user = user
+        self.organization = organization
         self.invitation_id = invitation_id
 
     def __repr__(self):
@@ -47,7 +47,7 @@ class Partner(db.Model):
             'lastname': self.lastname,
             'email': self.email,
             'is_deleted': self.is_deleted,
-            'user_id': self.user_id,
-            'organization_id': self.organization_id,
+            'user_id': self.user.id,
+            'organization_id': self.organization.id,
             'invitation_id': self.invitation_id
         }

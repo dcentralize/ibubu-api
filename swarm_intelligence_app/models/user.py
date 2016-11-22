@@ -1,4 +1,5 @@
 from swarm_intelligence_app.models import db
+from sqlalchemy.ext.associationproxy import association_proxy
 
 
 class User(db.Model):
@@ -8,6 +9,9 @@ class User(db.Model):
     lastname = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
+
+    partners = db.relationship('Partner', backref='user')
+    organizations = association_proxy('partners', 'organization')
 
     def __init__(self, google_id, firstname, lastname, email):
         self.google_id = google_id
