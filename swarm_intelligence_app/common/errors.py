@@ -1,3 +1,9 @@
+"""
+Define any error classes for the application.
+
+"""
+
+
 class EntityNotFoundError(Exception):
     def __init__(self, type, id):
         self.type = type
