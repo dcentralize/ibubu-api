@@ -5,7 +5,7 @@ import requests
 import unittest
 
 app = Flask(__name__)
-
+MAX_RETRIES = 20
 
 class TestUser(TestCase):
     token = "mock_user_001"
@@ -25,8 +25,11 @@ class TestUser(TestCase):
 
     def setUp(self):
         url = "http://localhost:5432/drop"
-
-        response = requests.get(url)
+        session = requests.Session()
+        adapter = requests.adapters.HTTPAdapter(max_retries=MAX_RETRIES)
+        session.mount('https://', adapter)
+        session.mount('http://', adapter)
+        response = session.get(url)
         status_code = response.status_code
 
         self.assertEqual(status_code, 200, "drop database")

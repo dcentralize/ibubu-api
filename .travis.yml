@@ -6,7 +6,7 @@ notifications:
 
 # command to set the python version
 python:
-  - "3.5"
+  - "3.4"
   
 # command to use mariadb
 services:
