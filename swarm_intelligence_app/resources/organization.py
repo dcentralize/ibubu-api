@@ -1,28 +1,37 @@
-from flask_restful import Resource, reqparse
+"""
+Define the classes for the organization API.
+
+"""
+from flask_restful import reqparse, Resource
+from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.invitation import \
+    Invitation as InvitationModel
 from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import \
     Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
-from swarm_intelligence_app.models.invitation import \
-    Invitation as InvitationModel
-from swarm_intelligence_app.common import errors
-from swarm_intelligence_app.common.authentication import auth
 
 
 class Organization(Resource):
+    """
+    Define the endpoints for the organization node.
+
+    """
     @auth.login_required
     def get(self,
             organization_id):
         """
-        Retrieve an organization
+        Retrieve an organization.
 
         In order to retrieve an organization, the authenticated user must be a
         member or an admin of the organization.
 
         Params:
             organization_id: The id of the organization to retrieve
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -38,7 +47,7 @@ class Organization(Resource):
     def put(self,
             organization_id):
         """
-        Edit an organization
+        Edit an organization.
 
         In order to edit an organization, the authenticated user must be an
         admin of the organization.
@@ -46,6 +55,7 @@ class Organization(Resource):
         Params:
             organization_id: The id of the organization to edit
             name: The name of the organization
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -67,7 +77,7 @@ class Organization(Resource):
     def delete(self,
                organization_id):
         """
-        Delete an organization
+        Delete an organization.
 
         This endpoint sets the organization's state to 'deleted', so that it
         cannot be accessed by its members or admins in any way. In order to
@@ -76,6 +86,7 @@ class Organization(Resource):
 
         Params:
             organization_id: The id of the organization to delete
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -96,11 +107,15 @@ class Organization(Resource):
 
 
 class OrganizationMembers(Resource):
+    """
+    Define the endpoints for the members edge of the organization node.
+
+    """
     @auth.login_required
     def get(self,
             organization_id):
         """
-        List members of an organization
+        List members of an organization.
 
         This endpoint lists all partners with access through membership or with
         admin access to the organization, whether their state is 'active' or
@@ -110,6 +125,7 @@ class OrganizationMembers(Resource):
         Params:
             organization_id: The id of the organization for which to list the
             members
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -124,11 +140,15 @@ class OrganizationMembers(Resource):
 
 
 class OrganizationAdmins(Resource):
+    """
+    Define the endpoints for the admins edge of the organization node.
+
+    """
     @auth.login_required
     def get(self,
             organization_id):
         """
-        List admins of an organization
+        List admins of an organization.
 
         This endpoint lists all partners of an organization with admin access
         to the organization, wether their state is 'active' or not. In order
@@ -138,6 +158,7 @@ class OrganizationAdmins(Resource):
         Params:
             organization_id: The id of the organization for which to list the
             admins
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -155,11 +176,15 @@ class OrganizationAdmins(Resource):
 
 
 class OrganizationInvitations(Resource):
+    """
+    Define the endpoints for the invitations edge of the organization node.
+
+    """
     @auth.login_required
     def post(self,
              organization_id):
         """
-        Invite a user to an organization
+        Invite a user to an organization.
 
         This endpoint will send an invitation to a given email address. The
         newly-created invitation will be in the 'pending' state until the user
@@ -172,6 +197,7 @@ class OrganizationInvitations(Resource):
             organization_id: The id of the organization for which to invite
             the user
             email: The email address the invitation will be sent to
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -200,7 +226,7 @@ class OrganizationInvitations(Resource):
     def get(self,
             organization_id):
         """
-        List invitations to an organization
+        List invitations to an organization.
 
         This endpoint lists all 'pending', 'accepted' and 'cancelled'
         invitations to an organization. In order to list invitations to an
@@ -210,6 +236,7 @@ class OrganizationInvitations(Resource):
         Params:
             organization_id: The id of the organization for which to list the
             invitations
+
         """
         organization = OrganizationModel.query.get(organization_id)
 
