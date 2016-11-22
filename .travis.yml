@@ -9,7 +9,7 @@ python:
   - "3.4"
   
 # command to use mariadb
-addons:
+services:
   - mariadb: '10.0'  
   
 # command to install dependencies
@@ -18,8 +18,8 @@ install:
   - pip install pytest-cov
   
 before_script:
-  - mysql.server start
-  - mysql -u root -e 'CREATE DATABASE swarm_intelligence'  
+  - mysql -u root -e 'CREATE DATABASE swarm_intelligence'
+  
 
 # command to run python scripts and tests
 script:
