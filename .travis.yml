@@ -16,6 +16,7 @@ services:
 install:
   - pip3 install -r .travis.requirements.txt
   - pip install pytest-cov
+  - pip install --upgrade requests
   
 before_script:
   - mysql -u root -e 'CREATE DATABASE swarm_intelligence'
