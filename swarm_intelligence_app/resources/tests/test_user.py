@@ -27,7 +27,9 @@ class TestUser(TestCase):
         url = "http://localhost:5432/drop"
 
         response = requests.get(url)
-        self.assertEqual(response.status_code, 200, "drop database")
+        status_code = response.status_code
+
+        self.assertEqual(status_code, 200, "drop database")
         response = requests.get(url="http://localhost:5000/setup")
         self.assertEqual(response.status_code, 200, "setup database")
 
