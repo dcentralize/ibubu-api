@@ -1,3 +1,7 @@
+"""
+Define the classes for the user API.
+
+"""
 from flask import g
 from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
@@ -5,12 +9,16 @@ from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
-from swarm_intelligence_app.models.user import User as UserModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.user import User as UserModel
 
 
 class User(Resource):
+    """
+    Define the endpoints for the user node.
+
+    """
     @auth.login_required
     def post(self):
         """
@@ -21,6 +29,7 @@ class User(Resource):
         the user is created. If a user exists and is deactivated, the user is
         activated. If a user does not exist, the user is created with the data
         provided by google.
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -49,6 +58,7 @@ class User(Resource):
     def get(self):
         """
         Retrieve the authenticated user.
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -69,6 +79,7 @@ class User(Resource):
             firstname: The firstname of the authenticated user
             lastname: The lastname of the authenticated user
             email: The email address of the authenticated user
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -100,6 +111,7 @@ class User(Resource):
         the user's partnerships with organizations to 'inactive'. By signin-up
         again with the same google account, the user's account is reopened. To
         rejoin an organization, a new invitation is needed.
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -120,6 +132,10 @@ class User(Resource):
 
 
 class UserOrganizations(Resource):
+    """
+    Define the endpoints for the organizations edge of the user node.
+
+    """
     @auth.login_required
     def post(self):
         """
@@ -130,6 +146,7 @@ class UserOrganizations(Resource):
 
         Params:
             name: The name of the organization
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
@@ -157,6 +174,7 @@ class UserOrganizations(Resource):
 
         This endpoint only lists organizations that the authenticated user is
         allowed to operate on as a member or an admin.
+
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
