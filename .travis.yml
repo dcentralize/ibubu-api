@@ -9,7 +9,7 @@ python:
   - "3.4"
   
 # command to use mariadb
-services:
+addons:
   - mariadb: '10.0'  
   
 # command to install dependencies
