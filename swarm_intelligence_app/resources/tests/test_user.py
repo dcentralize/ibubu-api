@@ -3,7 +3,6 @@ from flask import Flask
 import urllib
 import requests
 import unittest
-from time import sleep
 
 app = Flask(__name__)
 
@@ -28,7 +27,6 @@ class TestUser(TestCase):
         url = "http://localhost:5432/drop"
 
         response = requests.get(url)
-        sleep(10)
         self.assertEqual(response.status_code, 200, "drop database")
         response = requests.get(url="http://localhost:5000/setup")
         self.assertEqual(response.status_code, 200, "setup database")
