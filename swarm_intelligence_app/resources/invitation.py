@@ -1,22 +1,30 @@
+"""
+Define the classes for the invitation API.
+
+"""
 from flask import g
 from flask_restful import Resource
+from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.invitation import \
     Invitation as InvitationModel
 from swarm_intelligence_app.models.invitation import InvitationStatus
-from swarm_intelligence_app.models.user import User as UserModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
-from swarm_intelligence_app.common import errors
-from swarm_intelligence_app.common.authentication import auth
+from swarm_intelligence_app.models.user import User as UserModel
 
 
 class Invitation(Resource):
+    """
+    Define the endpoints for the invitation node.
+
+    """
     @auth.login_required
     def get(self,
             invitation_id):
         """
-        Retrieve an invitation
+        Retrieve an invitation.
 
         In order to retrieve an invitation, the authenticated user must be a
         member or an admin of the organization that the invitation is
@@ -24,6 +32,7 @@ class Invitation(Resource):
 
         Params:
             invitation_id: The id of the invitation to retrieve
+
         """
         invitation = InvitationModel.query.get(invitation_id)
 
@@ -39,7 +48,7 @@ class Invitation(Resource):
     def delete(self,
                invitation_id):
         """
-        Delete an invitation
+        Delete an invitation.
 
         If an invitation's state is 'pending', this endpoint will set the
         invitation's state to 'cancelled'. If an invitation's state is
@@ -50,6 +59,7 @@ class Invitation(Resource):
 
         Params:
             invitation_id: The id of the invitation to delete
+
         """
         invitation = InvitationModel.query.get(invitation_id)
 
@@ -72,10 +82,14 @@ class Invitation(Resource):
 
 
 class InvitationResend(Resource):
+    """
+    Define the endpoints for the resend edge of the invitation node.
+
+    """
     def get(self,
             invitation_id):
         """
-        Resend an invitation
+        Resend an invitation.
 
         If an invitation's state is 'pending', this endpoint will resend the
         invitation to the associated email address. If an invitation's state
@@ -85,16 +99,21 @@ class InvitationResend(Resource):
 
         Params:
             invitation_id: The id of the invitation to resend
+
         """
         raise errors.MethodNotImplementedError()
 
 
 class InvitationAccept(Resource):
+    """
+    Define the endpoints for the accept edge of the invitation node.
+
+    """
     @auth.login_required
     def get(self,
             code):
         """
-        Accept an invitation
+        Accept an invitation.
 
         If an invitation's state is 'pending', this endpoint will set the
         invitation's state to 'accepted' and the authenticated user will be
@@ -105,6 +124,7 @@ class InvitationAccept(Resource):
 
         Params:
             code: The code of the invitation to accept
+
         """
         invitation = InvitationModel.query.filter_by(code=code).first()
 
