@@ -3,8 +3,12 @@ from swarm_intelligence_app.models import db
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
+
+    partners = db.relationship('Partner', backref='organization')
+    invitations = db.relationship('Invitation', backref='organization',
+                                  lazy='dynamic')
 
     def __init__(self, name):
         self.name = name

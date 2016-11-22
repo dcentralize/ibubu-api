@@ -10,6 +10,15 @@ class EntityNotFoundError(Exception):
         )
 
 
+class MethodNotImplementedError(Exception):
+    def __init__(self, message=None):
+        self.message = message
+
+    def __str__(self):
+        return self.message or 'The method you requested is not implemented ' \
+                               'right now.'
+
+
 class EntityAlreadyExistsError(Exception):
     def __init__(self, message=None):
         self.message = message
@@ -18,10 +27,9 @@ class EntityAlreadyExistsError(Exception):
         return self.message or 'The specified entity already exists.'
 
 
-class MethodNotImplementedError(Exception):
+class EntityNotModifiedError(Exception):
     def __init__(self, message=None):
         self.message = message
 
     def __str__(self):
-        return self.message or 'The method you requested is not implemented ' \
-                               'right now.'
+        return self.message or 'The specified entity cannot be modified.'

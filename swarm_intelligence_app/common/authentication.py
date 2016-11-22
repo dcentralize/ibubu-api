@@ -26,15 +26,15 @@ def verify_token(token):
         g.user = mock_users[token]
         return True
     else:
-        response = requests.get("https://www.googleapis.com/oauth2/v3/tokeninfo"
-                                "?id_token=" + token)
+        response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                'tokeninfo?id_token=' + token)
 
         if response.status_code != 200:
             return False
 
         data = response.json()
-        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54.apps' \
-                          '.googleusercontent.com':
+        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                          '.apps.googleusercontent.com':
             return False
 
         g.user = {

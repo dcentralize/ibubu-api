@@ -7,7 +7,7 @@ def handle_entity_not_found(error):
         'success': False,
         'errors': [{
             'type': 'EntityNotFoundError',
-            'reason': str(error)
+            'message': str(error)
         }]
     })
     status = 404
@@ -22,7 +22,7 @@ def handle_method_not_implemented(error):
         'success': False,
         'errors': [{
             'type': 'MethodNotImplementedError',
-            'reason': str(error)
+            'message': str(error)
         }]
     })
     status = 405
@@ -37,7 +37,22 @@ def handle_entity_already_exists(error):
         'success': False,
         'errors': [{
             'type': 'EntityAlreadyExistsError',
-            'reason': str(error)
+            'message': str(error)
+        }]
+    })
+    status = 409
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    return make_response(data, status, headers)
+
+
+def handle_entity_not_modified(error):
+    data = json.dumps({
+        'success': False,
+        'errors': [{
+            'type': 'EntityNotModifiedError',
+            'message': str(error)
         }]
     })
     status = 409
