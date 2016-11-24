@@ -17,9 +17,10 @@ class Organization(db.Model):
     partners = db.relationship('Partner', backref='organization')
     invitations = db.relationship('Invitation', backref='organization',
                                   lazy='dynamic')
+    anchorcircle = db.relationship("Circle", uselist=False,
+                                   back_populates="organization")
 
-    def __init__(self,
-                 name):
+    def __init__(self, name):
         """
         Initialize an organization.
 

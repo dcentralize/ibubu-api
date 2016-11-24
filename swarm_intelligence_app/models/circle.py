@@ -3,6 +3,7 @@ Define classes for a circle.
 
 """
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.circlemember import cm
 
 
 class Circle(db.Model):
@@ -13,13 +14,36 @@ class Circle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
-    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
-                                 nullable=True)
+
+    """
+    Organization Relationship
+    OneToOne
+    """
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
+    organization = db.relationship("Organization", back_populates="circle")
 
-    partners = db.relationship('Partner', backref='circle')
-    child_circles = db.relationship('Circle', lazy='dynamic')
+    """
+    Parent Circle Relationship
+    OneToMany
+    """
+    child_circles = db.relationship('Circle', back_populates="circle")
+
+    """
+    Child Circle Relationship
+    ManyToOne
+    """
+    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+                                 nullable=True)
+    parent = db.relationship("Circle", back_populates="circle")
+
+    """
+    Partner Relationship
+    ManyToMany
+    """
+    partners = \
+        db.relationship('Partner', secondary=cm,
+                        back_populates='circle', lazy='dynamic')
 
     def __init__(self, name, organization_id, parent_circle_id=None):
         """
