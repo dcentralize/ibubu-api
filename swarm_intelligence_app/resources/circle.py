@@ -1,48 +1,90 @@
+"""
+Define the classes for the circle API.
+
+"""
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
 
 
 class Circle(Resource):
-    # get a circle
-    # permissions: login_required
-    def get(self, circle_id):
+    """
+    Define the endpoints for the circle node.
+
+    """
+    def get(self,
+            circle_id):
+        """
+        Retrieve a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # update a circle
-    # permissions: login_required
-    def put(self, circle_id):
+    def put(self,
+            circle_id):
+        """
+        Edit a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # delete a circle
-    # permissions: login_required
-    def delete(self, circle_id):
+    def delete(self,
+               circle_id):
+        """
+        Delete a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
 
 class CircleRoles(Resource):
-    # create a new role within a circle
-    # permissions: login_required
-    def post(self, circle_id):
+    """
+    Define the endpoints for the roles edge of the circle node.
+
+    """
+    def post(self,
+             circle_id):
+        """
+        Add a role to a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # get a list of roles of a circle
-    # permissions: login_required
-    def get(self, circle_id):
+    def get(self,
+            circle_id):
+        """
+        List roles of a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
 
 class CircleMembers(Resource):
-    # assign a member to a circle
-    # permissions: login_required
-    def post(self, circle_id):
+    """
+    Define the endpoints for the members edge of the circle node.
+
+    """
+    def get(self,
+            circle_id):
+        """
+        List members of a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # get a list of members assigned to a circle
-    # permissions: login_required
-    def get(self, circle_id):
+    def put(self,
+            circle_id,
+            partner_id):
+        """
+        Assign a partner to a circle.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # unassign a member from a circle
-    # permissions: login_required
-    def delete(self, circle_id):
+    def delete(self,
+               circle_id,
+               partner_id):
+        """
+        Unassign a partner from a circle.
+
+        """
         raise errors.MethodNotImplementedError()

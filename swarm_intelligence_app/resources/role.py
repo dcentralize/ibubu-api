@@ -1,36 +1,68 @@
+"""
+Define the classes for the role API.
+
+"""
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
 
 
 class Role(Resource):
-    # get a role
-    # permissions: login_required
-    def get(self, role_id):
+    """
+    Define the endpoints for the role node.
+
+    """
+    def get(self,
+            role_id):
+        """
+        Retrieve a role.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # update a role
-    # permissions: login_required
-    def put(self, role_id):
+    def put(self,
+            role_id):
+        """
+        Edit a role.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # delete a role
-    # permissions: login_required
-    def delete(self, role_id):
+    def delete(self,
+               role_id):
+        """
+        Delete a role.
+
+        """
         raise errors.MethodNotImplementedError()
 
 
 class RoleMembers(Resource):
-    # assign a member to a role
-    # permissions: login_required
-    def post(self, role_id):
+    """
+    Define the endpoints for the members edge of the role node.
+
+    """
+    def get(self,
+            role_id):
+        """
+        List members of a role.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # get a list of members assigned to a role
-    # permissions: login_required
-    def get(self, role_id):
+    def put(self,
+            role_id,
+            partner_id):
+        """
+        Assign a partner to a role.
+
+        """
         raise errors.MethodNotImplementedError()
 
-    # unassign a member from a role
-    # permissions: login_required
-    def delete(self, role_id):
+    def delete(self,
+               role_id,
+               partner_id):
+        """
+        Unassign a partner from a role.
+
+        """
         raise errors.MethodNotImplementedError()
