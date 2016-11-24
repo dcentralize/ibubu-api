@@ -27,4 +27,4 @@ before_script:
 # command to run python scripts and tests
 script:
   - tox
-  - py.test --cov-config .coveragerc --cov=swarm_intelligence_app swarm_intelligence_app/resources/tests/*
+  - py.test
