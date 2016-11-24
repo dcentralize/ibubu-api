@@ -3,6 +3,7 @@ Define any error handlers for the application.
 
 """
 import json
+
 from flask import make_response
 
 from flask import make_response
