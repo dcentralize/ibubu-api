@@ -18,7 +18,7 @@ class PartnerType(Enum):
 
 class Partner(db.Model):
     """
-    Define a mapping for a partner to the database.
+    Define a mapping to the database for a partner.
 
     """
     id = db.Column(db.Integer, primary_key=True)

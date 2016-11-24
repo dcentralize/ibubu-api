@@ -4,6 +4,7 @@ Define classes for an invitation.
 """
 import uuid
 from enum import Enum
+
 from swarm_intelligence_app.models import db
 
 
@@ -19,7 +20,7 @@ class InvitationStatus(Enum):
 
 class Invitation(db.Model):
     """
-    Define a mapping for an invitation to the database.
+    Define a mapping to the database for an invitation.
 
     """
     id = db.Column(db.Integer, primary_key=True)
