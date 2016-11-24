@@ -61,12 +61,26 @@ def app():
     register_error_handlers(app)
 
     # Google Sign-In Helper
+    # Google Sign-In Helper
     @app.route('/signin')
     def signin():
         return render_template('google_signin.html')
 
-    @app.route('/ping')
-    def ping():
-        return jsonify(ping='pong')
+    # Setup Database Tables
+    @app.route('/setup')
+    def setup():
+        db.create_all()
+        return 'Setup Database Tables'
+
+    # Populate Database Tables
+    @app.route('/populate')
+    def populate():
+        return 'Populate Database Tables'
+
+    # Drop Database Table (Only for testing purposes)
+    @app.route('/drop')
+    def drop():
+        db.drop_all()
+        return 'Drop Database'
 
     return app
