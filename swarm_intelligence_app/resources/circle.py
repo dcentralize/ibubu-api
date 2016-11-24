@@ -108,9 +108,9 @@ class CircleChildCircle(Resource):
                                    circle_id)
 
         return {
-                   'success': True,
-                   'data': child_circle.serialize
-               }, 200
+            'success': True,
+            'data': child_circle.serialize
+        }, 200
 
     def delete(self, child_circle_id):
         """
