@@ -36,7 +36,8 @@ class Circle(db.Model):
     Parent Circle Relationship
     OneToMany
     """
-    child_circles = db.relationship('Circle', back_populates='parent_circle_id')
+    child_circles = db.relationship('Circle',
+                                    back_populates='parent_circle_id')
 
     """
     Child Circle Relationship
