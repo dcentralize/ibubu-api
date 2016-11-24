@@ -1,5 +1,5 @@
 import pytest
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_restful import Api
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.resources import user
@@ -12,7 +12,6 @@ from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
 
 
-@pytest.fixture
 def load_config(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = \
         'mysql+pymysql://root@localhost:3306/swarm_intelligence'
@@ -21,7 +20,6 @@ def load_config(app):
         '.googleusercontent.com'
 
 
-@pytest.fixture
 def register_error_handlers(app):
     app.register_error_handler(errors.EntityNotFoundError,
                                handlers.handle_entity_not_found)
@@ -32,7 +30,7 @@ def register_error_handlers(app):
 
 
 @pytest.fixture
-def create_app():
+def app():
     app = Flask(__name__)
     load_config(app)
     api = Api(app)
@@ -61,40 +59,14 @@ def create_app():
     api.add_resource(role.RoleMembers, '/roles/<role_id>/members')
     db.init_app(app)
     register_error_handlers(app)
+
+    # Google Sign-In Helper
+    @app.route('/signin')
+    def signin():
+        return render_template('google_signin.html')
+
+    @app.route('/ping')
+    def ping():
+        return jsonify(ping='pong')
+
     return app
-
-
-app = create_app()
-
-
-@pytest.fixture
-# Google Sign-In Helper
-@app.route('/signin')
-def signin():
-    return render_template('google_signin.html')
-
-
-@pytest.fixture
-# Setup Database Tables
-@app.route('/setup')
-def setup():
-    db.create_all()
-    return 'Setup Database Tables'
-
-
-@pytest.fixture
-# Populate Database Tables
-@app.route('/populate')
-def populate():
-    return 'Populate Database Tables'
-
-
-@pytest.fixture
-# Drop Database Table (Only for testing purposes)
-@app.route('/drop')
-def drop():
-    db.drop_all()
-    return 'Drop Database'
-
-if __name__ == "__main__":
-    app.run(host='localhost', port=5432, debug=True)
