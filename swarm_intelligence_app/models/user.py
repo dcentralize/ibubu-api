@@ -38,13 +38,17 @@ class User(db.Model):
 
     def __repr__(self):
         """
-        Return a readable representation of a user including its id.
+        Return a readable representation of a user.
 
         """
         return '<User %r>' % self.id
 
     @property
     def serialize(self):
+        """
+        Return a JSON-encoded representation of a user.
+
+        """
         return {
             'id': self.id,
             'google_id': self.google_id,

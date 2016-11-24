@@ -3,7 +3,6 @@ Define classes for a partner.
 
 """
 from enum import Enum
-
 from swarm_intelligence_app.models import db
 
 
@@ -60,7 +59,7 @@ class Partner(db.Model):
 
     def __repr__(self):
         """
-        Return a readable representation of a partner including its id.
+        Return a readable representation of a partner.
 
         """
         return '<Partner %r>' % self.id
