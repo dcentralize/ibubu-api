@@ -1,13 +1,26 @@
+"""
+Define classes for a partner.
+
+"""
 from enum import Enum
+
 from swarm_intelligence_app.models import db
 
 
 class PartnerType(Enum):
+    """
+    Define values for a partner's type.
+
+    """
     ADMIN = 'admin'
     MEMBER = 'member'
 
 
 class Partner(db.Model):
+    """
+    Define a mapping to the database for a partner.
+
+    """
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum(PartnerType), nullable=False)
     firstname = db.Column(db.String(45), nullable=False)
@@ -19,13 +32,23 @@ class Partner(db.Model):
                                 nullable=False)
     invitation_id = db.Column(db.Integer, db.ForeignKey('invitation.id'),
                               nullable=True)
-
+    circles = db.relationship('Circle', backref='partner', lazy='dynamic')
     __table_args__ = (db.UniqueConstraint('user_id', 'organization_id',
                                           name='UNIQUE_organization_id_user_id'
                                           ),)
 
-    def __init__(self, type, firstname, lastname, email, user, organization,
+    def __init__(self,
+                 type,
+                 firstname,
+                 lastname,
+                 email,
+                 user,
+                 organization,
                  invitation_id=None):
+        """
+        Initialize a partner.
+
+        """
         self.type = type
         self.firstname = firstname
         self.lastname = lastname
@@ -36,10 +59,18 @@ class Partner(db.Model):
         self.invitation_id = invitation_id
 
     def __repr__(self):
+        """
+        Return a readable representation of a partner.
+
+        """
         return '<Partner %r>' % self.id
 
     @property
     def serialize(self):
+        """
+        Return a JSON-encoded representation of a partner.
+
+        """
         return {
             'id': self.id,
             'type': self.type.value,

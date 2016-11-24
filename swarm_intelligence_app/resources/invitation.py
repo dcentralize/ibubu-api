@@ -137,7 +137,7 @@ class InvitationAccept(Resource):
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         PartnerModel(PartnerType.MEMBER, user.firstname, user.lastname,
-                     user.email, user, invitation.organization, invitation.id)
+                     user.email, user, invitation.organization)
 
         invitation.status = InvitationStatus.ACCEPTED
         db.session.commit()
