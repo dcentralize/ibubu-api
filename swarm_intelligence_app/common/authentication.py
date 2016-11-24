@@ -1,3 +1,7 @@
+"""
+Define any authentication functions for the application.
+
+"""
 import requests
 from flask import g
 from flask_httpauth import HTTPTokenAuth
@@ -22,6 +26,10 @@ mock_users = {
 
 @auth.verify_token
 def verify_token(token):
+    """
+    Validate a google id token.
+
+    """
     if token == 'mock_user_001' or 'mock_user_002':
         g.user = mock_users[token]
         return True
