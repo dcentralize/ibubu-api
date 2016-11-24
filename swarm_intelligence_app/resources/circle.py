@@ -5,7 +5,6 @@ Define the classes for the circle API.
 from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.circle import Circle as CircleModel
 
 
 class Circle(Resource):

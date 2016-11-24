@@ -5,7 +5,7 @@ Define classes for a partner.
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.circlemember import cm
+from swarm_intelligence_app.models.circlemember import circle_members
 
 
 class PartnerType(Enum):
@@ -33,8 +33,8 @@ class Partner(db.Model):
                                 nullable=False)
     invitation_id = db.Column(db.Integer, db.ForeignKey('invitation.id'),
                               nullable=True)
-    circles = db.relationship("Circle", secondary=cm,
-                              back_populates="partner", lazy='dynamic')
+    circles = db.relationship('Circle', secondary=circle_members,
+                              back_populates='partners')
 
     __table_args__ = (db.UniqueConstraint('user_id', 'organization_id',
                                           name='UNIQUE_organization_id_user_id'
