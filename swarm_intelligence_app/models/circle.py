@@ -26,6 +26,7 @@ class Circle(db.Model):
         Initialize a circle.
 
         """
+        print("organizations id = " + str(organization_id) + "name= " + name)
         self.name = name
         self.organization_id = organization_id
         self.parent_circle_id = parent_circle_id

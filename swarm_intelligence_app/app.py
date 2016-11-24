@@ -21,7 +21,7 @@ def load_config(app):
 
     """
     app.config['SQLALCHEMY_DATABASE_URI'] = \
-        'mysql+pymysql://root@localhost:3306/swarm_intelligence'
+        'mysql+pymysql://root:1111@localhost:3306/swarm_intelligence'
     app.config['GOOGLE_CLIENT_ID'] = \
         '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54.apps' \
         '.googleusercontent.com'

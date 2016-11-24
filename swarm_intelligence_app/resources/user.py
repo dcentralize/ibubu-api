@@ -10,6 +10,7 @@ from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
+from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import PartnerType
 from swarm_intelligence_app.models.user import User as UserModel
 
@@ -19,6 +20,7 @@ class User(Resource):
     Define the endpoints for the user node.
 
     """
+
     @auth.login_required
     def post(self):
         """
@@ -50,9 +52,9 @@ class User(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': user.serialize
-        }, 200
+                   'success': True,
+                   'data': user.serialize
+               }, 200
 
     @auth.login_required
     def get(self):
@@ -66,9 +68,9 @@ class User(Resource):
             raise errors.EntityNotFoundError('user', g.user['google_id'])
 
         return {
-            'success': True,
-            'data': user.serialize
-        }, 200
+                   'success': True,
+                   'data': user.serialize
+               }, 200
 
     @auth.login_required
     def put(self):
@@ -98,9 +100,9 @@ class User(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': user.serialize
-        }, 200
+                   'success': True,
+                   'data': user.serialize
+               }, 200
 
     @auth.login_required
     def delete(self):
@@ -126,9 +128,9 @@ class User(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': user.serialize
-        }, 200
+                   'success': True,
+                   'data': user.serialize
+               }, 200
 
 
 class UserOrganizations(Resource):
@@ -136,6 +138,7 @@ class UserOrganizations(Resource):
     Define the endpoints for the organizations edge of the user node.
 
     """
+
     @auth.login_required
     def post(self):
         """
@@ -160,12 +163,16 @@ class UserOrganizations(Resource):
         organization = OrganizationModel(args['name'])
         PartnerModel(PartnerType.ADMIN, user.firstname, user.lastname,
                      user.email, user, organization)
+
+        db.session.commit()
+        circle = CircleModel(organization.name, organization.id)
+        db.session.add(circle)
         db.session.commit()
 
         return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+                   'success': True,
+                   'data': organization.serialize
+               }, 200
 
     @auth.login_required
     def get(self):
@@ -186,6 +193,6 @@ class UserOrganizations(Resource):
 
         data = [item.serialize for item in organizations]
         return {
-            'success': True,
-            'data': data
-        }, 200
+                   'success': True,
+                   'data': data
+               }, 200
