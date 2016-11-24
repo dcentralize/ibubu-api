@@ -64,6 +64,8 @@ def create_app():
                      '/organizations/<organization_id>/invitations')
     api.add_resource(partner.Partner,
                      '/partners/<partner_id>')
+    api.add_resource(partner.PartnerAdmin,
+                     '/partners/<partner_id>/admin')
     api.add_resource(partner.PartnerMetrics,
                      '/partners/<partner_id>/metrics')
     api.add_resource(partner.PartnerChecklists,
