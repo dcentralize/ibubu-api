@@ -4,6 +4,7 @@ Define the classes for the circle API.
 """
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.models.circle import Circle as CircleModel
 
 
 class Circle(Resource):
@@ -69,6 +70,17 @@ class CircleMembers(Resource):
         List members of a circle.
 
         """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+
+        data = [i.serialize for i in circle.partners]
+        return {
+            'success': True,
+            'data': data
+        }
+
         raise errors.MethodNotImplementedError()
 
     def put(self,
