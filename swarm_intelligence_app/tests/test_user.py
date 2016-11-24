@@ -10,6 +10,7 @@ class TestUser:
 
     """
     token = 'mock_user_001'
+    
     def test_client(self, client):
         """
         Test if the signin-page returns a valid http status-code.

@@ -2,8 +2,8 @@
 Define the main entry point for the tests.
 
 """
-from flask import Flask, render_template
 import pytest
+from flask import Flask, render_template
 from flask_restful import Api
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
