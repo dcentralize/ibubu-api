@@ -3,7 +3,6 @@ Define classes for a partner.
 
 """
 from enum import Enum
-
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle_member import circle_members
 
