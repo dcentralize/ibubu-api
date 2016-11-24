@@ -18,8 +18,8 @@ class Circle(db.Model):
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
 
-    partners = db.relationship('Partner', backref='organization')
-    child_circles = db.relationship('Circle', backref='circle', lazy='dynamic')
+    partners = db.relationship('Partner', backref='circle')
+    child_circles = db.relationship('Circle', lazy='dynamic')
 
     def __init__(self, name, organization_id, parent_circle_id=None):
         """
