@@ -122,4 +122,4 @@ def populate():
 
 
 if __name__ == '__main__':
-    application.run(host='localhost', port=5432, debug=True)
+    application.run(host='localhost', port=5432, debug=False)

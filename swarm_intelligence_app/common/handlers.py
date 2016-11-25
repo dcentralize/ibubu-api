@@ -3,7 +3,6 @@ Define any error handlers for the application.
 
 """
 import json
-
 from flask import make_response
 
 
@@ -59,6 +58,7 @@ def handle_entity_already_exists(error):
         error: The error that was raised.
 
     """
+    print("#####handle_already_exists!###########")
     data = json.dumps({
         'success': False,
         'errors': [{
