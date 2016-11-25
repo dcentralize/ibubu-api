@@ -52,6 +52,7 @@ def app():
     app = Flask('pytest')
     app.config.update(DEBUG=True)
     load_config(app)
+    app.config.update(debug=True)
     api = Api(app)
     api.add_resource(user.User,
                      '/me')

@@ -26,6 +26,8 @@ mock_users = {
     }
 }
 
+def get_mock_user():
+    return mock_users
 
 @auth.verify_token
 def verify_token(token):
