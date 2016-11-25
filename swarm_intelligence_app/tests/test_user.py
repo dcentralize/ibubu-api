@@ -1,7 +1,6 @@
 """
 Test user api-functionality.
 """
-from flask import url_for
 
 
 class TestUser:
@@ -41,16 +40,6 @@ class TestUser:
         assert client.post('/me', headers={
             'Authorization': 'Token ' + self.token}).status == '200 OK'
         print('Passed test for creating a new user.')
-
-    def test_me_post(self, client):
-        """
-        Test if the me-page returns a valid http status-code when posting.
-        """
-        assert client.post('/me', headers={
-            'Authorization': 'Token ' + self.token}).status == '200 OK'
-        print('Passed test for creating a new user.')
-
-
 
     # def test_me_post_no_login(self, client):
     #     """

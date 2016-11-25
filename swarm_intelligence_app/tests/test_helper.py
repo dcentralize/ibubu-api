@@ -1,7 +1,14 @@
+"""
+Use for Setting Up tests
+"""
 from flask import url_for
 
 
 class TestHelper:
+    """
+    Class for cleaning the database for each test
+    """
+
     def test_signin(self, client):
         """
         Test if the signin-page returns a valid http status-code.
