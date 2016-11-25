@@ -55,9 +55,13 @@ class Circle(Resource):
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
+        parser.add_argument('purpose')
+        parser.add_argument('strategy')
         args = parser.parse_args()
 
         circle.name = args['name']
+        circle.purpose = args['purpose']
+        circle.strategy = args['strategy']
         db.session.commit()
 
         return {
@@ -114,9 +118,12 @@ class CircleSubcircles(Resource):
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
+        parser.add_argument('purpose')
+        parser.add_argument('strategy')
         args = parser.parse_args()
 
-        subcircle = CircleModel(args['name'], circle.organization_id,
+        subcircle = CircleModel(args['name'], args['purpose'],
+                                args['strategy'], circle.organization_id,
                                 circle.id)
         db.session.add(subcircle)
         db.session.commit()

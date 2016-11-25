@@ -13,6 +13,8 @@ class Circle(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    purpose = db.Column(db.String(100), nullable=True)
+    strategy = db.Column(db.String(255), nullable=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
     circle_id = db.Column(db.Integer,
@@ -24,8 +26,13 @@ class Circle(db.Model):
     partners = db.relationship(
         'Partner', secondary=circle_members, back_populates='circles')
 
+    # subcircles = db.relationship('Circle')
+    # parent_circle = db.relationship('Circle', remote_side=[id])
+
     def __init__(self,
                  name,
+                 purpose,
+                 strategy,
                  organization_id,
                  circle_id):
         """
@@ -33,6 +40,8 @@ class Circle(db.Model):
 
         """
         self.name = name
+        self.purpose = purpose
+        self.strategy = strategy
         self.organization_id = organization_id
         self.circle_id = circle_id
 
@@ -52,6 +61,8 @@ class Circle(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'purpose': self.purpose,
+            'strategy': self.strategy,
             'organization_id': self.organization_id,
             'circle_id': self.circle_id
         }
