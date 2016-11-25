@@ -9,8 +9,8 @@ User
 Organization
 ------------
 /organizations/<organization_id> - GET, PUT, DELETE
-/organizations/<organization_id>/owner - PUT
-/organizations/<organization_id>/partners - GET
+/organizations/<organization_id>/admins - GET
+/organizations/<organization_id>/members - GET
 /organizations/<organization_id>/invitations - POST, GET
 
 Partner
