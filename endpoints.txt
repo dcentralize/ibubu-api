@@ -42,12 +42,12 @@ Organization
 /organizations/{organization-id} - GET, PUT, DELETE
 /organizations/{organization-id}/members - GET
 /organizations/{organization-id}/admins - GET
-/organizations/{organization-id}/admins/{partner-id} - PUT, DELETE
 /organizations/{organization-id}/invitations - POST, GET
 
 Partner
 -------
 /partners/{partner-id} - GET, PUT, DELETE
+/partners/{partner-id}/admin - PUT, DELETE
 /partners/{partner-id}/metrics - POST, GET
 /partners/{partner-id}/checklists - POST, GET
 

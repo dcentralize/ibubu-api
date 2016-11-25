@@ -7,6 +7,7 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
@@ -141,8 +142,8 @@ class UserOrganizations(Resource):
         """
         Create an organization.
 
-        This endpoint creates a new organization and adds the authenticated
-        user as an admin to the organization.
+        This endpoint creates a new organization with an anchor circle and
+        adds the authenticated user as an admin to the organization.
 
         Params:
             name: The name of the organization
@@ -160,6 +161,11 @@ class UserOrganizations(Resource):
         organization = OrganizationModel(args['name'])
         PartnerModel(PartnerType.ADMIN, user.firstname, user.lastname,
                      user.email, user, organization)
+        db.session.commit()
+
+        anchor_circle = CircleModel('General', None, None, organization.id,
+                                    None)
+        db.session.add(anchor_circle)
         db.session.commit()
 
         return {
