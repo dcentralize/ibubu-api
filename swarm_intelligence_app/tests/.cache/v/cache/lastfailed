@@ -1,0 +1,4 @@
+{
+  "test_user.py::TestUser::()::test_me_organizations_post": true,
+  "test_user.py::TestUser::()::test_me_post": true
+}

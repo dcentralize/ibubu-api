@@ -48,6 +48,7 @@ def create_app():
 
     """
     app = Flask(__name__)
+    app.config.update(DEBUG=True)
     load_config(app)
     api = Api(app)
     api.add_resource(user.User,
@@ -129,5 +130,5 @@ def populate():
     return 'Populate Database Tables'
 
 
-if __name__ == '__main__':
-    application.run(debug=True)
+#if __name__ == '__main__':
+#    application.run(debug=True)
