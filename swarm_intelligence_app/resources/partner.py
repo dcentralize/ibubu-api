@@ -25,7 +25,7 @@ class Partner(Resource):
         member or an admin of the organization that the partner is
         associated with.
 
-        Params:
+        Args:
             partner_id: The id of the partner to retrieve
 
         """
@@ -48,7 +48,7 @@ class Partner(Resource):
         In order to edit a partner, the authenticated user must be an admin of
         the organization that the partner is associated with.
 
-        Params:
+        Args:
             partner_id: The id of the partner to edit
 
         """
@@ -82,7 +82,7 @@ class Partner(Resource):
         In order to delete a partner, the authenticated user must be an admin
         of the organization that the partner is associated with.
 
-        Params:
+        Args:
             partner_id: The id of the partner to delete
 
         """
@@ -115,6 +115,9 @@ class PartnerAdmin(Resource):
             the authenticated user must be an admin of the organization that
             the partner is associated with.
 
+            Args:
+                partner_id: The id of the partner to grant admin access to
+
             """
             partner = PartnerModel.query.get(partner_id)
 
@@ -127,7 +130,7 @@ class PartnerAdmin(Resource):
             return {
                 'success': True,
                 'data': partner.serialize
-            }
+            }, 200
 
         @auth.login_required
         def delete(self,
@@ -138,6 +141,9 @@ class PartnerAdmin(Resource):
             In order to revoke admin access from a partner to an organization,
             the authenticated user must be an admin of the organization that
             the partner is associated with.
+
+            Args:
+                partner_id: The id of the partner to revoke admin access from
 
             """
             partner = PartnerModel.query.get(partner_id)
@@ -151,7 +157,37 @@ class PartnerAdmin(Resource):
             return {
                 'success': True,
                 'data': partner.serialize
-            }
+            }, 200
+
+
+class PartnerCircles(Resource):
+    """
+    Define the endpoints for the circles edge of the partner node.
+
+    """
+    def get(self,
+            partner_id):
+        """
+        List circles of a partner.
+
+        In order to list the circles of a partner, the authenticated user
+        must be a member or an admin of the organization that the partner is
+        associated with.
+
+        Args:
+            partner_id: The id of the partner for which to list the circles
+
+        """
+        partner = PartnerModel.query.get(partner_id)
+
+        if partner is None:
+            raise errors.EntityNotFoundError('partner', partner_id)
+
+        data = [i.serialize for i in partner.circles]
+        return {
+            'success': True,
+            'data': data
+        }, 200
 
 
 class PartnerMetrics(Resource):

@@ -163,7 +163,8 @@ class UserOrganizations(Resource):
                      user.email, user, organization)
         db.session.commit()
 
-        anchor_circle = CircleModel('General', organization.id, None)
+        anchor_circle = CircleModel('General', None, None, organization.id,
+                                    None)
         db.session.add(anchor_circle)
         db.session.commit()
 
