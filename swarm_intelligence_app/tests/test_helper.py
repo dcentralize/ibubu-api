@@ -2,6 +2,7 @@
 Use for Setting Up tests.
 """
 from flask import url_for
+import requests
 
 
 class TestHelper:
@@ -29,3 +30,21 @@ class TestHelper:
         """
         assert client.get(url_for('populate')).status == '200 OK'
         print('Passed test for populating the database.')
+
+    def signin(self, client):
+        """
+        Helper Method for populating the database.
+        """
+        client.get(url_for('signin'))
+
+    def set_up(self, client):
+        """
+        Helper method for setting up the database.
+        """
+        client.get(url_for('setup'))
+
+    def populate(self, client):
+        """
+        Helper Method for populating the database.
+        """
+        client.get(url_for('populate'))
