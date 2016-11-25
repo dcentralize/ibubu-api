@@ -1,12 +1,12 @@
 """
-Use for Setting Up tests
+Use for Setting Up tests.
 """
 from flask import url_for
 
 
 class TestHelper:
     """
-    Class for cleaning the database for each test
+    Class for cleaning the database for each test.
     """
 
     def test_signin(self, client):
