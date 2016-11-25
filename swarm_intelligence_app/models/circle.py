@@ -14,38 +14,18 @@ class Circle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
+    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+                          nullable=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
+                                nullable=False)
 
-    """
-      Partner Relationship
-      ManyToMany
-      """
     partners = \
         db.relationship('Partner', secondary=circle_members,
                         back_populates='circles')
-
-    """
-    Organization Relationship
-    OneToOne
-    """
-    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
-                                nullable=False)
     organization = db.relationship('Organization', uselist=False,
                                    back_populates='circle')
-
-    """
-    Parent Circle Relationship
-    OneToMany
-    """
-    child_circles = db.relationship('Circle',
-                                    back_populates='parent_circle_id')
-
-    """
-    Child Circle Relationship
-    ManyToOne
-    """
-    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
-                                 nullable=True)
-    parent = db.relationship('Circle', back_populates='child_circles')
+    child_circles = db.relationship('Circle')
+    parent_circle = db.relation('Circle', remote_side=id)
 
     def __init__(self, name, organization_id, parent_circle_id=None):
         """
