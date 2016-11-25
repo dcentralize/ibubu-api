@@ -13,17 +13,28 @@ class Circle(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
+                                nullable=False)
+    circle_id = db.Column(db.Integer,
+                          db.ForeignKey('circle.id',
+                                        onupdate='CASCADE',
+                                        ondelete='CASCADE'),
+                          nullable=True)
 
     partners = db.relationship(
         'Partner', secondary=circle_members, back_populates='circles')
 
     def __init__(self,
-                 name):
+                 name,
+                 organization_id,
+                 circle_id):
         """
         Initialize a circle.
 
         """
         self.name = name
+        self.organization_id = organization_id
+        self.circle_id = circle_id
 
     def __repr__(self):
         """
@@ -40,5 +51,7 @@ class Circle(db.Model):
         """
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'organization_id': self.organization_id,
+            'circle_id': self.circle_id
         }

@@ -6,6 +6,7 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.invitation import \
     Invitation as InvitationModel
 from swarm_intelligence_app.models.organization import \
@@ -106,6 +107,44 @@ class Organization(Resource):
         }, 200
 
 
+class OrganizationAnchorCircle(Resource):
+    """
+    Define the endpoints for the anchor circle edge of the organization node.
+
+    """
+    @auth.login_required
+    def get(self,
+            organization_id):
+        """
+        Retrieve the anchor circle of an organization.
+
+        This endpoint retrieves the anchor circle of an organization. Each
+        organization has exactly one circle as its anchor circle. In order to
+        retrieve the anchor circle of an organization, the authenticated user
+        must be a member or an admin of the organization.
+
+        Params:
+            organization_id: The id of the organization for which to retrieve
+            the anchor circle
+
+        """
+        organization = OrganizationModel.query.get(organization_id)
+
+        if organization is None:
+            raise errors.EntityNotFoundError('organization', organization_id)
+
+        anchor_circle = CircleModel.query.filter_by(
+            organization_id=organization.id, circle_id=None).first()
+
+        if anchor_circle is None:
+            raise errors.EntityNotFoundError('circle', '')
+
+        return {
+            'sucess': True,
+            'data': anchor_circle.serialize
+        }, 200
+
+
 class OrganizationMembers(Resource):
     """
     Define the endpoints for the members edge of the organization node.
@@ -166,7 +205,7 @@ class OrganizationAdmins(Resource):
             raise errors.EntityNotFoundError('organization', organization_id)
 
         admins = PartnerModel.query.filter_by(organization=organization,
-                                              type=PartnerType.ADMIN)
+                                              type=PartnerType.ADMIN).all()
 
         data = [i.serialize for i in admins]
         return {

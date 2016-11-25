@@ -56,6 +56,8 @@ def create_app():
                      '/me/organizations')
     api.add_resource(organization.Organization,
                      '/organizations/<organization_id>')
+    api.add_resource(organization.OrganizationAnchorCircle,
+                     '/organizations/<organization_id>/anchor_circle')
     api.add_resource(organization.OrganizationMembers,
                      '/organizations/<organization_id>/members')
     api.add_resource(organization.OrganizationAdmins,
@@ -78,10 +80,13 @@ def create_app():
                      '/invitations/<code>/accept')
     api.add_resource(circle.Circle,
                      '/circles/<circle_id>')
+    api.add_resource(circle.CircleSubcircles,
+                     '/circles/<circle_id>/subcircles')
     api.add_resource(circle.CircleRoles,
                      '/circles/<circle_id>/roles')
     api.add_resource(circle.CircleMembers,
-                     '/circles/<circle_id>/members')
+                     '/circles/<circle_id>/members',
+                     '/circles/<circle_id>/members/<partner_id>')
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
