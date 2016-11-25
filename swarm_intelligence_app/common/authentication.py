@@ -3,7 +3,7 @@ Define any authentication functions for the application.
 
 """
 import requests
-from flask import g
+from flask import abort, g
 from flask_httpauth import HTTPTokenAuth
 
 auth = HTTPTokenAuth(scheme='Token')
@@ -49,7 +49,10 @@ def verify_token(token):
 
     """
     if token == 'mock_user_001' or 'mock_user_002':
-        g.user = mock_users[token]
+        try:
+            g.user = mock_users[token]
+        except KeyError:
+            abort(400)
         return True
     else:
         response = requests.get('https://www.googleapis.com/oauth2/v3/'
@@ -69,5 +72,5 @@ def verify_token(token):
             'lastname': data['family_name'],
             'email': data['email']
         }
+    return True
 
-        return True
