@@ -1,37 +1,79 @@
-ENDPOINTS
+General Usage
+=============
+/{node-name}/{node-id}[/{edge-name}[/{edge-id}]]
+
+
+HTTP Requests
+=============
+GET		Used for retrieving resources or collections
+POST	Used for creating resources
+PUT		Used for replacing resources
+DELETE	Used for deleting resources
+
+
+HTTP Responses
+==============
+
+On Success
+----------
+{
+	'success': True,
+	'data': []
+}
+
+On Error
+--------
+{
+	'success': False,
+	'errors': []
+}
+
+
+Endpoints
 =========
 
 User
--------
+----
 /me - POST, GET, PUT, DELETE
 /me/organizations - POST, GET
 
 Organization
 ------------
-/organizations/<organization_id> - GET, PUT, DELETE
-/organizations/<organization_id>/owner - PUT
-/organizations/<organization_id>/partners - GET
-/organizations/<organization_id>/invitations - POST, GET
+/organizations/{organization-id} - GET, PUT, DELETE
+/organizations/{organization-id}/members - GET
+/organizations/{organization-id}/admins - GET
+/organizations/{organization-id}/invitations - POST, GET
 
 Partner
 -------
-/partners/<partner_id> - GET, PUT
-/partners/<partner_id>/metrics - POST, GET
-/partners/<partner_id>/checklists - POST, GET
+/partners/{partner-id} - GET, PUT, DELETE
+/partners/{partner-id}/admin - PUT, DELETE
+/partners/{partner-id}/metrics - POST, GET
+/partners/{partner-id}/checklists - POST, GET
 
 Invitation
 ----------
-/invitations/<invitation_id> - GET, DELETE
-/invitations/<invitation_id>/resend - GET
-/invitations/<invitation_id>/accept - GET
+/invitations/{invitation-id} - GET, DELETE
+/invitations/{invitation-id}/resend - GET
+/invitations/{invitation-code}/accept - GET
 
 Circle
 ------
-/circles/<circle_id> - GET, PUT, DELETE
-/circles/<circle_id>/roles - GET, POST
-/circles/<circle_id>/members - GET, POST, DELETE
+/circles/{circle-id} - GET, PUT, DELETE
+/circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/members - GET
+/circles/{circle-id}/members/{partner-id} - PUT, DELETE
 
 Role
 ----
-/roles/<role_id> - GET, PUT, DELETE
-/roles/<role_id>/members - GET, POST, DELETE
+/roles/{role-id} - GET, PUT, DELETE
+/roles/{role-id}/members - GET
+/roles/{role-id}/members/{partner-id} - PUT, DELETE
+
+Metric
+------
+/metrics/{metric-id} - GET, PUT, DELETE
+
+Checklist
+---------
+/checklists/{checklist-id} - GET, PUT, DELETE

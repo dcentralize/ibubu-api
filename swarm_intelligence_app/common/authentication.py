@@ -20,24 +20,6 @@ mock_users = {
         'firstname': 'Dagobert',
         'lastname': 'Duck',
         'email': 'dagobert@gmail.de'
-    },
-    'mock_user_003': {
-        'google_id': 'mock_user_003',
-        'firstname': 'Tick',
-        'lastname': 'Duck',
-        'email': 'tick@gmail.de'
-    },
-    'mock_user_004': {
-        'google_id': 'mock_user_004',
-        'firstname': 'Trick',
-        'lastname': 'Duck',
-        'email': 'trick@gmail.de'
-    },
-    'mock_user_005': {
-        'google_id': 'mock_user_005',
-        'firstname': 'Tack',
-        'lastname': 'Duck',
-        'email': 'Tack@gmail.de'
     }
 }
 
@@ -53,6 +35,7 @@ def verify_token(token):
             g.user = mock_users[token]
         except KeyError:
             abort(400)
+
         return True
     else:
         response = requests.get('https://www.googleapis.com/oauth2/v3/'
@@ -72,5 +55,5 @@ def verify_token(token):
             'lastname': data['family_name'],
             'email': data['email']
         }
-    return True
 
+        return True
