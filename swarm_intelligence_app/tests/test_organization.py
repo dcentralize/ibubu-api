@@ -1,23 +1,27 @@
 """
-Test user api-functionality.
+Test organization api-functionality.
 """
-from swarm_intelligence_app.tests import test_helper
+from swarm_intelligence_app.tests import test_helper, test_user
 
 
 class TestOrganization:
     """
-    Class for testing user api-functionality.
+    Class for testing API-Endpoint /organizations.
 
     """
+    token = 'mock_user_001'
     helper = test_helper.TestHelper
 
-    token = 'mock_user_001'
+    def get_organization_id(self, client):
+        client.get('/organizations', headers={
+            'Authorization': 'Token ' + self.token}).json['data'][0]['id']
 
-    def test_me_post(self, client):
+    def test_organizations_get(self, client):
         """
-        Test if the me-page returns a valid http status-code when posting.
+        Test if the endpoint /organizations returns the Status-Code '200' when
+        an existing organization is requested with a valid token.
         """
         self.helper.set_up(test_helper, client)
-        assert client.post('/me', headers={
+        test_user.TestUserOrganization.test_me_organizations_post(self, client)
+        assert client.get('/organizations', headers={
             'Authorization': 'Token ' + self.token}).status == '200 OK'
-        print('Passed test for creating a new user.')
