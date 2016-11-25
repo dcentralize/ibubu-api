@@ -2,7 +2,6 @@
 Use for Setting Up tests.
 """
 from flask import url_for
-import requests
 
 
 class TestHelper:
