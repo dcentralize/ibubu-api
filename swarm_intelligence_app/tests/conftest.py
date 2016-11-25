@@ -49,7 +49,8 @@ def app():
     Create the main flask app.
 
     """
-    app = Flask(__name__)
+    app = Flask('pytest')
+    app.config.update(DEBUG=True)
     load_config(app)
     api = Api(app)
     api.add_resource(user.User,
