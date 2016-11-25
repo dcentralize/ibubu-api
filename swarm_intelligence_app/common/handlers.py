@@ -5,6 +5,7 @@ Define any error handlers for the application.
 import json
 
 from flask import make_response
+import http.client
 
 
 def handle_entity_not_found(error):
@@ -22,11 +23,12 @@ def handle_entity_not_found(error):
             'message': str(error)
         }]
     })
-    status = 404
+    status_code = 404
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type':'application/x-www-form-urlencoded'
     }
-    return make_response(data, status, headers)
+
+    return make_response(data, status_code, headers)
 
 
 def handle_method_not_implemented(error):

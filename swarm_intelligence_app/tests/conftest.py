@@ -3,7 +3,7 @@ Define the main entry point for the tests.
 
 """
 import pytest
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_restful import Api
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
@@ -22,10 +22,11 @@ def load_config(app):
 
     """
     app.config['SQLALCHEMY_DATABASE_URI'] = \
-        'mysql+pymysql://root@localhost:3306/swarm_intelligence'
+        'mysql+pymysql://root:1111@localhost:3306/swarm_intelligence'
     app.config['GOOGLE_CLIENT_ID'] = \
         '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54.apps' \
         '.googleusercontent.com'
+    app.config['DEBUG'] = True
 
 
 def register_error_handlers(app):
@@ -50,6 +51,7 @@ def app():
 
     """
     app = Flask(__name__)
+
     load_config(app)
     api = Api(app)
     api.add_resource(user.User,
@@ -66,8 +68,8 @@ def app():
                      '/organizations/<organization_id>/invitations')
     api.add_resource(partner.Partner,
                      '/partners/<partner_id>')
-    api.add_resource(partner.PartnerAdmin,
-                     '/partners/<partner_id>/admin')
+    #    api.add_resource(partner.PartnerAdmin,
+    #                    '/partners/<partner_id>/admin')
     api.add_resource(partner.PartnerMetrics,
                      '/partners/<partner_id>/metrics')
     api.add_resource(partner.PartnerChecklists,
@@ -88,8 +90,9 @@ def app():
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
                      '/roles/<role_id>/members')
-    db.init_app(app)
+
     register_error_handlers(app)
+    db.init_app(app)
 
     @app.route('/signin')
     def signin():
@@ -105,6 +108,7 @@ def app():
         Setup the database.
 
         """
+        print("setup")
         db.drop_all()
         db.create_all()
         return 'Setup Database Tables'

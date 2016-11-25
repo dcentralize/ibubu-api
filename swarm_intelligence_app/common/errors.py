@@ -2,6 +2,7 @@
 Define any error classes for the application.
 
 """
+from werkzeug.exceptions import HTTPException
 
 
 class EntityNotFoundError(Exception):

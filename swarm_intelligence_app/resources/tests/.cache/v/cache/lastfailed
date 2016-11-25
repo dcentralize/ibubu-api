@@ -1,1 +1,9 @@
-{}
+{
+  "test_organization.py::TestOrganization::test_change_name": true,
+  "test_organization.py::TestOrganization::test_delete_organization": true,
+  "test_organization.py::TestOrganization::test_get_admin": true,
+  "test_organization.py::TestOrganization::test_get_member": true,
+  "test_organization.py::TestOrganization::test_get_organization": true,
+  "test_organization.py::TestOrganization::test_post_organization": true,
+  "test_organization.py::TestOrganization::test_send_invitation": true
+}
