@@ -92,3 +92,4 @@ class EntityNotModifiedError(Exception):
 
         """
         return self.message or 'The specified entity cannot be modified.'
+
