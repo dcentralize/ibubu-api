@@ -79,7 +79,7 @@ class TestUser:
 
 class TestUserOrganization:
     """
-        Class for testing API-Endpoint /me/organizations.
+    Class for testing API-Endpoint /me/organizations.
 
     """
     token = 'mock_user_001'
