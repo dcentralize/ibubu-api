@@ -4,7 +4,6 @@ Test user api-functionality.
 from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.common import authentication
 from flask import json
-from swarm_intelligence_app.tests.mockobjects import mock_user
 
 
 class TestUser:
@@ -19,7 +18,7 @@ class TestUser:
         self.helper.set_up(test_helper, client)
         for mock_user in self.mock_user_list:
             self.me_post(client, mock_user)
-            self.me_get(client, mock_user)
+
 
     def me_post(self, client, token):
         """
