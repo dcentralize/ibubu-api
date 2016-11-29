@@ -1,6 +1,7 @@
 """
 Test user api-functionality.
 """
+import pytest
 from swarm_intelligence_app.tests import test_helper
 
 
@@ -11,6 +12,11 @@ class TestUser:
     """
     token = 'mock_user_001'
     helper = test_helper.TestHelper
+
+    @pytest.fixture
+    def user_data(self):
+
+
 
     def test_me_post(self, client):
         """
@@ -109,7 +115,7 @@ class TestUserOrganization:
         assert client.get('/me/organizations', headers={
             'Authorization': 'Token ' + self.token}).status == \
                '200 OK'
-        print('Passed test for creating a new organization.')
+        print('Passed test for getting an organization.')
 
 
 class TestUserExceptions:
