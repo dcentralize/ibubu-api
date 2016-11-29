@@ -75,4 +75,3 @@ class TestOrganization:
             client), headers={
             'Authorization': 'Token ' + self.token}).status == '200 OK'
 
-    

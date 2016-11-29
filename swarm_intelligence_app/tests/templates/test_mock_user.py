@@ -13,7 +13,6 @@ class TestUser:
 
     """
     mock_user_list = authentication.get_mock_user()
-
     helper = test_helper.TestHelper
 
     def test_me_all_users(self, client):
@@ -32,17 +31,14 @@ class TestUser:
 
         print('Passed test for creating a new user: ' + token)
 
-    def me_get(self, client, token):
-        """
-        Test if the get request returns the correct user.
-        """
-        token
-        assert client.get('/me', headers={
-            'Authorization': 'Token ' + token}).status == '200 OK'
-
-        for entry in json.loads(token):
-            print (entry)
-            # user = client.get('/me', headers={
-            #     'Authorization': 'Token ' + token}).json['data'][''+entry]
-
-        # print('USER ARRAY: ' + user)
+    # def me_get(self, client, token):
+    #     """
+    #     Test if the get request returns the correct user.
+    #     """
+    #
+    #     assert client.get('/me', headers={
+    #         'Authorization': 'Token ' + token}).status == '200 OK'
+    #     for tokens in self.mock_user_list:
+    #         responseToken = client.get('/me', headers={
+    #             'Authorization': 'Token ' + tokens}).json['data']
+    #     print(responseToken)
