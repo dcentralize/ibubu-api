@@ -7,6 +7,7 @@ from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
+from swarm_intelligence_app.common.authentication import auth
 
 
 class Circle(Resource):
@@ -14,6 +15,8 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
+
+    @auth.login_required
     def get(self,
             circle_id):
         """
@@ -36,6 +39,7 @@ class Circle(Resource):
             'data': circle.serialize
         }, 200
 
+    @auth.login_required
     def put(self,
             circle_id):
         """
@@ -69,6 +73,7 @@ class Circle(Resource):
             'data': circle.serialize
         }, 200
 
+    @auth.login_required
     def delete(self,
                circle_id):
         """
@@ -99,6 +104,8 @@ class CircleSubcircles(Resource):
     Define the endpoints for the subcircles edge of the circle node.
 
     """
+
+    @auth.login_required
     def post(self,
              circle_id):
         """
@@ -133,6 +140,7 @@ class CircleSubcircles(Resource):
             'data': subcircle.serialize
         }, 200
 
+    @auth.login_required
     def get(self,
             circle_id):
         """
@@ -165,6 +173,7 @@ class CircleRoles(Resource):
     Define the endpoints for the roles edge of the circle node.
 
     """
+    @auth.login_required
     def post(self,
              circle_id):
         """
@@ -173,6 +182,7 @@ class CircleRoles(Resource):
         """
         raise errors.MethodNotImplementedError()
 
+    @auth.login_required
     def get(self,
             circle_id):
         """
@@ -187,6 +197,8 @@ class CircleMembers(Resource):
     Define the endpoints for the members edge of the circle node.
 
     """
+
+    @auth.login_required
     def get(self,
             circle_id):
         """
@@ -213,6 +225,7 @@ class CircleMembers(Resource):
 
         raise errors.MethodNotImplementedError()
 
+    @auth.login_required
     def put(self,
             circle_id,
             partner_id):
@@ -244,6 +257,7 @@ class CircleMembers(Resource):
             'success': True
         }, 200
 
+    @auth.login_required
     def delete(self,
                circle_id,
                partner_id):

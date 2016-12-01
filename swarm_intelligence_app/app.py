@@ -116,6 +116,7 @@ def setup():
     Setup the database.
 
     """
+    db.delete_all()
     db.create_all()
     return 'Setup Database Tables'
 
@@ -130,4 +131,4 @@ def populate():
 
 
 if __name__ == '__main__':
-    application.run(debug=True)
+    application.run(host='localhost', port=5432, debug=True)
