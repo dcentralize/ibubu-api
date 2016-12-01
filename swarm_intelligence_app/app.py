@@ -116,7 +116,7 @@ def setup():
     Setup the database.
 
     """
-    db.delete_all()
+    db.drop_all()
     db.create_all()
     return 'Setup Database Tables'
 

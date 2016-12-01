@@ -16,6 +16,10 @@ HTTP Responses
 
 On Success
 ----------
+
+200: Success
+201: Success created
+
 {
 	'success': True,
 	'data': []
@@ -23,6 +27,12 @@ On Success
 
 On Error
 --------
+
+400: Error
+404: Error endpoint not found
+405: Error
+409: Error
+
 {
 	'success': False,
 	'errors': []
@@ -60,7 +70,8 @@ Invitation
 Circle
 ------
 /circles/{circle-id} - GET, PUT, DELETE
-/circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/roles - POST, GET, DELETE
+/circles/{circle-id}/subcircles - POST, GET
 /circles/{circle-id}/members - GET
 /circles/{circle-id}/members/{partner-id} - PUT, DELETE
 
@@ -69,6 +80,7 @@ Role
 /roles/{role-id} - GET, PUT, DELETE
 /roles/{role-id}/members - GET
 /roles/{role-id}/members/{partner-id} - PUT, DELETE
+/roles/{role-id}/circles - PUT
 
 Metric
 ------
