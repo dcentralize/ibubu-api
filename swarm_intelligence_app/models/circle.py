@@ -3,6 +3,7 @@ Define classes for a circle.
 
 """
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.circle_member import circle_members
 
 
 class Circle(db.Model):
@@ -11,33 +12,35 @@ class Circle(db.Model):
 
     """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    is_deleted = db.Column(db.Boolean(), nullable=False)
-    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
-                                 nullable=True)
+    strategy = db.Column(db.String(255), nullable=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+    partners = db.relationship(
+        'Partner', secondary=circle_members, back_populates='circles')
+    roles = db.relationship('Role', backref='circle')
 
-    partners = db.relationship('Partner', backref='circle')
-    child_circles = db.relationship('Circle', lazy='dynamic')
+    # subcircles = db.relationship('Circle')
+    # parent_circle = db.relationship('Circle', remote_side=[id])
 
-    def __init__(self, name, organization_id, parent_circle_id=None):
+    def __init__(self,
+                 strategy,
+                 organization_id,
+                 role_id):
         """
         Initialize a circle.
 
         """
-        print("organizations id = " + str(organization_id) + "name= " + name)
-        self.name = name
+        self.strategy = strategy
+        self.role_id = role_id
         self.organization_id = organization_id
-        self.parent_circle_id = parent_circle_id
-        self.is_deleted = False
 
     def __repr__(self):
         """
         Return a readable representation of a circle.
 
         """
-        return '<User %r>' % self.id
+        return '<Circle %r>' % self.id
 
     @property
     def serialize(self):
@@ -47,8 +50,7 @@ class Circle(db.Model):
         """
         return {
             'id': self.id,
-            'name': self.name,
-            'parent_circle_id': self.parent_circle_id,
-            'organization_id': self.organization_id,
-            'is_deleted': self.is_deleted
+            'strategy': self.strategy,
+            'role_id': self.role_id,
+            'organization_id': self.organization_id
         }

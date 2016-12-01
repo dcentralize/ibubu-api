@@ -1,5 +1,5 @@
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models import role_member
+from swarm_intelligence_app.models.role_member import role_members
 from enum import Enum
 
 
@@ -8,25 +8,41 @@ class RoleType(Enum):
     REP_LINK = 'rep_link'
     FACILITATOR = 'facilitator'
     SECRETARY = 'secretary'
+    CIRCLE = bool
     CUSTOM = "custom"
 
 
 class Role(db.Model):
+    """
+      Define a mapping to the database for a role.
+    """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=True)
+    name = db.Column(db.String(100), nullable=False)
+    purpose = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Enum(RoleType), nullable=False)
-    partners = db.relationship('partner', secondary=role_member,
-                               back_populates='Role')
+    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+                                 nullable=True)
+    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+                          nullable=True)
+
+    partners = db.relationship('Partner', secondary=role_members,
+                               back_populates='roles')
 
     def __init__(self,
                  name,
+                 purpose,
+                 parent_circle_id,
+                 circle_id,
                  type):
         """
-        Initialize a circle.
+        Initialize a role.
 
         """
         self.name = name
         self.type = type
+        self.parent_circle_id = parent_circle_id
+        self.circle_id = circle_id
+        self.purpose = purpose
 
     def __repr__(self):
         """
@@ -45,4 +61,7 @@ class Role(db.Model):
             'id': self.id,
             'name': self.name,
             'type': self.type,
+            'circle_id': self.circle_id,
+            'parent_circle_id': self.parent_circle_id,
+            'purpose': self.purpose
         }
