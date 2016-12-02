@@ -3,7 +3,6 @@ Define the classes for the role API.
 
 """
 from flask_restful import reqparse, Resource
-from flask_restful import Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
