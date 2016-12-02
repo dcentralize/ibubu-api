@@ -19,6 +19,8 @@ class Role(Resource):
 
         """
         # ToDO
+        role = RoleModel.query.get(role_id)
+        print(role)
         raise errors.MethodNotImplementedError()
 
     def put(self,
