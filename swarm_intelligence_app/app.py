@@ -50,6 +50,10 @@ def create_app():
     app = Flask(__name__)
     load_config(app)
     api = Api(app)
+    api.add_resource(user.UserRegistration,
+                     '/register')
+    api.add_resource(user.UserLogin,
+                     '/login')
     api.add_resource(user.User,
                      '/me')
     api.add_resource(user.UserOrganizations,

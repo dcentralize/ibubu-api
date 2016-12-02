@@ -12,7 +12,6 @@ from swarm_intelligence_app.models.invitation import \
 from swarm_intelligence_app.models.invitation import InvitationStatus
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
-from swarm_intelligence_app.models.user import User as UserModel
 
 
 class Invitation(Resource):
@@ -131,13 +130,8 @@ class InvitationAccept(Resource):
         if invitation is None:
             raise errors.EntityNotFoundError('invitation', code)
 
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
-        PartnerModel(PartnerType.MEMBER, user.firstname, user.lastname,
-                     user.email, user, invitation.organization)
+        PartnerModel(PartnerType.MEMBER, g.user.firstname, g.user.lastname,
+                     g.user.email, g.user, invitation.organization)
 
         invitation.status = InvitationStatus.ACCEPTED
         db.session.commit()

@@ -2,8 +2,11 @@
 Define the classes for the user API.
 
 """
+import jwt
+import requests
+from datetime import datetime, timedelta
 from flask import g
-from flask_restful import reqparse, Resource
+from flask_restful import abort, reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -14,13 +17,15 @@ from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
 from swarm_intelligence_app.models.user import User as UserModel
 
+APP_SECRET = 'top_secret'
+TOKEN_EXPIRATION = 3600
 
-class User(Resource):
+
+class UserRegistration(Resource):
     """
-    Define the endpoints for the user node.
+    Define the endpoints for the user registration.
 
     """
-    @auth.login_required
     def post(self):
         """
         Create a user.
@@ -32,7 +37,31 @@ class User(Resource):
         provided by google.
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        parser = reqparse.RequestParser()
+        parser.add_argument('Authorization', location='headers', required=True)
+        args = parser.parse_args()
+
+        authorization = args['Authorization']
+        credentials = authorization.split(' ')
+
+        if len(credentials) != 2:
+            abort(400)
+
+        if credentials[0] != 'Token':
+            abort(400)
+
+        response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                'tokeninfo?id_token=' + credentials[1])
+
+        if response.status_code != 200:
+            abort(401)
+
+        data = response.json()
+        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                          '.apps.googleusercontent.com':
+            abort(401)
+
+        user = UserModel.query.filter_by(google_id=data['sub']).first()
 
         if user is not None and user.is_deleted is False:
             raise errors.EntityAlreadyExistsError()
@@ -41,34 +70,93 @@ class User(Resource):
             user.is_deleted = False
         else:
             user = UserModel(
-                g.user['google_id'],
-                g.user['firstname'],
-                g.user['lastname'],
-                g.user['email']
+                data['sub'],
+                data['given_name'],
+                data['family_name'],
+                data['email']
             )
             db.session.add(user)
 
         db.session.commit()
 
+        fields = {
+            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'google_id': user.google_id
+        }
+
+        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+
         return {
             'success': True,
-            'data': user.serialize
-        }, 200
+            'data': {
+                'access_token': encoded.decode('utf-8')
+            }
+        }
 
+
+class UserLogin(Resource):
+    """
+    Define the endpoints for the user login.
+
+    """
+    def get(self):
+        """
+        Login a user.
+
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('Authorization', location='headers', required=True)
+        args = parser.parse_args()
+
+        authorization = args['Authorization']
+        credentials = authorization.split(' ')
+
+        if len(credentials) != 2:
+            abort(400)
+
+        if credentials[0] != 'Token':
+            abort(400)
+
+        response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                'tokeninfo?id_token=' + credentials[1])
+
+        if response.status_code != 200:
+            abort(401)
+
+        data = response.json()
+        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                          '.apps.googleusercontent.com':
+            abort(401)
+
+        user = UserModel.query.filter_by(google_id=data['sub']).first()
+        if user is None:
+            abort(401)
+
+        fields = {
+            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'google_id': data['sub']
+        }
+
+        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+
+        return {
+            'success': True,
+            'data': {
+                'access_token': encoded.decode('utf-8')
+            }
+        }
+
+
+class User(Resource):
     @auth.login_required
     def get(self):
         """
         Retrieve the authenticated user.
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
     @auth.login_required
@@ -82,25 +170,20 @@ class User(Resource):
             email: The email address of the authenticated user
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
         parser.add_argument('lastname', required=True)
         parser.add_argument('email', required=True)
         args = parser.parse_args()
 
-        user.firstname = args['firstname']
-        user.lastname = args['lastname']
-        user.email = args['email']
+        g.user.firstname = args['firstname']
+        g.user.lastname = args['lastname']
+        g.user.email = args['email']
         db.session.commit()
 
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
     @auth.login_required
@@ -114,21 +197,16 @@ class User(Resource):
         rejoin an organization, a new invitation is needed.
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        g.user.is_deleted = True
 
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
-        user.is_deleted = True
-
-        for partner in user.partners:
+        for partner in g.user.partners:
             partner.is_deleted = True
 
         db.session.commit()
 
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
 
@@ -149,18 +227,13 @@ class UserOrganizations(Resource):
             name: The name of the organization
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
         args = parser.parse_args()
 
         organization = OrganizationModel(args['name'])
-        PartnerModel(PartnerType.ADMIN, user.firstname, user.lastname,
-                     user.email, user, organization)
+        PartnerModel(PartnerType.ADMIN, g.user.firstname, g.user.lastname,
+                     g.user.email, g.user, organization)
         db.session.commit()
 
         anchor_circle = CircleModel('General', None, None, organization.id,
@@ -182,13 +255,8 @@ class UserOrganizations(Resource):
         allowed to operate on as a member or an admin.
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         organizations = db.session.query(OrganizationModel).filter(
-            OrganizationModel.partners.any(is_deleted=False, user=user))
+            OrganizationModel.partners.any(is_deleted=False, user=g.user))
 
         data = [item.serialize for item in organizations]
         return {
