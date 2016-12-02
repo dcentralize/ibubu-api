@@ -2,11 +2,14 @@
 Define any authentication functions for the application.
 
 """
-import requests
+import jwt
 from flask import abort, g
 from flask_httpauth import HTTPTokenAuth
+from swarm_intelligence_app.models.user import User as UserModel
 
-auth = HTTPTokenAuth(scheme='Token')
+APP_SECRET = 'top_secret'
+
+auth = HTTPTokenAuth('Bearer')
 
 mock_users = {
     'mock_user_001': {
@@ -20,24 +23,6 @@ mock_users = {
         'firstname': 'Dagobert',
         'lastname': 'Duck',
         'email': 'dagobert@gmail.de'
-    },
-    'mock_user_003': {
-        'google_id': 'mock_user_003',
-        'firstname': 'Tick',
-        'lastname': 'Duck',
-        'email': 'tick@gmail.de'
-    },
-    'mock_user_004': {
-        'google_id': 'mock_user_004',
-        'firstname': 'Trick',
-        'lastname': 'Duck',
-        'email': 'trick@gmail.de'
-    },
-    'mock_user_005': {
-        'google_id': 'mock_user_005',
-        'firstname': 'Tack',
-        'lastname': 'Duck',
-        'email': 'Tack@gmail.de'
     }
 }
 
@@ -47,33 +32,25 @@ def get_mock_user():
 @auth.verify_token
 def verify_token(token):
     """
-    Validate a google id token.
+    Validate a JSON Web Token.
 
     """
-    if token == 'mock_user_001' or 'mock_user_002':
-        try:
-            g.user = mock_users[token]
-        except KeyError:
-            abort(400)
+    try:
+        payload = jwt.decode(token, APP_SECRET)
+    except jwt.ExpiredSignatureError:
+        print('The access token has expired.')
+        abort(401)
+    except jwt.exceptions.InvalidTokenError:
+        print('The access token is not valid.')
+        abort(400)
 
-        return True
-    else:
-        response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                'tokeninfo?id_token=' + token)
+    user = UserModel.query.filter_by(
+        google_id=payload['google_id'], is_deleted=False).first()
 
-        if response.status_code != 200:
-            return False
+    if user is None:
+        print('The user is not found or is deleted.')
+        abort(401)
 
-        data = response.json()
-        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                          '.apps.googleusercontent.com':
-            return False
+    g.user = user
 
-        g.user = {
-            'google_id': data['sub'],
-            'firstname': data['given_name'],
-            'lastname': data['family_name'],
-            'email': data['email']
-        }
-
-        return True
+    return True

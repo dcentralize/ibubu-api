@@ -13,8 +13,8 @@ class TestUser:
     token = 'mock_user_001'
     helper = test_helper.TestHelper
 
-    @pytest.fixture
-    def user_data(self):
+    #@pytest.fixture
+    #def user_data(self):
 
 
 
@@ -215,7 +215,7 @@ class TestUserExceptions:
         assert client.put('/me',
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-                                '400 BAD REQUEST'
+               '400 BAD REQUEST'
         print('Passed nologin-test for updating a user.')
 
     def test_me_put_invalid_login(self, client):
@@ -229,7 +229,7 @@ class TestUserExceptions:
             'Authorization': 'Token ' + '2'},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-                                '400 BAD REQUEST'
+               '400 BAD REQUEST'
         print('Passed invalid-login-test for updating a user.')
 
     def test_me_put_no_data(self, client):
@@ -242,7 +242,7 @@ class TestUserExceptions:
             'Authorization': 'Token ' + self.token},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-                                '404 NOT FOUND'
+               '404 NOT FOUND'
         print('Passed no-data-test for updating a user.')
 
     def test_me_put_deleted_user(self, client):
@@ -260,7 +260,7 @@ class TestUserExceptions:
             'Authorization': 'Token ' + self.token},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-                                '404 NOT FOUND'
+               '404 NOT FOUND'
         print('Passed deleted-user-test for updating a user.')
 
     def test_me_del_no_login(self, client):
