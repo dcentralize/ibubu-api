@@ -2,9 +2,11 @@
 Define the classes for the user API.
 
 """
+from datetime import datetime, timedelta
+
 import jwt
 import requests
-from datetime import datetime, timedelta
+
 from flask import g
 from flask_restful import abort, reqparse, Resource
 from swarm_intelligence_app.common import errors
@@ -19,6 +21,21 @@ from swarm_intelligence_app.models.user import User as UserModel
 
 APP_SECRET = 'top_secret'
 TOKEN_EXPIRATION = 3600
+
+mock_users = {
+    'mock_user_001': {
+        'sub': 'mock_user_001',
+        'given_name': 'Donald',
+        'family_name': 'Duck',
+        'email': 'donald@gmail.de'
+    },
+    'mock_user_002': {
+        'sub': 'mock_user_002',
+        'given_name': 'Dagobert',
+        'family_name': 'Duck',
+        'email': 'dagobert@gmail.de'
+    }
+}
 
 
 class UserRegistration(Resource):
@@ -50,16 +67,21 @@ class UserRegistration(Resource):
         if credentials[0] != 'Token':
             abort(400)
 
-        response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                'tokeninfo?id_token=' + credentials[1])
+        if credentials[1] == 'mock_user_001':
+            data = mock_users['mock_user_001']
+        elif credentials[1] == 'mock_user_002':
+            data = mock_users['mock_user_002']
+        else:
+            response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                    'tokeninfo?id_token=' + credentials[1])
 
-        if response.status_code != 200:
-            abort(401)
+            if response.status_code != 200:
+                abort(401)
 
-        data = response.json()
-        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                          '.apps.googleusercontent.com':
-            abort(401)
+            data = response.json()
+            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                              '.apps.googleusercontent.com':
+                abort(401)
 
         user = UserModel.query.filter_by(google_id=data['sub']).first()
 
@@ -81,7 +103,7 @@ class UserRegistration(Resource):
 
         fields = {
             'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
-            'google_id': user.google_id
+            'sub': user.google_id
         }
 
         encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
@@ -134,7 +156,7 @@ class UserLogin(Resource):
 
         fields = {
             'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
-            'google_id': data['sub']
+            'sub': data['sub']
         }
 
         encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
@@ -148,6 +170,10 @@ class UserLogin(Resource):
 
 
 class User(Resource):
+    """
+    Define the endpoints for the user node.
+
+    """
     @auth.login_required
     def get(self):
         """
