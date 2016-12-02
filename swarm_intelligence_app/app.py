@@ -98,7 +98,8 @@ def create_app():
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
-                     '/roles/<role_id>/members')
+                     '/roles/<role_id>/members',
+                     '/roles/<role_id>/members/<partner_id>')
     api.add_resource(role.RoleCircle,
                      '/roles/<role_id>/circle')
     db.init_app(app)

@@ -6,6 +6,7 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.role import Role as RoleModel
 
 
@@ -186,27 +187,169 @@ class RoleMembers(Resource):
     """
     def get(self, role_id):
         """
-        List members of a role.
+        List all members of a role.
 
+        Args:
+            role_id: The id of the role to retrieve details.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'id': '2',
+                        'invitation_id': null,
+                        'is_deleted': false,
+                        'lastname': 'Duck',
+                        'organization_id': '2',
+                        'type': 'admin',
+                        'user_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        data = [i.serialize for i in role.members]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
 
     def put(self, role_id, partner_id):
         """
         Assign a partner to a role.
 
+        Args:
+            role_id: The id of the role to retrieve details.
+            partner_id: The id of the partner which to assign to a role.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'id': '2',
+                        'invitation_id': null,
+                        'is_deleted': false,
+                        'lastname': 'Duck',
+                        'organization_id': '2',
+                        'type': 'admin',
+                        'user_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        role = RoleModel.query.get(role_id)
+        partner = PartnerModel.query.get(partner_id)
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+        if partner is None:
+            raise errors.EntityNotFoundError('partner', partner_id)
+        role.members.append(partner)
+        db.session.commit()
+
+        data = [i.serialize for i in role.members]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
 
     def delete(self, role_id, partner_id):
         """
-        Unassign a partner from a role.
+        Unassign a partner to a role.
 
+        Args:
+            role_id: The id of the role to retrieve details.
+            partner_id: The id of the partner which to assign to a role.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'id': '2',
+                        'invitation_id': null,
+                        'is_deleted': false,
+                        'lastname': 'Duck',
+                        'organization_id': '2',
+                        'type': 'admin',
+                        'user_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        role = RoleModel.query.get(role_id)
+        partner = PartnerModel.query.get(partner_id)
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+        if partner is None:
+            raise errors.EntityNotFoundError('partner', partner_id)
+        role.members.remove(partner)
+        db.session.commit()
+
+        data = [i.serialize for i in role.members]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
 
 
 class RoleCircle(Resource):
