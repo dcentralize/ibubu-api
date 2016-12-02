@@ -13,8 +13,8 @@ class TestUser:
     token = 'mock_user_001'
     helper = test_helper.TestHelper
 
-    @pytest.fixture
-    def user_data(self):
+    #@pytest.fixture
+    #def user_data(self):
 
 
 
