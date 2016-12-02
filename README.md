@@ -34,6 +34,11 @@ pip3 install -r .travis.requirements.txt
 
 ### Installing <a name="linuxinstall"></a>
 A step by step series of examples that tell you have to get a development env running.
+
+Starting mariadb:
+```
+service mariadb-server start
+```
 Setting up the database:
 ```
 mysql -u root -e 'CREATE DATABASE swarm_intelligence'
