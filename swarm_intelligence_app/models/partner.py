@@ -38,7 +38,7 @@ class Partner(db.Model):
     circles = db.relationship(
         'Circle', secondary=circle_members, back_populates='partners')
     roles = db.relationship('Role', secondary=members_roles,
-                            back_populates='partners')
+                            back_populates='members')
 
     def __init__(self,
                  type,

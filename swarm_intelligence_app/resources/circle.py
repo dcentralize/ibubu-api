@@ -8,6 +8,8 @@ from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
+from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 
 
 class Circle(Resource):
@@ -15,6 +17,7 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
+
     @auth.login_required
     def get(self, circle_id):
         """
@@ -33,9 +36,9 @@ class Circle(Resource):
             raise errors.EntityNotFoundError('circle', circle_id)
 
         return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+                   'success': True,
+                   'data': circle.serialize
+               }, 200
 
     @auth.login_required
     def put(self,
@@ -67,9 +70,9 @@ class Circle(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+                   'success': True,
+                   'data': circle.serialize
+               }, 200
 
     @auth.login_required
     def delete(self,
@@ -135,9 +138,9 @@ class CircleSubcircles(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': subcircle.serialize
-        }, 200
+                   'success': True,
+                   'data': subcircle.serialize
+               }, 200
 
     @auth.login_required
     def get(self,
@@ -162,9 +165,9 @@ class CircleSubcircles(Resource):
 
         data = [i.serialize for i in subcircles]
         return {
-            'success': True,
-            'data': data
-        }, 200
+                   'success': True,
+                   'data': data
+               }, 200
 
 
 class CircleRole(Resource):
@@ -172,6 +175,7 @@ class CircleRole(Resource):
     Define the endpoints for the role edge of the circle node.
 
     """
+
     @auth.login_required
     def put(self, circle_id):
         """
@@ -187,25 +191,85 @@ class CircleRoles(Resource):
     Define the endpoints for the roles edge of the circle node.
 
     """
+
     @auth.login_required
-    def post(self,
-             circle_id):
+    def post(self, circle_id):
         """
         Add a role to a circle.
 
+        Args:
+            circle_id: The id of the circle for which to add the new role
+
+        Body:
+            name: The name of the role
+            purpose: A Description of the purpose role
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'google_id': 'mock_user_001',
+                        'id': '1',
+                        'is_deleted': false,
+                        'lastname': 'Duck'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The user with id 1 does not exist'
+                          }]
+            }
+
+            Raises:
+                EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        parser.add_argument('purpose', required=True)
+        args = parser.parse_args()
+
+        role = RoleModel(args['name'], args['purpose'], None,
+                         circle_id, RoleType.CUSTOM)
+        db.session.add(role)
+        db.session.commit()
+        return {
+                   'success': True,
+                   'data': role.serialize
+               }, 200
 
     @auth.login_required
-    def get(self,
-            circle_id):
+    def get(self, circle_id):
         """
-        List roles of a circle.
+        List all roles of a circle.
 
+        Params:
+            circle_id: The id of the circle for which to add the new role
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+
+        data = [i.serialize for i in circle.roles]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
 
 
 class CircleMembers(Resource):
@@ -215,8 +279,7 @@ class CircleMembers(Resource):
     """
 
     @auth.login_required
-    def get(self,
-            circle_id):
+    def get(self, circle_id):
         """
         List members of a circle.
 
@@ -270,8 +333,8 @@ class CircleMembers(Resource):
         db.session.commit()
 
         return {
-            'success': True
-        }, 200
+                   'success': True
+               }, 200
 
     @auth.login_required
     def delete(self,
@@ -303,5 +366,5 @@ class CircleMembers(Resource):
         db.session.commit()
 
         return {
-            'success': True
-        }, 200
+                   'success': True
+               }, 200

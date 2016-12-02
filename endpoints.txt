@@ -60,6 +60,7 @@ Partner
 /partners/{partner-id}/admin - PUT, DELETE
 /partners/{partner-id}/metrics - POST, GET
 /partners/{partner-id}/checklists - POST, GET
+/partners/{partner-id}/roles - GET
 
 Invitation
 ----------

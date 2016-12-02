@@ -30,17 +30,13 @@ class Role(db.Model):
     name = db.Column(db.String(100), nullable=False)
     purpose = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Enum(RoleType), nullable=False)
-    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id',
-                                                           use_alter=True),
+    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
                                  nullable=True)
-    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id',
-                                                    use_alter=True),
+    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
                           nullable=True)
 
-    partners = db.relationship('Partner', secondary=members_roles,
-                               back_populates='roles')
-    roles = db.relationship('Role', secondary=members_roles,
-                            back_populates='partners')
+    members = db.relationship('Partner', secondary=members_roles,
+                              back_populates='roles')
 
     def __init__(self, name, purpose, parent_circle_id, circle_id, type):
         """
@@ -69,7 +65,7 @@ class Role(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'type': self.type,
+            'type': self.type.value,
             'circle_id': self.circle_id,
             'parent_circle_id': self.parent_circle_id,
             'purpose': self.purpose

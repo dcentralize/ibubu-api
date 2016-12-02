@@ -12,6 +12,8 @@ from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 from swarm_intelligence_app.models.user import User as UserModel
 
 
@@ -142,14 +144,15 @@ class UserOrganizations(Resource):
         """
         Create an organization.
 
-        This endpoint creates a new organization with an anchor circle and
-        adds the authenticated user as an admin to the organization.
+        This endpoint creates a new organization with an anchor circle,
+        where three roles get created leadlink, secretary,
+        facilitator and adds the authenticated user as an admin to the
+        organization and to the role leadlink.
 
         Params:
             name: The name of the organization
 
         """
-        # ToDO
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
         if user is None or user.is_deleted is True:
@@ -160,13 +163,33 @@ class UserOrganizations(Resource):
         args = parser.parse_args()
 
         organization = OrganizationModel(args['name'])
-        PartnerModel(PartnerType.ADMIN, user.firstname, user.lastname,
-                     user.email, user, organization)
+        partner = PartnerModel(PartnerType.ADMIN, user.firstname,
+                               user.lastname, user.email, user, organization)
+        db.session.add(partner)
         db.session.commit()
 
-        anchor_circle = CircleModel('General', None, None, organization.id,
-                                    None)
+        role = RoleModel('General', 'Purpose', None, None, RoleType.CIRCLE)
+        db.session.add(role)
+        db.session.commit()
+
+        anchor_circle = CircleModel('Strategy', organization.id, role.id)
         db.session.add(anchor_circle)
+        db.session.commit()
+
+        role_leadlink = RoleModel('LEAD_LINK', 'Purpose leadlink',
+                                  None, anchor_circle.id, RoleType.LEAD_LINK)
+        role_secretary = RoleModel('SECRETARY', 'Purpose secretary',
+                                   None, anchor_circle.id, RoleType.SECRETARY)
+        role_facilitator = RoleModel('FACILITATOR', 'Purpose facilitator',
+                                     None, anchor_circle.id,
+                                     RoleType.FACILITATOR)
+        db.session.add(role_leadlink)
+        db.session.add(role_secretary)
+        db.session.add(role_facilitator)
+        db.session.commit()
+
+        partner.circles.append(anchor_circle)
+        partner.roles.append(role_leadlink)
         db.session.commit()
 
         return {
@@ -182,6 +205,38 @@ class UserOrganizations(Resource):
         This endpoint only lists organizations that the authenticated user is
         allowed to operate on as a member or an admin.
 
+        Args:
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'google_id': 'mock_user_001',
+                        'id': '1',
+                        'is_deleted': false,
+                        'lastname': 'Duck'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The user with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
