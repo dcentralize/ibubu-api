@@ -64,6 +64,7 @@ Our coding style is conform to flake8, except for some minor exceptions which ca
 
 ## Built With <a name="tools"></a>
 * [PyCharm](https://www.jetbrains.com/pycharm/)
+* [Travis-CI](https://travis-ci.org/)
 * [Mariadb](https://mariadb.org/)
 * [Flask](http://flask.pocoo.org/docs/0.11/)
 * [Flask-RESTful](https://flask-restful-cn.readthedocs.io/en/0.3.5/)
