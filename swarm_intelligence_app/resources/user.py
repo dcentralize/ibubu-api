@@ -3,6 +3,7 @@ Define the classes for the user API.
 
 """
 from datetime import datetime, timedelta
+
 import jwt
 import requests
 
@@ -169,6 +170,10 @@ class UserLogin(Resource):
 
 
 class User(Resource):
+    """
+    Define the endpoints for the user node.
+
+    """
     @auth.login_required
     def get(self):
         """
