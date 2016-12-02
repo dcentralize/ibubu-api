@@ -53,6 +53,10 @@ def app():
     app.config.update(DEBUG=True)
     load_config(app)
     api = Api(app)
+    api.add_resource(user.UserRegistration,
+                     '/register')
+    api.add_resource(user.UserLogin,
+                     '/login')
     api.add_resource(user.User,
                      '/me')
     api.add_resource(user.UserOrganizations,

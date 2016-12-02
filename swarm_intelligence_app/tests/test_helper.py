@@ -1,6 +1,8 @@
 """
 Use for Setting Up tests.
 """
+import json
+
 from flask import url_for
 
 
@@ -40,3 +42,13 @@ class TestHelper:
         Helper Method for populating the database.
         """
         client.get(url_for('populate'))
+
+    def login(self, client, token):
+        """
+        Helper Method for loggin in.
+        """
+        response = client.get('/login', headers={
+            'Authorization': 'Token ' + token})
+
+        json_data = response.json['data']['access_token']
+        return json_data

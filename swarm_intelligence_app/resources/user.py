@@ -139,16 +139,21 @@ class UserLogin(Resource):
         if credentials[0] != 'Token':
             abort(400)
 
-        response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                'tokeninfo?id_token=' + credentials[1])
+        if credentials[1] == 'mock_user_001':
+            data = mock_users['mock_user_001']
+        elif credentials[1] == 'mock_user_002':
+            data = mock_users['mock_user_002']
+        else:
+            response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                    'tokeninfo?id_token=' + credentials[1])
 
-        if response.status_code != 200:
-            abort(401)
+            if response.status_code != 200:
+                abort(401)
 
-        data = response.json()
-        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                          '.apps.googleusercontent.com':
-            abort(401)
+            data = response.json()
+            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                              '.apps.googleusercontent.com':
+                abort(401)
 
         user = UserModel.query.filter_by(google_id=data['sub']).first()
         if user is None:
