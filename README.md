@@ -7,7 +7,7 @@ A flexible holacracy implementation.
     2. [Installing](#linuxinstall)
 2. [Running the tests](#test)
     1. [Codingstyle tests](#codingstyle)
-3. [Build with](#tools)
+3. [Built with](#tools)
 4. [Authors](#authors)
 
 ## Getting Started using Bash <a name="linux"></a>
@@ -32,7 +32,7 @@ pip3 install -r .travis.requirements.txt
 ```
 
 ### Installing <a name="linuxinstall"></a>
-A step by step series of examples that tell you have to get a development env running.
+A step by step series of examples that tell you how to get a development env running.
 
 Starting mariadb:
 ```
