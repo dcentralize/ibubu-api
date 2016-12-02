@@ -1,15 +1,23 @@
+"""
+Define the classes for the role API.
+
+"""
+from enum import Enum
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.role_member import role_members
-from enum import Enum
 
 
 class RoleType(Enum):
+    """
+        Define values for an Role status.
+
+    """
     LEAD_LINK = 'lead_link'
     REP_LINK = 'rep_link'
     FACILITATOR = 'facilitator'
     SECRETARY = 'secretary'
-    CIRCLE = bool
-    CUSTOM = "custom"
+    CIRCLE = 'circle'
+    CUSTOM = 'custom'
 
 
 class Role(db.Model):
@@ -20,20 +28,19 @@ class Role(db.Model):
     name = db.Column(db.String(100), nullable=False)
     purpose = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Enum(RoleType), nullable=False)
-    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id',
+                                                           use_alter=True),
                                  nullable=True)
-    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+    circle_id = db.Column(db.Integer, db.ForeignKey('circle.id',
+                                                    use_alter=True),
                           nullable=True)
 
     partners = db.relationship('Partner', secondary=role_members,
                                back_populates='roles')
+    roles = db.relationship('Role', secondary=role_members,
+                            back_populates='partners')
 
-    def __init__(self,
-                 name,
-                 purpose,
-                 parent_circle_id,
-                 circle_id,
-                 type):
+    def __init__(self, name, purpose, parent_circle_id, circle_id, type):
         """
         Initialize a role.
 

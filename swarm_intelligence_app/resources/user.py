@@ -149,6 +149,7 @@ class UserOrganizations(Resource):
             name: The name of the organization
 
         """
+        # ToDO
         user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
 
         if user is None or user.is_deleted is True:

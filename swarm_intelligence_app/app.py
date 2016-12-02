@@ -3,6 +3,8 @@ Define the main entry point for the app.
 
 """
 from flask import Flask, render_template
+from sqlalchemy import create_engine
+from sqlalchemy_utils import database_exists, create_database
 from flask_restful import Api
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
@@ -116,7 +118,16 @@ def setup():
     Setup the database.
 
     """
-    db.drop_all()
+    engine = create_engine(
+        "mysql+pymysql://root@localhost:3306/swarm_intelligence")
+    conn = engine.connect()
+    conn.execute("COMMIT")
+    # Do not substitute user-supplied database names here.
+    conn.execute("DROP DATABASE swarm_intelligence")
+    conn.close()
+    if not database_exists(engine.url):
+        create_database(engine.url)
+
     db.create_all()
     return 'Setup Database Tables'
 
@@ -132,4 +143,3 @@ def populate():
 
 if __name__ == '__main__':
     application.run(host='localhost', port=5432, debug=True)
-

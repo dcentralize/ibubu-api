@@ -2,12 +2,9 @@
 Define the classes for the circle API.
 
 """
-<<<<<<<<< Temporary merge branch 1
-from flask_restful import Resource
-=========
 from flask_restful import reqparse, Resource
->>>>>>>>> Temporary merge branch 2
 from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
@@ -19,8 +16,7 @@ class Circle(Resource):
 
     """
     @auth.login_required
-    def get(self,
-            circle_id):
+    def get(self, circle_id):
         """
         Retrieve a circle.
 
@@ -102,6 +98,7 @@ class Circle(Resource):
 
 
 class CircleSubcircles(Resource):
+    # ToDO
     """
     Define the endpoints for the subcircles edge of the circle node.
 
@@ -182,6 +179,7 @@ class CircleRoles(Resource):
         Add a role to a circle.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
     @auth.login_required
@@ -191,6 +189,7 @@ class CircleRoles(Resource):
         List roles of a circle.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
 

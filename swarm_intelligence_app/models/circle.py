@@ -16,12 +16,10 @@ class Circle(db.Model):
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+
     partners = db.relationship(
         'Partner', secondary=circle_members, back_populates='circles')
-    roles = db.relationship('Role', backref='circle')
-
-    # subcircles = db.relationship('Circle')
-    # parent_circle = db.relationship('Circle', remote_side=[id])
+    roles = db.relationship('Role')
 
     def __init__(self,
                  strategy,

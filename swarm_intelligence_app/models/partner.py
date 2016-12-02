@@ -35,10 +35,6 @@ class Partner(db.Model):
     invitation_id = db.Column(db.Integer, db.ForeignKey('invitation.id'),
                               nullable=True)
 
-    __table_args__ = (db.UniqueConstraint('user_id', 'organization_id',
-                                          name='UNIQUE_organization_id_user_id'
-                                          ),)
-
     circles = db.relationship(
         'Circle', secondary=circle_members, back_populates='partners')
     roles = db.relationship('Role', secondary=role_members,

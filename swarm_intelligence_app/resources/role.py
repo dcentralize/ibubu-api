@@ -4,6 +4,7 @@ Define the classes for the role API.
 """
 from flask_restful import Resource
 from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.models.role import Role as RoleModel
 
 
 class Role(Resource):
@@ -17,6 +18,7 @@ class Role(Resource):
         Retrieve a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
     def put(self,
@@ -25,6 +27,7 @@ class Role(Resource):
         Edit a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
     def delete(self,
@@ -33,6 +36,7 @@ class Role(Resource):
         Delete a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
 
@@ -47,6 +51,7 @@ class RoleMembers(Resource):
         List members of a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
     def put(self,
@@ -56,6 +61,7 @@ class RoleMembers(Resource):
         Assign a partner to a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
 
     def delete(self,
@@ -65,4 +71,5 @@ class RoleMembers(Resource):
         Unassign a partner from a role.
 
         """
+        # ToDO
         raise errors.MethodNotImplementedError()
