@@ -37,7 +37,7 @@ A step by step series of examples that tell you have to get a development env ru
 
 Starting mariadb:
 ```
-service mariadb-server start
+service mariadb start
 ```
 Setting up the database:
 ```
