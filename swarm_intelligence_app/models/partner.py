@@ -6,7 +6,7 @@ from enum import Enum
 
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle_member import circle_members
-from swarm_intelligence_app.models.role_member import role_members
+from swarm_intelligence_app.models.member_role import members_roles
 
 
 class PartnerType(Enum):
@@ -37,7 +37,7 @@ class Partner(db.Model):
 
     circles = db.relationship(
         'Circle', secondary=circle_members, back_populates='partners')
-    roles = db.relationship('Role', secondary=role_members,
+    roles = db.relationship('Role', secondary=members_roles,
                             back_populates='partners')
 
     def __init__(self,

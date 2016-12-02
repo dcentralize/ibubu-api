@@ -5,7 +5,7 @@ Define the classes for the role API.
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.role_member import role_members
+from swarm_intelligence_app.models.member_role import members_roles
 
 
 class RoleType(Enum):
@@ -37,9 +37,9 @@ class Role(db.Model):
                                                     use_alter=True),
                           nullable=True)
 
-    partners = db.relationship('Partner', secondary=role_members,
+    partners = db.relationship('Partner', secondary=members_roles,
                                back_populates='roles')
-    roles = db.relationship('Role', secondary=role_members,
+    roles = db.relationship('Role', secondary=members_roles,
                             back_populates='partners')
 
     def __init__(self, name, purpose, parent_circle_id, circle_id, type):
