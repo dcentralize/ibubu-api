@@ -2,9 +2,10 @@
 Define the classes for the user API.
 
 """
+from datetime import datetime, timedelta
 import jwt
 import requests
-from datetime import datetime, timedelta
+
 from flask import g
 from flask_restful import abort, reqparse, Resource
 from swarm_intelligence_app.common import errors
