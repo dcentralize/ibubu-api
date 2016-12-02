@@ -2,12 +2,15 @@
 Define the classes for the circle API.
 
 """
+<<<<<<<<< Temporary merge branch 1
+from flask_restful import Resource
+=========
 from flask_restful import reqparse, Resource
+>>>>>>>>> Temporary merge branch 2
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
-from swarm_intelligence_app.common.authentication import auth
 
 
 class Circle(Resource):
@@ -15,7 +18,6 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
-
     @auth.login_required
     def get(self,
             circle_id):
