@@ -6,8 +6,10 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 
 
 class Role(Resource):
@@ -361,6 +363,65 @@ class RoleCircle(Resource):
         """
         Update the role to a circle.
 
+        Args:
+            role_id: The id of the role to retrieve details.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'email': 'donald@gmail.de',
+                        'firstname': 'Donald',
+                        'id': '2',
+                        'invitation_id': null,
+                        'is_deleted': false,
+                        'lastname': 'Duck',
+                        'organization_id': '2',
+                        'type': 'admin',
+                        'user_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        parser.add_argument('purpose', required=True)
+        parser.add_argument('strategy', required=True)
+        args = parser.parse_args()
+
+        circle = CircleModel(args['strategy'], role.circle.id, role.id)
+        db.session.add(circle)
+        db.session.commit()
+
+        role.name = args['name']
+        role.purpose = args['purpose']
+        role.type = RoleType.CIRCLE
+        role.parent_circle_id = role.circle_id
+        db.session.commit()
+
+        return {
+                   'success': True,
+                   'data': circle.serialize
+               }, 200

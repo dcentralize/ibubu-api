@@ -19,7 +19,8 @@ class Circle(db.Model):
 
     partners = db.relationship(
         'Partner', secondary=circle_members, back_populates='circles')
-    roles = db.relationship('Role', primaryjoin='Role.circle_id==Circle.id')
+    roles = db.relationship('Role', backref='circle',
+                            primaryjoin='Role.circle_id==Circle.id')
 
     def __init__(self,
                  strategy,

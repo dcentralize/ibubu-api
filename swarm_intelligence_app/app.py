@@ -86,8 +86,6 @@ def create_app():
                      '/invitations/<code>/accept')
     api.add_resource(circle.Circle,
                      '/circles/<circle_id>')
-    api.add_resource(circle.CircleSubcircles,
-                     '/circles/<circle_id>/subcircles')
     api.add_resource(circle.CircleRole,
                      '/circles/<circle_id>/role')
     api.add_resource(circle.CircleRoles,
