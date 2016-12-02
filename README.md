@@ -1,6 +1,5 @@
 # Swarm Intelligence Plattform
-
-A simple holacracy implementation
+A flexible holacracy implementation.
 
 ## Table of Contents
 1. [Getting Started on Linux](#linux)
@@ -54,7 +53,8 @@ python3 app.py
 You can now access your application via your browser at localhost:5432.
 
 ## Running the tests <a name="tests"></a>
-In order to run the tests navigate to the /tests directory and run:
+Normally our tests are run using Travis-CI.
+In order to run the tests locally, navigate to the /tests directory and run:
 ```
 py.test
 ```
