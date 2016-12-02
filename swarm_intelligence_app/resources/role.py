@@ -12,8 +12,7 @@ class Role(Resource):
     Define the endpoints for the role node.
 
     """
-    def get(self,
-            role_id):
+    def get(self, role_id):
         """
         Retrieve a role.
 
@@ -23,8 +22,7 @@ class Role(Resource):
         print(role)
         raise errors.MethodNotImplementedError()
 
-    def put(self,
-            role_id):
+    def put(self, role_id):
         """
         Edit a role.
 
@@ -32,8 +30,7 @@ class Role(Resource):
         # ToDO
         raise errors.MethodNotImplementedError()
 
-    def delete(self,
-               role_id):
+    def delete(self, role_id):
         """
         Delete a role.
 
@@ -47,8 +44,7 @@ class RoleMembers(Resource):
     Define the endpoints for the members edge of the role node.
 
     """
-    def get(self,
-            role_id):
+    def get(self, role_id):
         """
         List members of a role.
 
@@ -56,9 +52,7 @@ class RoleMembers(Resource):
         # ToDO
         raise errors.MethodNotImplementedError()
 
-    def put(self,
-            role_id,
-            partner_id):
+    def put(self, role_id, partner_id):
         """
         Assign a partner to a role.
 
@@ -66,11 +60,23 @@ class RoleMembers(Resource):
         # ToDO
         raise errors.MethodNotImplementedError()
 
-    def delete(self,
-               role_id,
-               partner_id):
+    def delete(self, role_id, partner_id):
         """
         Unassign a partner from a role.
+
+        """
+        # ToDO
+        raise errors.MethodNotImplementedError()
+
+
+class RoleCircle(Resource):
+    """
+    Define the endpoints for the circle edge of the role node.
+
+    """
+    def put(self, role_id):
+        """
+        Update the role to a circle.
 
         """
         # ToDO

@@ -86,6 +86,8 @@ def create_app():
                      '/circles/<circle_id>')
     api.add_resource(circle.CircleSubcircles,
                      '/circles/<circle_id>/subcircles')
+    api.add_resource(circle.CircleRole,
+                     '/circles/<circle_id>/role')
     api.add_resource(circle.CircleRoles,
                      '/circles/<circle_id>/roles')
     api.add_resource(circle.CircleMembers,
@@ -95,6 +97,8 @@ def create_app():
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
                      '/roles/<role_id>/members')
+    api.add_resource(role.RoleCircle,
+                     '/roles/<role_id>/circle')
     db.init_app(app)
     register_error_handlers(app)
     return app

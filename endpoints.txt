@@ -70,8 +70,9 @@ Invitation
 Circle
 ------
 /circles/{circle-id} - GET, PUT, DELETE
+/circles/{circle-id}/role - PUT
 /circles/{circle-id}/roles - POST, GET, DELETE
-/circles/{circle-id}/subcircles - POST, GET
+/circles/{circle-id}/subcircles - GET
 /circles/{circle-id}/members - GET
 /circles/{circle-id}/members/{partner-id} - PUT, DELETE
 
@@ -80,7 +81,7 @@ Role
 /roles/{role-id} - GET, PUT, DELETE
 /roles/{role-id}/members - GET
 /roles/{role-id}/members/{partner-id} - PUT, DELETE
-/roles/{role-id}/circles - PUT
+/roles/{role-id}/circle - PUT
 
 Metric
 ------

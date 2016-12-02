@@ -2,8 +2,8 @@
 Define the classes for the role API.
 
 """
-
 from enum import Enum
+
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.role_member import role_members
 

@@ -167,6 +167,21 @@ class CircleSubcircles(Resource):
         }, 200
 
 
+class CircleRole(Resource):
+    """
+    Define the endpoints for the role edge of the circle node.
+
+    """
+    @auth.login_required
+    def put(self, circle_id):
+        """
+        Change the circle back to the role.
+
+        """
+        # ToDO
+        raise errors.MethodNotImplementedError()
+
+
 class CircleRoles(Resource):
     """
     Define the endpoints for the roles edge of the circle node.
