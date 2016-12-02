@@ -2,6 +2,7 @@
 Define the classes for the role API.
 
 """
+
 from enum import Enum
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.role_member import role_members
@@ -9,7 +10,7 @@ from swarm_intelligence_app.models.role_member import role_members
 
 class RoleType(Enum):
     """
-        Define values for an Role status.
+    Define values for an Role status.
 
     """
     LEAD_LINK = 'lead_link'
@@ -22,7 +23,8 @@ class RoleType(Enum):
 
 class Role(db.Model):
     """
-      Define a mapping to the database for a role.
+    Define a mapping to the database for a role.
+
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
