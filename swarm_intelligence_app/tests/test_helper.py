@@ -5,25 +5,13 @@ import json
 
 from flask import url_for
 
+from swarm_intelligence_app.models import organization
+
 
 class TestHelper:
     """
     Class for cleaning the database for each test.
     """
-
-    def test_setup(self, client):
-        """
-        Test if the setup-page returns a valid http status-code.
-        """
-        assert client.get(url_for('setup')).status == '200 OK'
-        print('Passed test for setup.')
-
-    def test_populate(self, client):
-        """
-        Test if the populate-page returns a valid http status-code.
-        """
-        assert client.get(url_for('populate')).status == '200 OK'
-        print('Passed test for populating the database.')
 
     def signin(self, client):
         """
@@ -52,3 +40,12 @@ class TestHelper:
 
         json_data = response.json['data']['access_token']
         return json_data
+
+    def get_organization_id(self, client, token):
+        """
+        Helper Method getting an organization_id
+        """
+        organization_id = client.get('/me/organizations', headers={
+            'Authorization': 'Bearer ' + token}, ).json['data']
+        print(organization)
+        return organization_id

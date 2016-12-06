@@ -1,8 +1,10 @@
 """
 Test User-Api exceptions
 """
+
 from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.common import authentication
+from swarm_intelligence_app.tests.user_tests import test_me
 
 
 class TestUserExceptions:
@@ -10,6 +12,7 @@ class TestUserExceptions:
     Class for testing exceptions at the /me(/*) endpoint
     """
     tokens = authentication.get_mock_user()
+    endpoint_me = test_me.TestUser
     helper = test_helper.TestHelper
 
     def test_me_exceptions(self, client):
@@ -20,8 +23,11 @@ class TestUserExceptions:
         self.me_organizations_post_no_login(client)
 
         for token in self.tokens:
-            self.me_organizations_post_no_param(client, token)
-            self.me_del_no_param(client, token)
+            self.endpoint_me.me_post(test_me, client, token)
+            jwtToken = self.helper.login(test_helper, client, token)
+            self.me_organizations_post_no_param(client, jwtToken)
+            self.me_del_no_param(client, jwtToken)
+            self.me_delete_deleted_user(client, jwtToken)
 
     def me_post_no_login(self, client):
         """
@@ -53,7 +59,7 @@ class TestUserExceptions:
         Test if the me-page returns a valid http status-code when putting.
         """
         assert client.put('/me', headers={
-            'Authorization': 'Token ' + token},
+            'Authorization': 'Bearer ' + token},
                           data={}).status == '400 BAD REQUEST'
         print('Passed noparam-test for updating a user: ' + token)
 
@@ -72,8 +78,9 @@ class TestUserExceptions:
         Test if the me-page returns a valid http status-code when deleting.
         """
         assert client.delete('/me', headers={
-            'Authorization': 'Token ' + token},
-                             data={}).status == '400 BAD REQUEST'
+            'Authorization': 'Bearer ' + token},
+                             data={}).status == '200 OK'
+        #TODO 400 oder 200?
         print("Passed noparam-test for deleting a user.")
 
     def me_organizations_post_no_login(self, client):
@@ -94,6 +101,11 @@ class TestUserExceptions:
         when posting.
         """
         assert client.post('/me/organizations', headers={
-            'Authorization': 'Token ' + token},
+            'Authorization': 'Bearer ' + token},
                            data={}).status == '400 BAD REQUEST'
         print("Passed noparam-test for creating a new organization.")
+
+    def me_delete_deleted_user(self, client, token):
+
+        assert client.delete('/me', headers={
+            'Authorization': 'Bearer ' + token}).status == '401 UNAUTHORIZED'

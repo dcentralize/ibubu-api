@@ -23,19 +23,22 @@ class TestUser:
             self.me_post(client, token)
             jwtToken = self.helper.login(test_helper, client, token)
             self.me_get(client, jwtToken)
-            # self.me_put(client, jwtToken)
-            # self.me_del(client, jwtToken)
+            self.me_put(client, jwtToken)
+            self.me_del(client, jwtToken)
 
             """
             Test /me/organizations Endpoint
             """
-            # self.me_organizations_post(client, token)
+            self.me_post(client, token)
+            jwtToken = self.helper.login(test_helper, client, token)
+            self.me_organizations_post(client, jwtToken)
+            self.me_organizations_get(client,jwtToken)
 
     def me_post(self, client, token):
         """
         Test if the me-page returns a valid http status-code when posting.
         """
-        print('Passed test for creating a new user: ' + token)
+        print('Passed test for creating a new user')
 
         assert client.post('/register', headers={
             'Authorization': 'Token ' + token}).status == '200 OK'
@@ -57,24 +60,35 @@ class TestUser:
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy' +
                                          token + '@tolli.com'})
-        print('Passed test for updating a user:' + token)
+        print('Passed test for updating a user.')
 
     def me_del(self, client, token):
         """
         Test if the me-page returns a valid http status-code when deleting.
         """
         assert client.delete('/me', headers={
-            'Authorization': 'Bearer ' + token})
-        print('Passed test for deleting a user: ' + token)
+            'Authorization': 'Bearer ' + token}).status == '200 OK'
+        print('Passed test for deleting a user.')
 
-        # def me_organizations_post(self, client, token):
-        #     """
-        #     Test if the me-organizations-page returns a valid http status-code.
-        #     when posting.
-        #     """
-        #     assert client.post('/me/organizations', headers={
-        #         'Authorization': 'Bearer ' + token},
-        #                        data={'name': token + ': Dagoberts ' +
-        #                                      'Empire'}).status == \
-        #            '200 OK'
-        #     print('Passed test for creating a new organization: ' + token)
+    def me_organizations_post(self, client, token):
+        """
+        Test if the me-organizations-page returns a valid http status-code.
+        when posting.
+        """
+        assert client.post('/me/organizations', headers={
+            'Authorization': 'Bearer ' + token},
+                           data={'name': token + ': Dagoberts ' +
+                                         'Empire'}).status == \
+               '200 OK'
+        print('Passed test for creating a new organization')
+
+    def me_organizations_get(self, client, token):
+        """
+        Test if the me-organizations-page returns a valid http status-code.
+        when posting.
+        """
+        assert client.get('/me/organizations', headers={
+            'Authorization': 'Bearer ' + token}, ).status == \
+               '200 OK'
+
+        print('Passed test for getting an organization')
