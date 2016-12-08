@@ -80,7 +80,7 @@ class TestUserExceptions:
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token},
                              data={}).status == '200 OK'
-        #TODO 400 oder 200?
+
         print("Passed noparam-test for deleting a user.")
 
     def me_organizations_post_no_login(self, client):

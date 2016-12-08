@@ -21,6 +21,7 @@ class Organization(Resource):
     Define the endpoints for the organization node.
 
     """
+
     @auth.login_required
     def get(self,
             organization_id):
@@ -40,9 +41,9 @@ class Organization(Resource):
             raise errors.EntityNotFoundError('organization', organization_id)
 
         return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+                   'success': True,
+                   'data': organization.serialize
+               }, 200
 
     @auth.login_required
     def put(self,
@@ -71,10 +72,11 @@ class Organization(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+                   'success': True,
+                   'data': organization.serialize
+               }, 200
 
+    @auth.login_required
     def delete(self,
                organization_id):
         """
@@ -102,9 +104,9 @@ class Organization(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+                   'success': True,
+                   'data': organization.serialize
+               }, 200
 
 
 class OrganizationAnchorCircle(Resource):
@@ -112,6 +114,7 @@ class OrganizationAnchorCircle(Resource):
     Define the endpoints for the anchor circle edge of the organization node.
 
     """
+
     @auth.login_required
     def get(self,
             organization_id):
@@ -140,9 +143,9 @@ class OrganizationAnchorCircle(Resource):
             raise errors.EntityNotFoundError('circle', '')
 
         return {
-            'sucess': True,
-            'data': anchor_circle.serialize
-        }, 200
+                   'sucess': True,
+                   'data': anchor_circle.serialize
+               }, 200
 
 
 class OrganizationMembers(Resource):
@@ -150,6 +153,7 @@ class OrganizationMembers(Resource):
     Define the endpoints for the members edge of the organization node.
 
     """
+
     @auth.login_required
     def get(self,
             organization_id):
@@ -173,9 +177,9 @@ class OrganizationMembers(Resource):
 
         data = [i.serialize for i in organization.partners]
         return {
-            'success': True,
-            'data': data
-        }, 200
+                   'success': True,
+                   'data': data
+               }, 200
 
 
 class OrganizationAdmins(Resource):
@@ -183,6 +187,7 @@ class OrganizationAdmins(Resource):
     Define the endpoints for the admins edge of the organization node.
 
     """
+
     @auth.login_required
     def get(self,
             organization_id):
@@ -209,9 +214,9 @@ class OrganizationAdmins(Resource):
 
         data = [i.serialize for i in admins]
         return {
-            'success': True,
-            'data': data
-        }, 200
+                   'success': True,
+                   'data': data
+               }, 200
 
 
 class OrganizationInvitations(Resource):
@@ -219,6 +224,7 @@ class OrganizationInvitations(Resource):
     Define the endpoints for the invitations edge of the organization node.
 
     """
+
     @auth.login_required
     def post(self,
              organization_id):
@@ -257,9 +263,9 @@ class OrganizationInvitations(Resource):
         db.session.commit()
 
         return {
-            'success': True,
-            'data': invitation.serialize
-        }, 200
+                   'success': True,
+                   'data': invitation.serialize
+               }, 200
 
     @auth.login_required
     def get(self,
@@ -287,6 +293,6 @@ class OrganizationInvitations(Resource):
 
         data = [i.serialize for i in invitations]
         return {
-            'success': True,
-            'data': data
-        }, 200
+                   'success': True,
+                   'data': data
+               }, 200
