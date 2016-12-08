@@ -14,15 +14,14 @@ class Domain(db.Model):
     name = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
 
-    policies = db.relationship('Policy', backref='domain')
+    policies = db.relationship('Policy', backref='domain', cascade="all,delete")
 
-    def __init__(self, title, description, role_id):
+    def __init__(self, name, role_id):
         """
         Initialize a domain.
 
         """
-        self.title = title
-        self.description = description
+        self.name = name
         self.role_id = role_id
 
     def __repr__(self):
@@ -40,7 +39,6 @@ class Domain(db.Model):
         """
         return {
             'id': self.id,
-            'title': self.title,
-            'description': self.description,
+            'title': self.name,
             'role_id': self.role_id
         }

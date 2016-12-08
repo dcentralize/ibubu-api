@@ -2,17 +2,18 @@
 Define the classes for the accountability API.
 
 """
-from flask_restful import Resource
-# from swarm_intelligence_app.common import errors
+from flask_restful import reqparse, Resource
+from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
-# from swarm_intelligence_app.models import db
-# from swarm_intelligence_app.models.accountability import Accountability as \
-#     AccountabilityModel
+from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.accountability import Accountability as \
+    AccountabilityModel
+from swarm_intelligence_app.models.role import Role as RoleModel
 
 
 class Accountability(Resource):
     """
-    Define the endpoints for the roles edge of the accountability node.
+    Define the endpoints for the accountability node.
 
     """
 
@@ -53,7 +54,16 @@ class Accountability(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDo
+        accountability = AccountabilityModel.query.get(accountability_id)
+
+        if accountability is None:
+            raise errors.EntityNotFoundError('accountability',
+                                             accountability_id)
+
+        return {
+                   'success': True,
+                   'data': accountability.serialize
+               }, 200
 
     @auth.login_required
     def put(self, accountability_id):
@@ -93,7 +103,23 @@ class Accountability(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
+        accountability = AccountabilityModel.query.get(accountability_id)
+
+        if accountability is None:
+            raise errors.EntityNotFoundError('accountability',
+                                             accountability_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        args = parser.parse_args()
+
+        accountability.name = args['name']
+        db.session.commit()
+
+        return {
+                   'success': True,
+                   'data': accountability.serialize
+               }, 200
 
     @auth.login_required
     def delete(self, accountability_id):
@@ -113,8 +139,7 @@ class Accountability(Resource):
             fetched and converted to json. Each row is represented as a
             tuple of strings. For example:
             {
-                'success': True,
-                'data': { }
+                'success': True
             }
             {
                 'success': False,
@@ -128,4 +153,15 @@ class Accountability(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDo
+        accountability = AccountabilityModel.query.get(accountability_id)
+
+        if accountability is None:
+            raise errors.EntityNotFoundError('accountability',
+                                             accountability_id)
+
+        db.session.delete(accountability)
+        db.session.commit()
+
+        return {
+                   'success': True
+               }, 200

@@ -72,7 +72,7 @@ Circle
 ------
 /circles/{circle-id} - GET, PUT, DELETE
 /circles/{circle-id}/role - PUT
-/circles/{circle-id}/roles - POST, GET, DELETE
+/circles/{circle-id}/roles - POST, GET
 /circles/{circle-id}/subcircles - GET
 /circles/{circle-id}/members - GET
 /circles/{circle-id}/members/{partner-id} - PUT, DELETE
@@ -83,11 +83,14 @@ Role
 /roles/{role-id}/members - GET
 /roles/{role-id}/members/{partner-id} - PUT, DELETE
 /roles/{role-id}/circle - PUT
+/roles/{role-id}/accountabilities - GET, POST
+/roles/{role-id}/domains - GET, POST
 
-Metric
+Accountability
 ------
-/metrics/{metric-id} - GET, PUT, DELETE
+/accountabilities/{accountability-id} - GET, PUT, DELETE
 
-Checklist
+Domain
 ---------
-/checklists/{checklist-id} - GET, PUT, DELETE
+/domains/{domain-id} - GET, PUT, DELETE
+/domains/{domain-id}/policies - GET, POST

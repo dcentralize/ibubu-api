@@ -36,11 +36,13 @@ class Role(db.Model):
                           nullable=True)
 
     members = db.relationship('Partner', secondary=members_roles,
-                              back_populates='roles')
+                              back_populates='roles', cascade="all,delete")
     subcircle = db.relationship('Circle', backref='role',
-                                primaryjoin='Circle.role_id==Role.id')
-    domains = db.relationship('Domain', backref='role')
-    accountabilities = db.relationship('Accountability', backref='role',)
+                                primaryjoin='Circle.role_id==Role.id',
+                                cascade="all,delete")
+    domains = db.relationship('Domain', backref='role', cascade="all,delete")
+    accountabilities = db.relationship('Accountability', backref='role',
+                                       cascade="all,delete")
 
     def __init__(self, name, purpose, parent_circle_id, circle_id, type):
         """

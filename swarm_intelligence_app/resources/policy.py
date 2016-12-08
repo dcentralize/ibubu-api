@@ -2,17 +2,17 @@
 Define the classes for the policy API.
 
 """
-from flask_restful import Resource
-# from swarm_intelligence_app.common import errors
+from flask_restful import reqparse, Resource
+from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
-# from swarm_intelligence_app.models import db
-# from swarm_intelligence_app.models.policy import Policy as \
-#     PolicyModel
+from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.policy import Policy as \
+     PolicyModel
 
 
 class Policy(Resource):
     """
-    Define the endpoints for the roles edge of the policy node.
+    Define the endpoints for the policy node.
 
     """
 
@@ -54,7 +54,15 @@ class Policy(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDo
+        policy = PolicyModel.query.get(policy_id)
+
+        if policy is None:
+            raise errors.EntityNotFoundError('policy', policy_id)
+
+        return {
+                   'success': True,
+                   'data': policy.serialize
+               }, 200
 
     @auth.login_required
     def put(self, policy_id):
@@ -96,7 +104,24 @@ class Policy(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDO
+        policy = PolicyModel.query.get(policy_id)
+
+        if policy is None:
+            raise errors.EntityNotFoundError('policy', policy_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('title', required=True)
+        parser.add_argument('description', required=True)
+        args = parser.parse_args()
+
+        policy.title = args['title']
+        policy.description = args['descrition']
+        db.session.commit()
+
+        return {
+                   'success': True,
+                   'data': policy.serialize
+               }, 200
 
     @auth.login_required
     def delete(self, policy_id):
@@ -131,4 +156,14 @@ class Policy(Resource):
         Raises:
             EntityNotFoundError: There is no entry found with the id.
         """
-        # ToDo
+        policy = PolicyModel.query.get(policy_id)
+
+        if policy is None:
+            raise errors.EntityNotFoundError('policy', policy_id)
+
+        db.session.delete(policy)
+        db.session.commit()
+
+        return {
+                   'success': True
+               }, 200

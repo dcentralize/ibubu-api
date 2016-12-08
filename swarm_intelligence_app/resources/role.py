@@ -6,7 +6,10 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.accountability import Accountability as \
+    AccountabilityModel
 from swarm_intelligence_app.models.circle import Circle as CircleModel
+from swarm_intelligence_app.models.domain import Domain as DomainModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.role import Role as RoleModel
 from swarm_intelligence_app.models.role import RoleType
@@ -187,6 +190,8 @@ class RoleMembers(Resource):
     Define the endpoints for the members edge of the role node.
 
     """
+
+    @auth.login_required
     def get(self, role_id):
         """
         List all members of a role.
@@ -239,6 +244,7 @@ class RoleMembers(Resource):
                    'data': data
                }, 200
 
+    @auth.login_required
     def put(self, role_id, partner_id):
         """
         Assign a partner to a role.
@@ -296,6 +302,7 @@ class RoleMembers(Resource):
                    'data': data
                }, 200
 
+    @auth.login_required
     def delete(self, role_id, partner_id):
         """
         Unassign a partner to a role.
@@ -354,11 +361,13 @@ class RoleMembers(Resource):
                }, 200
 
 
-class RoleCircle(Resource):
+class RoleCircles(Resource):
     """
     Define the endpoints for the circle edge of the role node.
 
     """
+
+    @auth.login_required
     def put(self, role_id):
         """
         Update the role to a circle.
@@ -425,4 +434,236 @@ class RoleCircle(Resource):
         return {
                    'success': True,
                    'data': circle.serialize
+               }, 200
+
+
+class RoleAccountabilities(Resource):
+    """
+    Define the endpoints for the accountability edge of the role node.
+
+    """
+
+    @auth.login_required
+    def get(self, role_id):
+        """
+        List all accountabilities of a role.
+
+        Args:
+            role_id: The id of the accountabilities to display.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        },
+                        {
+                        'id': '4',
+                        'name': 'Persmission',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not
+                            exist'
+                          }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        data = [i.serialize for i in role.accountabilities]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
+
+    @auth.login_required
+    def post(self, role_id):
+        """
+        Add a accountability to a role.
+
+        Args:
+            role_id: The id of the role to add a accountability.
+
+        Body:
+            name: The name of the accountability.
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        args = parser.parse_args()
+
+        accountability = AccountabilityModel(args['name'], role.id)
+
+        db.session.add(accountability)
+        role.accountabilities.append(accountability)
+        db.session.commit()
+        return {
+                   'success': True,
+                   'data': accountability.serialize
+               }, 200
+
+
+class RoleDomains(Resource):
+    """
+    Define the endpoints for the domain edge of the role node.
+
+    """
+
+    @auth.login_required
+    def get(self, role_id):
+        """
+        List all domains of a role.
+
+        Args:
+            role_id: The id of the domains to display.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        },
+                        {
+                        'id': '4',
+                        'name': 'Persmission',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not
+                            exist'
+                          }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        data = [i.serialize for i in role.domains]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
+
+    @auth.login_required
+    def post(self, role_id):
+        """
+        Add a domain to a role.
+
+        Args:
+            role_id: The id of the role to add domain.
+
+        Body:
+            name: The name of the domain.
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        role = RoleModel.query.get(role_id)
+
+        if role is None:
+            raise errors.EntityNotFoundError('role', role_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        args = parser.parse_args()
+
+        domain = DomainModel(args['name'], role.id)
+
+        db.session.add(domain)
+        role.domains.append(domain)
+        db.session.commit()
+        return {
+                   'success': True,
+                   'data': domain.serialize
                }, 200

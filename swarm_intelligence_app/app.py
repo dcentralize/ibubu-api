@@ -15,6 +15,9 @@ from swarm_intelligence_app.resources import organization
 from swarm_intelligence_app.resources import partner
 from swarm_intelligence_app.resources import role
 from swarm_intelligence_app.resources import user
+from swarm_intelligence_app.resources import policy
+from swarm_intelligence_app.resources import domain
+from swarm_intelligence_app.resources import accountability
 
 
 def load_config(app):
@@ -100,8 +103,20 @@ def create_app():
     api.add_resource(role.RoleMembers,
                      '/roles/<role_id>/members',
                      '/roles/<role_id>/members/<partner_id>')
-    api.add_resource(role.RoleCircle,
+    api.add_resource(role.RoleCircles,
                      '/roles/<role_id>/circle')
+    api.add_resource(role.RoleDomains,
+                     '/roles/<role_id>/domains')
+    api.add_resource(role.RoleAccountabilities,
+                     '/roles/<role_id>/accountabilities')
+    api.add_resource(policy.Policy,
+                     '/policies/<policy_id>')
+    api.add_resource(accountability.Accountability,
+                     '/accountabilities/<accountability_id>')
+    api.add_resource(domain.Domain,
+                     '/domains/<domain_id>')
+    api.add_resource(domain.DomainPolicies,
+                     '/domains/<domain_id>/policies')
     db.init_app(app)
     register_error_handlers(app)
     return app

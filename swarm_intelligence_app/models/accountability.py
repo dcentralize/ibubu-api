@@ -14,13 +14,12 @@ class Accountability(db.Model):
     name = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
 
-    def __init__(self, title, description, role_id):
+    def __init__(self, name, role_id):
         """
         Initialize a accountability.
 
         """
-        self.title = title
-        self.description = description
+        self.name = name
         self.role_id = role_id
 
     def __repr__(self):
