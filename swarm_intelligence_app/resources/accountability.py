@@ -8,7 +8,6 @@ from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.accountability import Accountability as \
     AccountabilityModel
-from swarm_intelligence_app.models.role import Role as RoleModel
 
 
 class Accountability(Resource):
