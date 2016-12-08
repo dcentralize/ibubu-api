@@ -1,5 +1,5 @@
 """
-Test User-Api exceptions
+Test User-Api exceptions.
 """
 
 from swarm_intelligence_app.tests import test_helper
@@ -9,13 +9,16 @@ from swarm_intelligence_app.tests.user_tests import test_me
 
 class TestUserExceptions:
     """
-    Class for testing exceptions at the /me(/*) endpoint
+    Class for testing exceptions at the /me(/*) endpoint.
     """
     tokens = authentication.get_mock_user()
     endpoint_me = test_me.TestUser
     helper = test_helper.TestHelper
 
     def test_me_exceptions(self, client):
+        """
+        Test with multiple tokens
+        """
         self.helper.set_up(test_helper, client)
 
         self.me_put_no_login(client)
@@ -106,6 +109,8 @@ class TestUserExceptions:
         print("Passed noparam-test for creating a new organization.")
 
     def me_delete_deleted_user(self, client, token):
-
+        """
+        Test if the delete request works on a deleted user.
+        """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '401 UNAUTHORIZED'
