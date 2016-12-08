@@ -9,6 +9,7 @@ import requests
 
 from flask import g
 from flask_restful import abort, reqparse, Resource
+from flask_restful_swagger import swagger
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -43,16 +44,40 @@ class UserRegistration(Resource):
     Define the endpoints for the user registration.
 
     """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[
+            {
+                "name": "Authorization",
+                "defaultValue": ("Token + <mock_user_001>"),
+                "in": "header",
+                "description": "web-token to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+            }
+        ],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ],
+    )
     def post(self):
         """
         Create a user.
-
         To create a user the data provided by google is taken into
-        consideration. If a user with the provided google id does not exist,
-        the user is created. If a user exists and is deactivated, the user is
-        activated. If a user does not exist, the user is created with the data
-        provided by google.
-
+        consideration.
+        If a user with the provided google id does not exist,
+        the user is created with the data provided by google.
+        If a user exists and is deactivated, the user is reactivated.
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -119,12 +144,34 @@ class UserRegistration(Resource):
 class UserLogin(Resource):
     """
     Define the endpoints for the user login.
-
     """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     def get(self):
         """
         Login a user.
-
+        In order to login a user, a valid JWT has to be provided to the server.
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -179,27 +226,79 @@ class User(Resource):
     Define the endpoints for the user node.
 
     """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     @auth.login_required
     def get(self):
         """
         Retrieve the authenticated user.
-
+        Retrieve the authenticated user from the database. A valid JWT must
+        be provided.
         """
         return {
             'success': True,
             'data': g.user.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }, {
+                "name": "body",
+                "defaultValue": ("{'firstname': 'Daisy', 'lastname': "
+                                 "'Ducks', 'email': 'daisy' + token +  "
+                                 "'@tolli.com'}"),
+                "description": "new user-data",
+                "required": "true",
+                "type": "JSON Object",
+                "paramType": "body"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     @auth.login_required
     def put(self):
         """
         Edit the authenticated user.
-
-        Params:
-            firstname: The firstname of the authenticated user
-            lastname: The lastname of the authenticated user
-            email: The email address of the authenticated user
-
+        The authenticated user will be updated, by providing the server with
+        a valid JWT and the new user-data.
         """
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
@@ -217,15 +316,38 @@ class User(Resource):
             'data': g.user.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     @auth.login_required
     def delete(self):
         """
         Delete the authenticated user.
-
-        This endpoint sets the authenticated user's account to 'closed' and
-        the user's partnerships with organizations to 'inactive'. By signin-up
-        again with the same google account, the user's account is reopened. To
-        rejoin an organization, a new invitation is needed.
+        The state of the authenticated user will be set to 'closed' and the
+        user's partnerships with organizations will be set to 'inactive'.
+        The user's account will be reopened, as soon as a new user with the
+        same google account has signed in. In order to rejoin an organization,
+        a new invitation is needed. A valid JWT is needed.
 
         """
         g.user.is_deleted = True
@@ -246,17 +368,45 @@ class UserOrganizations(Resource):
     Define the endpoints for the organizations edge of the user node.
 
     """
+
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }, {
+                "name": "body",
+                "defaultValue": ("{'name': token + ': Dagoberts ' + "
+                                 "'Empire'}"),
+                "description": "name of the organization",
+                "required": "true",
+                "type": "JSON Object",
+                "paramType": "body"
+                }
+        ],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     @auth.login_required
     def post(self):
         """
         Create an organization.
-
-        This endpoint creates a new organization with an anchor circle and
-        adds the authenticated user as an admin to the organization.
-
-        Params:
-            name: The name of the organization
-
+        A new organization with an anchor circle will be created. The
+        authenticated user becomes its admin. A valid JWT must be provided.
         """
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
@@ -282,14 +432,35 @@ class UserOrganizations(Resource):
             'data': organization.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                "name": "Authorization",
+                "defaultValue": ("Bearer + <mock_user_001>"),
+                "in": "header",
+                "description": "JWT to be passed as a header",
+                "required": "true",
+                "paramType": "header",
+                "type": "string"
+                    }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ])
     @auth.login_required
     def get(self):
         """
         List organizations for the authenticated user.
-
-        This endpoint only lists organizations that the authenticated user is
-        allowed to operate on as a member or an admin.
-
+        A list of all organizations in which the authenticated user is
+        allowed to operate in will be returned.
         """
         organizations = db.session.query(OrganizationModel).filter(
             OrganizationModel.partners.any(is_deleted=False, user=g.user))

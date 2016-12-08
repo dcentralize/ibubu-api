@@ -2,8 +2,9 @@
 Define the main entry point for the app.
 
 """
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint
 from flask_restful import Api
+from flask_restful_swagger import swagger
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
 from swarm_intelligence_app.models import db
@@ -41,6 +42,8 @@ def register_error_handlers(app):
     app.register_error_handler(errors.MethodNotImplementedError,
                                handlers.handle_method_not_implemented)
 
+my_blueprint1 = Blueprint('my_blueprint1', __name__)
+
 
 def create_app():
     """
@@ -48,8 +51,18 @@ def create_app():
 
     """
     app = Flask(__name__)
+
+    ###################################
+    # This is important:
+    api = swagger.docs(Api(my_blueprint1), apiVersion='0.1',
+                       basePath='http://localhost:5000',
+                       resourcePath='/',
+                       produces=["application/json", "text/html"],
+                       api_spec_url='/api',
+                       description='Swarm Intelligence')
+
+    ###################################
     load_config(app)
-    api = Api(app)
     api.add_resource(user.UserRegistration,
                      '/register')
     api.add_resource(user.UserLogin,
@@ -96,7 +109,7 @@ def create_app():
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
-                     '/roles/<role_id>/members')
+                     '/roles/<role_id>/members'),
     db.init_app(app)
     register_error_handlers(app)
     return app
@@ -134,4 +147,6 @@ def populate():
 
 
 if __name__ == '__main__':
-    application.run(debug=True)
+    application.register_blueprint(my_blueprint1,
+                                   url_prefix='')
+    application.run(host='localhost', port=5000, debug=True)

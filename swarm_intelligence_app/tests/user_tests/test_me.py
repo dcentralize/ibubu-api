@@ -32,7 +32,7 @@ class TestUser:
             self.me_post(client, token)
             jwtToken = self.helper.login(test_helper, client, token)
             self.me_organizations_post(client, jwtToken)
-            self.me_organizations_get(client,jwtToken)
+            self.me_organizations_get(client, jwtToken)
 
     def me_post(self, client, token):
         """

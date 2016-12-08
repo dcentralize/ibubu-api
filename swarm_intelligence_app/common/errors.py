@@ -9,9 +9,7 @@ class EntityNotFoundError(Exception):
     Define an EntityNotFoundError.
 
     """
-    def __init__(self,
-                 type,
-                 id):
+    def __init__(self,type,id):
         """
         Initialize an EntityNotFoundError.
 
