@@ -9,15 +9,15 @@ from sqlalchemy_utils import create_database, database_exists
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common import handlers
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.resources import accountability
 from swarm_intelligence_app.resources import circle
+from swarm_intelligence_app.resources import domain
 from swarm_intelligence_app.resources import invitation
 from swarm_intelligence_app.resources import organization
 from swarm_intelligence_app.resources import partner
+from swarm_intelligence_app.resources import policy
 from swarm_intelligence_app.resources import role
 from swarm_intelligence_app.resources import user
-from swarm_intelligence_app.resources import policy
-from swarm_intelligence_app.resources import domain
-from swarm_intelligence_app.resources import accountability
 
 
 def load_config(app):

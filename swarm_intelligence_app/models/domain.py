@@ -14,7 +14,8 @@ class Domain(db.Model):
     name = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
 
-    policies = db.relationship('Policy', backref='domain', cascade="all,delete")
+    policies = db.relationship('Policy', backref='domain', cascade='all,'
+                                                                   'delete')
 
     def __init__(self, name, role_id):
         """
