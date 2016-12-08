@@ -6,7 +6,10 @@ from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
+from swarm_intelligence_app.models.accountability import Accountability as \
+    AccountabilityModel
 from swarm_intelligence_app.models.circle import Circle as CircleModel
+from swarm_intelligence_app.models.domain import Domain as DomainModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.role import Role as RoleModel
 from swarm_intelligence_app.models.role import RoleType
@@ -347,4 +350,238 @@ class CircleMembers(Resource):
 
         return {
                    'success': True
+               }, 200
+
+
+class CircleAccountabilities(Resource):
+    """
+    Define the endpoints for the accountability edge of the circle node.
+
+    """
+
+    @auth.login_required
+    def get(self, circle_id):
+        """
+        List all accountabilities of a circle.
+
+        Args:
+            circle_id: The id of the circle to display.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        },
+                        {
+                        'id': '4',
+                        'name': 'Persmission',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The circle with id 1 does not exist'
+                          }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+        role = RoleModel.query.get(circle.role_id)
+
+        data = [i.serialize for i in role.accountabilities]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
+
+    @auth.login_required
+    def post(self, circle_id):
+        """
+        Add a domain to a circle.
+
+        Args:
+            circle_id: The id of the circle to add a domain.
+
+        Body:
+            name: The name of the accountability.
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('role', circle_id)
+
+        role = RoleModel.query.get(circle.role_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        args = parser.parse_args()
+
+        accountability = AccountabilityModel(args['name'], role.id)
+
+        role.accountabilities.append(accountability)
+        db.session.commit()
+        return {
+                   'success': True,
+                   'data': accountability.serialize
+               }, 200
+
+
+class CircleDomains(Resource):
+    """
+    Define the endpoints for the accountability edge of the circle node.
+
+    """
+
+    @auth.login_required
+    def get(self, circle_id):
+        """
+        List all domains of a circle.
+
+        Args:
+            circle_id: The id of the circle to display.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        },
+                        {
+                        'id': '4',
+                        'name': 'Persmission',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The circle with id 1 does not exist'
+                          }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+        role = RoleModel.query.get(circle.role_id)
+
+        data = [i.serialize for i in role.domains]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
+
+    @auth.login_required
+    def post(self, circle_id):
+        """
+        Add a domain to a circle.
+
+        Args:
+            circle_id: The id of the circle to add a domain.
+
+        Body:
+            name: The name of the domain.
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'id': '2',
+                        'name': 'Finances',
+                        'role_id': '1'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The role with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('role', circle_id)
+
+        role = RoleModel.query.get(circle.role_id)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        args = parser.parse_args()
+
+        domain = DomainModel(args['name'], role.id)
+
+        role.domains.append(domain)
+        db.session.commit()
+        return {
+                   'success': True,
+                   'data': domain.serialize
                }, 200

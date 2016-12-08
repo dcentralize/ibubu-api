@@ -98,6 +98,10 @@ def create_app():
     api.add_resource(circle.CircleMembers,
                      '/circles/<circle_id>/members',
                      '/circles/<circle_id>/members/<partner_id>')
+    api.add_resource(circle.CircleDomains,
+                     '/circles/<circle_id>/domains')
+    api.add_resource(circle.CircleAccountabilities,
+                     '/circles/<circle_id>/accountabilities')
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,

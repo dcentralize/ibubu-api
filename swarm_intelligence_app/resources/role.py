@@ -544,7 +544,6 @@ class RoleAccountabilities(Resource):
 
         accountability = AccountabilityModel(args['name'], role.id)
 
-        db.session.add(accountability)
         role.accountabilities.append(accountability)
         db.session.commit()
         return {
@@ -660,7 +659,6 @@ class RoleDomains(Resource):
 
         domain = DomainModel(args['name'], role.id)
 
-        db.session.add(domain)
         role.domains.append(domain)
         db.session.commit()
         return {
