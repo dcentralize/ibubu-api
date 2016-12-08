@@ -1,4 +1,4 @@
-"""
-Define any resources for the application.
-
-"""
+# """
+# Define any resources for the application.
+#
+# """
