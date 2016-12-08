@@ -100,6 +100,54 @@ class Circle(Resource):
         }
 
 
+class CircleSubcircles(Resource):
+    """
+    Define the endpoints for the subcircles edge of the circle node.
+
+    """
+
+    @auth.login_required
+    def get(self,
+            circle_id):
+        """
+        List subcircles of a circle.
+
+        In order to list the subcircles of a circle, the authenticated user
+        must be a member or an admin of the organization that the circle is
+        associated with.
+
+        Args:
+            circle_id: The id of the circle for which to list the subcircles
+
+        """
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+
+        data = []
+        for i in circle.roles:
+            if i.type == RoleType.CIRCLE:
+
+                data.append({
+                    'id_role': i.id,
+                    'name': i.name,
+                    'type': i.type.value,
+                    'role_circle_id': i.circle_id,
+                    'parent_circle_id': i.parent_circle_id,
+                    'purpose': i.purpose,
+                    'circle_id': i.subcircle[0].id,
+                    'strategy': i.circle.strategy,
+                    'role_id': i.subcircle[0].role_id,
+                    'organization_id': i.circle.organization_id
+                })
+
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
+
+
 class CircleRole(Resource):
     """
     Define the endpoints for the role edge of the circle node.
@@ -160,8 +208,8 @@ class CircleRoles(Resource):
                           }]
             }
 
-            Raises:
-                EntityNotFoundError: There is no entry found with the id.
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
         """
         circle = CircleModel.query.get(circle_id)
 
@@ -176,6 +224,7 @@ class CircleRoles(Resource):
         role = RoleModel(args['name'], args['purpose'], None,
                          circle_id, RoleType.CUSTOM)
         db.session.add(role)
+        circle.roles.append(role)
         db.session.commit()
         return {
                    'success': True,
@@ -195,7 +244,10 @@ class CircleRoles(Resource):
         if circle is None:
             raise errors.EntityNotFoundError('circle', circle_id)
 
-        data = [i.serialize for i in circle.roles]
+        data = []
+        for i in circle.roles:
+            if i.type != RoleType.CIRCLE:
+                data.append(i.serialize)
         return {
                    'success': True,
                    'data': data
@@ -231,8 +283,6 @@ class CircleMembers(Resource):
             'success': True,
             'data': data
         }
-
-        raise errors.MethodNotImplementedError()
 
     @auth.login_required
     def put(self,

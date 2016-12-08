@@ -419,6 +419,7 @@ class RoleCircle(Resource):
         role.purpose = args['purpose']
         role.type = RoleType.CIRCLE
         role.parent_circle_id = role.circle_id
+        role.subcircle.append(circle)
         db.session.commit()
 
         return {

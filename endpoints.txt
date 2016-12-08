@@ -73,6 +73,7 @@ Circle
 /circles/{circle-id} - GET, PUT, DELETE
 /circles/{circle-id}/role - PUT
 /circles/{circle-id}/roles - POST, GET, DELETE
+/circles/{circle-id}/subcircles - GET
 /circles/{circle-id}/members - GET
 /circles/{circle-id}/members/{partner-id} - PUT, DELETE
 

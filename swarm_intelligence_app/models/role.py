@@ -37,6 +37,8 @@ class Role(db.Model):
 
     members = db.relationship('Partner', secondary=members_roles,
                               back_populates='roles')
+    subcircle = db.relationship('Circle', backref='role',
+                                primaryjoin='Circle.role_id==Role.id')
 
     def __init__(self, name, purpose, parent_circle_id, circle_id, type):
         """

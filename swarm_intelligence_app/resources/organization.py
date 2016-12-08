@@ -75,6 +75,7 @@ class Organization(Resource):
             'data': organization.serialize
         }, 200
 
+    @auth.login_required
     def delete(self,
                organization_id):
         """
@@ -134,7 +135,7 @@ class OrganizationAnchorCircle(Resource):
             raise errors.EntityNotFoundError('organization', organization_id)
 
         anchor_circle = CircleModel.query.filter_by(
-            organization_id=organization.id, circle_id=None).first()
+            organization_id=organization.id).first()
 
         if anchor_circle is None:
             raise errors.EntityNotFoundError('circle', '')
