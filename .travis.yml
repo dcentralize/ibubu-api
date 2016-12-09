@@ -27,4 +27,4 @@ before_script:
 # command to run python scripts and tests
 script:
   - tox
-  - conftest.py
+  - py.test
