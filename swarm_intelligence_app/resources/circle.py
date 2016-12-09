@@ -3,6 +3,7 @@ Define the classes for the circle API.
 
 """
 from flask_restful import reqparse, Resource
+from flask_restful_swagger import swagger
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -14,17 +15,37 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string",
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     def get(self,
             circle_id):
         """
         Retrieve a circle.
-
         In order to retrieve a circle, the authenticated user must be a member
         or an admin of the organization that the circle is associated with.
-
-        Args:
-            circle_id: The id of the circle to retrieve
-
+        A valid JWT must be provided.
         """
         circle = CircleModel.query.get(circle_id)
 

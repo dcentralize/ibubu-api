@@ -167,7 +167,8 @@ class UserLogin(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     def get(self):
         """
         Login a user.
@@ -248,7 +249,8 @@ class User(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     @auth.login_required
     def get(self):
         """
@@ -292,7 +294,8 @@ class User(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     @auth.login_required
     def put(self):
         """
@@ -338,7 +341,8 @@ class User(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     @auth.login_required
     def delete(self):
         """
@@ -400,7 +404,8 @@ class UserOrganizations(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     @auth.login_required
     def post(self):
         """
@@ -454,7 +459,8 @@ class UserOrganizations(Resource):
                 "code": 401,
                 "message": "UNAUTHORIZED"
             }
-        ])
+        ]
+    )
     @auth.login_required
     def get(self):
         """

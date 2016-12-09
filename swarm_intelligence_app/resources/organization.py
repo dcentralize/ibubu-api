@@ -3,6 +3,7 @@ Define the classes for the organization API.
 
 """
 from flask_restful import reqparse, Resource
+from flask_restful_swagger import swagger
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -22,18 +23,38 @@ class Organization(Resource):
 
     """
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string",
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def get(self,
             organization_id):
         """
         Retrieve an organization.
-
-        In order to retrieve an organization, the authenticated user must be a
-        member or an admin of the organization.
-
-        Params:
-            organization_id: The id of the organization to retrieve
-
+        In order to retrieve an organization, the authenticated
+        user must be a member or an admin of the organization. A valid JWT
+        must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -45,19 +66,45 @@ class Organization(Resource):
                    'data': organization.serialize
                }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }, {
+            "name": "body",
+            "defaultValue": ("{'is_deleted': 'False', 'name': 'Tolli Empire',"
+                             "'id': '1'}"),
+            "description": "new organization-data",
+            "required": "true",
+            "type": "JSON Object",
+            "paramType": "body"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def put(self,
             organization_id):
         """
         Edit an organization.
-
         In order to edit an organization, the authenticated user must be an
-        admin of the organization.
-
-        Params:
-            organization_id: The id of the organization to edit
-            name: The name of the organization
-
+        admin of the organization. A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -76,20 +123,39 @@ class Organization(Resource):
                    'data': organization.serialize
                }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def delete(self,
                organization_id):
         """
         Delete an organization.
-
         This endpoint sets the organization's state to 'deleted', so that it
         cannot be accessed by its members or admins in any way. In order to
         delete an organization, the authenticated user must be an admin of the
-        organization.
-
-        Params:
-            organization_id: The id of the organization to delete
-
+        organization. A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -114,22 +180,40 @@ class OrganizationAnchorCircle(Resource):
     Define the endpoints for the anchor circle edge of the organization node.
 
     """
-
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def get(self,
             organization_id):
         """
         Retrieve the anchor circle of an organization.
-
         This endpoint retrieves the anchor circle of an organization. Each
         organization has exactly one circle as its anchor circle. In order to
         retrieve the anchor circle of an organization, the authenticated user
-        must be a member or an admin of the organization.
-
-        Params:
-            organization_id: The id of the organization for which to retrieve
-            the anchor circle
-
+        must be a member or an admin of the organization. A valid JWT must
+        be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -153,22 +237,40 @@ class OrganizationMembers(Resource):
     Define the endpoints for the members edge of the organization node.
 
     """
-
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def get(self,
             organization_id):
         """
         List members of an organization.
-
         This endpoint lists all partners with access through membership or with
         admin access to the organization, whether their state is 'active' or
         not. In order to list the members of an organization, the
         authenticated user must be a member or an admin of the organization.
-
-        Params:
-            organization_id: The id of the organization for which to list the
-            members
-
+        A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -187,22 +289,39 @@ class OrganizationAdmins(Resource):
     Define the endpoints for the admins edge of the organization node.
 
     """
-
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def get(self,
             organization_id):
         """
         List admins of an organization.
-
         This endpoint lists all partners of an organization with admin access
-        to the organization, wether their state is 'active' or not. In order
+        to the organization, whether their state is 'active' or not. In order
         to list the admins of an organization, the authenticated user must be
-        a member or an admin of the organization.
-
-        Params:
-            organization_id: The id of the organization for which to list the
-            admins
-
+        a member or an admin of the organization. A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -222,27 +341,52 @@ class OrganizationAdmins(Resource):
 class OrganizationInvitations(Resource):
     """
     Define the endpoints for the invitations edge of the organization node.
-
     """
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }, {
+            "name": "body",
+            "defaultValue": ("{{'email': 'donaldo@ducko.com',"
+                             "'organization_id': id}"),
+            "description": "new user-data",
+            "required": "true",
+            "type": "JSON Object",
+            "paramType": "body"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def post(self,
              organization_id):
         """
         Invite a user to an organization.
-
         This endpoint will send an invitation to a given email address. The
         newly-created invitation will be in the 'pending' state until the user
         accepts the invitation. At this point the invitation will transition
         to the 'accepted' state and the user will be added as a new partner to
         the organization. In order to invite a user to an organization, the
         authenticated user must be an admin of the organization.
-
-        Params:
-            organization_id: The id of the organization for which to invite
-            the user
-            email: The email address the invitation will be sent to
-
+        A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
@@ -267,21 +411,39 @@ class OrganizationInvitations(Resource):
                    'data': invitation.serialize
                }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            "name": "Authorization",
+            "defaultValue": ("Bearer + <mock_user_001>"),
+            "in": "header",
+            "description": "JWT to be passed as a header",
+            "required": "true",
+            "paramType": "header",
+            "type": "string"
+        }],
+        responseMessages=[
+            {
+                "code": 400,
+                "message": "BAD REQUEST"
+            },
+            {
+                "code": 401,
+                "message": "UNAUTHORIZED"
+            }
+        ]
+    )
     @auth.login_required
     def get(self,
             organization_id):
         """
         List invitations to an organization.
-
         This endpoint lists all 'pending', 'accepted' and 'cancelled'
         invitations to an organization. In order to list invitations to an
         organization, the authenticated user must be a member or an admin of
-        the organization.
-
-        Params:
-            organization_id: The id of the organization for which to list the
-            invitations
-
+        the organization. A valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
