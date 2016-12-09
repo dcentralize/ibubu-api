@@ -426,12 +426,12 @@ class OrganizationInvitations(Resource):
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
