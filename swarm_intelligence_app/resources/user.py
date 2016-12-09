@@ -415,31 +415,11 @@ class UserOrganizations(Resource):
         A new organization with an anchor circle will be created. The
         authenticated user becomes its admin. A valid JWT must be provided.
         """
+        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
+
         parser = reqparse.RequestParser()
-        parser.add_argument('Authorization', location='headers', required=True)
         parser.add_argument('name', required=True)
         args = parser.parse_args()
-
-        authorization = args['Authorization']
-        credentials = authorization.split(' ')
-
-        if credentials[1] == 'mock_user_001':
-            data = mock_users['mock_user_001']
-        elif credentials[1] == 'mock_user_002':
-            data = mock_users['mock_user_002']
-        else:
-            response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                    'tokeninfo?id_token=' + credentials[1])
-
-            if response.status_code != 200:
-                abort(401)
-
-            data = response.json()
-            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                              '.apps.googleusercontent.com':
-                abort(401)
-
-        user = UserModel.query.filter_by(google_id=data['sub']).first()
 
         if user is None or user.is_deleted is True:
             raise errors.EntityNotFoundError('user', g.user['google_id'])
@@ -510,30 +490,7 @@ class UserOrganizations(Resource):
         A list of all organizations in which the authenticated user is
         allowed to operate in will be returned.
         """
-        parser = reqparse.RequestParser()
-        parser.add_argument('Authorization', location='headers', required=True)
-        args = parser.parse_args()
-
-        authorization = args['Authorization']
-        credentials = authorization.split(' ')
-
-        if credentials[1] == 'mock_user_001':
-            data = mock_users['mock_user_001']
-        elif credentials[1] == 'mock_user_002':
-            data = mock_users['mock_user_002']
-        else:
-            response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                    'tokeninfo?id_token=' + credentials[1])
-
-            if response.status_code != 200:
-                abort(401)
-
-            data = response.json()
-            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                              '.apps.googleusercontent.com':
-                abort(401)
-
-        user = UserModel.query.filter_by(google_id=data['sub']).first()
+        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
 
         if user is None or user.is_deleted is True:
             raise errors.EntityNotFoundError('user', g.user['google_id'])

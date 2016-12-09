@@ -78,7 +78,7 @@ class TestUser:
         assert client.post('/me/organizations', headers={
             'Authorization': 'Bearer ' + token},
                            data={'name': token + ': Dagoberts ' +
-                                         'Empire'}).status == \
+                                                 'Empire'}).status == \
                '200 OK'
         print('Passed test for creating a new organization')
 
