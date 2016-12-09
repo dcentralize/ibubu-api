@@ -20,22 +20,22 @@ class Circle(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string",
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string',
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )

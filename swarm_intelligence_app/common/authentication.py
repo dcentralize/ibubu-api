@@ -28,6 +28,9 @@ mock_users = {
 
 
 def get_mock_user():
+    """
+    Return mock_users.
+    """
     return mock_users
 
 

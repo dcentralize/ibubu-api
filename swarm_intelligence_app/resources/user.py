@@ -50,23 +50,23 @@ class UserRegistration(Resource):
         # but you could also override them here, or add other parameters.
         parameters=[
             {
-                "name": "Authorization",
-                "defaultValue": ("Token + <mock_user_001>"),
-                "in": "header",
-                "description": "web-token to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Token + <mock_user_001>'),
+                'in': 'header',
+                'description': 'web-token to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
             }
         ],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ],
     )
@@ -150,22 +150,22 @@ class UserLogin(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -232,22 +232,22 @@ class User(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -268,31 +268,31 @@ class User(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }, {
-                "name": "body",
-                "defaultValue": ("{'firstname': 'Daisy', 'lastname': "
+                'name': 'body',
+                'defaultValue': ("{'firstname': 'Daisy', 'lastname': "
                                  "'Ducks', 'email': 'daisy' + token +  "
                                  "'@tolli.com'}"),
-                "description": "new user-data",
-                "required": "true",
-                "type": "JSON Object",
-                "paramType": "body"
+                'description': 'new user-data',
+                'required': 'true',
+                'type': 'JSON Object',
+                'paramType': 'body'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -324,22 +324,22 @@ class User(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -378,31 +378,31 @@ class UserOrganizations(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }, {
-                "name": "body",
-                "defaultValue": ("{'name': token + ': Dagoberts ' + "
+                'name': 'body',
+                'defaultValue': ("{'name': token + ': Dagoberts ' + "
                                  "'Empire'}"),
-                "description": "name of the organization",
-                "required": "true",
-                "type": "JSON Object",
-                "paramType": "body"
+                'description': 'name of the organization',
+                'required': 'true',
+                'type': 'JSON Object',
+                'paramType': 'body'
                 }
         ],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -442,22 +442,22 @@ class UserOrganizations(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-                "name": "Authorization",
-                "defaultValue": ("Bearer + <mock_user_001>"),
-                "in": "header",
-                "description": "JWT to be passed as a header",
-                "required": "true",
-                "paramType": "header",
-                "type": "string"
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
                     }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )

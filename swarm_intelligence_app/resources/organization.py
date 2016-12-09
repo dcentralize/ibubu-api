@@ -1,6 +1,5 @@
 """
 Define the classes for the organization API.
-
 """
 from flask_restful import reqparse, Resource
 from flask_restful_swagger import swagger
@@ -20,7 +19,6 @@ from swarm_intelligence_app.models.partner import PartnerType
 class Organization(Resource):
     """
     Define the endpoints for the organization node.
-
     """
 
     @swagger.operation(
@@ -28,22 +26,22 @@ class Organization(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string",
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string',
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -71,30 +69,30 @@ class Organization(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }, {
-            "name": "body",
-            "defaultValue": ("{'is_deleted': 'False', 'name': 'Tolli Empire',"
-                             "'id': '1'}"),
-            "description": "new organization-data",
-            "required": "true",
-            "type": "JSON Object",
-            "paramType": "body"
+            'name': 'body',
+            'defaultValue': "({'is_deleted': 'False', 'name': 'Tolli Empire',"
+                            "'id': '1'})",
+            'description': 'new organization-data',
+            'required': 'true',
+            'type': 'JSON Object',
+            'paramType': 'body'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -128,22 +126,22 @@ class Organization(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -178,29 +176,28 @@ class Organization(Resource):
 class OrganizationAnchorCircle(Resource):
     """
     Define the endpoints for the anchor circle edge of the organization node.
-
     """
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -235,29 +232,28 @@ class OrganizationAnchorCircle(Resource):
 class OrganizationMembers(Resource):
     """
     Define the endpoints for the members edge of the organization node.
-
     """
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -287,29 +283,28 @@ class OrganizationMembers(Resource):
 class OrganizationAdmins(Resource):
     """
     Define the endpoints for the admins edge of the organization node.
-
     """
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -348,30 +343,30 @@ class OrganizationInvitations(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }, {
-            "name": "body",
-            "defaultValue": ("{{'email': 'donaldo@ducko.com',"
-                             "'organization_id': id}"),
-            "description": "new user-data",
-            "required": "true",
-            "type": "JSON Object",
-            "paramType": "body"
+            'name': 'body',
+            'defaultValue': "({'email': 'donaldo@ducko.com',"
+                            "'organization_id': id})",
+            'description': 'new user-data',
+            'required': 'true',
+            'type': 'JSON Object',
+            'paramType': 'body'
         }],
         responseMessages=[
             {
-                "code": 400,
-                "message": "BAD REQUEST"
+                'code': 400,
+                'message': 'BAD REQUEST'
             },
             {
-                "code": 401,
-                "message": "UNAUTHORIZED"
+                'code': 401,
+                'message': 'UNAUTHORIZED'
             }
         ]
     )
@@ -416,13 +411,13 @@ class OrganizationInvitations(Resource):
         # <string:id>)
         # but you could also override them here, or add other parameters.
         parameters=[{
-            "name": "Authorization",
-            "defaultValue": ("Bearer + <mock_user_001>"),
-            "in": "header",
-            "description": "JWT to be passed as a header",
-            "required": "true",
-            "paramType": "header",
-            "type": "string"
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
         }],
         responseMessages=[
             {
