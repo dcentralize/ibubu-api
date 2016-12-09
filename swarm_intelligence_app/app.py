@@ -69,6 +69,8 @@ def create_app():
                      '/organizations/<organization_id>/admins')
     api.add_resource(organization.OrganizationInvitations,
                      '/organizations/<organization_id>/invitations')
+    api.add_resource(organization.OrganizationRoles,
+                     '/organizations/<organization_id>/roles')
     api.add_resource(partner.Partner,
                      '/partners/<partner_id>')
     api.add_resource(partner.PartnerCircles,

@@ -133,15 +133,12 @@ class CircleSubcircles(Resource):
             if i.type == RoleType.CIRCLE:
 
                 data.append({
-                    'id_role': i.id,
+                    'role_id': i.id,
                     'name': i.name,
                     'type': i.type.value,
-                    'role_circle_id': i.circle_id,
-                    'parent_circle_id': i.parent_circle_id,
                     'purpose': i.purpose,
-                    'circle_id': i.subcircle[0].id,
+                    'circle_id': i.subcircle[0].role_id,
                     'strategy': i.circle.strategy,
-                    'role_id': i.subcircle[0].role_id,
                     'organization_id': i.circle.organization_id
                 })
 
@@ -158,13 +155,24 @@ class CircleRole(Resource):
     """
 
     @auth.login_required
-    def put(self, circle_id):
+    def delete(self, circle_id):
         """
         Change the circle back to the role.
 
         """
-        # ToDO
-        raise errors.MethodNotImplementedError()
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            raise errors.EntityNotFoundError('circle', circle_id)
+        role = RoleModel.query.get(circle.role_id)
+        role.type = RoleType.CUSTOM
+
+        db.session.delete(circle)
+        db.session.commit()
+
+        return {
+                   'success': True,
+               }, 200
 
 
 class CircleRoles(Resource):
@@ -224,8 +232,8 @@ class CircleRoles(Resource):
         parser.add_argument('purpose', required=True)
         args = parser.parse_args()
 
-        role = RoleModel(args['name'], args['purpose'], None,
-                         circle_id, RoleType.CUSTOM)
+        role = RoleModel(args['name'], args['purpose'], circle_id,
+                         RoleType.CUSTOM)
         db.session.add(role)
         circle.roles.append(role)
         db.session.commit()

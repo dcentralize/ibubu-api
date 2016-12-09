@@ -11,16 +11,18 @@ class Circle(db.Model):
     Define a mapping to the database for a circle.
 
     """
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
+                        primary_key=True)
     strategy = db.Column(db.String(255), nullable=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
 
-    partners = db.relationship(
-        'Partner', secondary=circle_members, back_populates='circles')
+    partners = db.relationship('Partner', secondary=circle_members,
+                               back_populates='circles', cascade='all,delete')
     roles = db.relationship('Role', backref='circle',
-                            primaryjoin='Role.circle_id==Circle.id')
+                            primaryjoin='Role.circle_id==Circle.role_id',
+                            cascade='all,delete')
 
     def __init__(self,
                  strategy,
@@ -48,7 +50,7 @@ class Circle(db.Model):
 
         """
         return {
-            'id': self.id,
+            #'id': self.id,
             'strategy': self.strategy,
             'role_id': self.role_id,
             'organization_id': self.organization_id

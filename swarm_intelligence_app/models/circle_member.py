@@ -9,5 +9,5 @@ circle_members = db.Table(
     'circle_members',
     db.Column('partner_id', db.Integer, db.ForeignKey('partner.id')),
     db.Column('circle_id', db.Integer, db.ForeignKey(
-        'circle.id', onupdate='CASCADE', ondelete='CASCADE'))
+        'circle.role_id', onupdate='CASCADE', ondelete='CASCADE'))
 )

@@ -420,7 +420,8 @@ class RoleCircles(Resource):
         parser.add_argument('strategy', required=True)
         args = parser.parse_args()
 
-        circle = CircleModel(args['strategy'], role.circle.id, role.id)
+        circle = CircleModel(args['strategy'], role.circle.organization_id,
+                             role.id)
         db.session.add(circle)
         db.session.commit()
 

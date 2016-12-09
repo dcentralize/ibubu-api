@@ -14,6 +14,7 @@ from swarm_intelligence_app.models.organization import \
 from swarm_intelligence_app.models.partner import \
     Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.role import RoleType
 
 
 class Organization(Resource):
@@ -143,6 +144,42 @@ class OrganizationAnchorCircle(Resource):
         return {
             'sucess': True,
             'data': anchor_circle.serialize
+        }, 200
+
+
+class OrganizationRoles(Resource):
+    """
+    Define the endpoints for the anchor circle edge of the organization node.
+
+    """
+    @auth.login_required
+    def get(self, organization_id):
+        """
+        List of all roles in a organization.
+
+        This endpoint retrieves a list of all roles in a organization.
+
+        Params:
+            organization_id: The id of the organization for which to retrieve
+            the anchor circle
+
+        """
+        organization = OrganizationModel.query.get(organization_id)
+
+        if organization is None:
+            raise errors.EntityNotFoundError('organization', organization_id)
+
+        circles = CircleModel.query.filter_by(organization_id=organization.id)
+
+        data = []
+        for circle in circles:
+            for role in circle.roles:
+                if role.type != RoleType.CIRCLE:
+                    data.append(role.serialize)
+
+        return {
+            'sucess': True,
+            'data': data
         }, 200
 
 

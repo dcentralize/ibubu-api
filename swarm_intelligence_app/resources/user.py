@@ -168,7 +168,7 @@ class UserOrganizations(Resource):
         db.session.add(partner)
         db.session.commit()
 
-        role = RoleModel('General', 'Purpose', None, None, RoleType.CIRCLE)
+        role = RoleModel('General', 'Purpose', None, RoleType.CIRCLE)
         db.session.add(role)
         db.session.commit()
 
@@ -177,11 +177,11 @@ class UserOrganizations(Resource):
         db.session.commit()
 
         role_leadlink = RoleModel('LEAD_LINK', 'Purpose leadlink',
-                                  None, anchor_circle.id, RoleType.LEAD_LINK)
+                                  anchor_circle.role_id, RoleType.LEAD_LINK)
         role_secretary = RoleModel('SECRETARY', 'Purpose secretary',
-                                   None, anchor_circle.id, RoleType.SECRETARY)
+                                   anchor_circle.role_id, RoleType.SECRETARY)
         role_facilitator = RoleModel('FACILITATOR', 'Purpose facilitator',
-                                     None, anchor_circle.id,
+                                     anchor_circle.role_id, 
                                      RoleType.FACILITATOR)
         db.session.add(role_leadlink)
         db.session.add(role_secretary)
