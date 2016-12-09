@@ -18,6 +18,8 @@ from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 from swarm_intelligence_app.models.user import User as UserModel
 
 APP_SECRET = 'top_secret'
@@ -413,23 +415,43 @@ class UserOrganizations(Resource):
         A new organization with an anchor circle will be created. The
         authenticated user becomes its admin. A valid JWT must be provided.
         """
+        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+
+        if user is None or user.is_deleted is True:
+            raise errors.EntityNotFoundError('user', g.user['google_id']
+
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
         args = parser.parse_args()
 
         organization = OrganizationModel(args['name'])
-        PartnerModel(PartnerType.ADMIN, g.user.firstname, g.user.lastname,
-                     g.user.email, g.user, organization)
+        partner = PartnerModel(PartnerType.ADMIN, user.firstname,
+                               user.lastname, user.email, user, organization)
+        db.session.add(partner)
         db.session.commit()
 
-        anchor_circle = CircleModel('General', None, None, organization.id,
-                                    None)
+        role = RoleModel('General', 'Purpose', None, RoleType.CIRCLE)
+        db.session.add(role)
+        db.session.commit()
+
+        anchor_circle = CircleModel('Strategy', organization.id, role.id)
         db.session.add(anchor_circle)
         db.session.commit()
 
-        anchor_circle = CircleModel('General', None, None, organization.id,
-                                    None)
-        db.session.add(anchor_circle)
+        role_leadlink = RoleModel('LEAD_LINK', 'Purpose leadlink',
+                                  anchor_circle.role_id, RoleType.LEAD_LINK)
+        role_secretary = RoleModel('SECRETARY', 'Purpose secretary',
+                                   anchor_circle.role_id, RoleType.SECRETARY)
+        role_facilitator = RoleModel('FACILITATOR', 'Purpose facilitator',
+                                     anchor_circle.role_id,
+                                     RoleType.FACILITATOR)
+        db.session.add(role_leadlink)
+        db.session.add(role_secretary)
+        db.session.add(role_facilitator)
+        db.session.commit()
+
+        partner.circles.append(anchor_circle)
+        partner.roles.append(role_leadlink)
         db.session.commit()
 
         return {
@@ -468,8 +490,13 @@ class UserOrganizations(Resource):
         A list of all organizations in which the authenticated user is
         allowed to operate in will be returned.
         """
+        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+
+        if user is None or user.is_deleted is True:
+            raise errors.EntityNotFoundError('user', g.user['google_id'])
+
         organizations = db.session.query(OrganizationModel).filter(
-            OrganizationModel.partners.any(is_deleted=False, user=g.user))
+            OrganizationModel.partners.any(is_deleted=False, user=user))
 
         data = [item.serialize for item in organizations]
         return {

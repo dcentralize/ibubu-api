@@ -16,6 +16,10 @@ HTTP Responses
 
 On Success
 ----------
+
+200: Success
+201: Success created
+
 {
 	'success': True,
 	'data': []
@@ -23,6 +27,12 @@ On Success
 
 On Error
 --------
+
+400: Error
+404: Error endpoint not found
+405: Error
+409: Error
+
 {
 	'success': False,
 	'errors': []
@@ -43,6 +53,8 @@ Organization
 /organizations/{organization-id}/members - GET
 /organizations/{organization-id}/admins - GET
 /organizations/{organization-id}/invitations - POST, GET
+/organizations/{organization-id}/roles - GET
+/organizations/{organization-id}/anchor_circle - GET
 
 Partner
 -------
@@ -50,6 +62,7 @@ Partner
 /partners/{partner-id}/admin - PUT, DELETE
 /partners/{partner-id}/metrics - POST, GET
 /partners/{partner-id}/checklists - POST, GET
+/partners/{partner-id}/roles - GET
 
 Invitation
 ----------
@@ -60,20 +73,29 @@ Invitation
 Circle
 ------
 /circles/{circle-id} - GET, PUT, DELETE
+/circles/{circle-id}/role - DELETE
 /circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/subcircles - GET
 /circles/{circle-id}/members - GET
 /circles/{circle-id}/members/{partner-id} - PUT, DELETE
+/circles/<circle_id>/domains - POST, GET
+/circles/<circle_id>/accountabilities - POST, GET
+
 
 Role
 ----
 /roles/{role-id} - GET, PUT, DELETE
 /roles/{role-id}/members - GET
 /roles/{role-id}/members/{partner-id} - PUT, DELETE
+/roles/{role-id}/circle - PUT
+/roles/{role-id}/accountabilities - GET, POST
+/roles/{role-id}/domains - GET, POST
 
-Metric
+Accountability
 ------
-/metrics/{metric-id} - GET, PUT, DELETE
+/accountabilities/{accountability-id} - GET, PUT, DELETE
 
-Checklist
+Domain
 ---------
-/checklists/{checklist-id} - GET, PUT, DELETE
+/domains/{domain-id} - GET, PUT, DELETE
+/domains/{domain-id}/policies - GET, POST

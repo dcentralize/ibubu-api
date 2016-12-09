@@ -232,3 +232,60 @@ class PartnerChecklists(Resource):
 
         """
         raise errors.MethodNotImplementedError()
+
+
+class PartnerRoles(Resource):
+    """
+    Define the endpoints for the role edge of the partner node.
+
+    """
+
+    @auth.login_required
+    def get(self, partner_id):
+        """
+        List all roles of a partner.
+
+        Args:
+            partner_id: The id of the partner for which to list the circles.
+
+        Body:
+
+        Headers:
+            Authorization: A string of the authorization token.
+
+        Return:
+            A dictionary mapping keys to the corresponding table row data
+            fetched and converted to json. Each row is represented as a
+            tuple of strings. For example:
+            {
+                'success': True,
+                'data': {
+                        'circle_id': '3',
+                        'id': '2',
+                        'name': 'Manager',
+                        'parent_circle_id': 2,
+                        'purpose': 'Purpose of the Role',
+                        'type': 'custom'
+                        }
+            }
+            {
+                'success': False,
+                'errors': [{
+                            'type': 'EntityNotFoundError',
+                            'message': 'The circle with id 1 does not exist'
+                        }]
+            }
+
+        Raises:
+            EntityNotFoundError: There is no entry found with the id.
+        """
+        partner = PartnerModel.query.get(partner_id)
+
+        if partner is None:
+            raise errors.EntityNotFoundError('circle', partner_id)
+
+        data = [i.serialize for i in partner.roles]
+        return {
+                   'success': True,
+                   'data': data
+               }, 200
