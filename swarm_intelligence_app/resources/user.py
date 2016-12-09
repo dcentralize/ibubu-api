@@ -2,8 +2,14 @@
 Define the classes for the user API.
 
 """
+from datetime import datetime, timedelta
+
+import jwt
+import requests
+
 from flask import g
-from flask_restful import reqparse, Resource
+from flask_restful import abort, reqparse, Resource
+from flask_restful_swagger import swagger
 from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -16,25 +22,95 @@ from swarm_intelligence_app.models.role import Role as RoleModel
 from swarm_intelligence_app.models.role import RoleType
 from swarm_intelligence_app.models.user import User as UserModel
 
+APP_SECRET = 'top_secret'
+TOKEN_EXPIRATION = 3600
 
-class User(Resource):
+mock_users = {
+    'mock_user_001': {
+        'sub': 'mock_user_001',
+        'given_name': 'Donald',
+        'family_name': 'Duck',
+        'email': 'donald@gmail.de'
+    },
+    'mock_user_002': {
+        'sub': 'mock_user_002',
+        'given_name': 'Dagobert',
+        'family_name': 'Duck',
+        'email': 'dagobert@gmail.de'
+    }
+}
+
+
+class UserRegistration(Resource):
     """
-    Define the endpoints for the user node.
+    Define the endpoints for the user registration.
 
     """
-    @auth.login_required
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[
+            {
+                'name': 'Authorization',
+                'defaultValue': ('Token + <mock_user_001>'),
+                'in': 'header',
+                'description': 'web-token to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+            }
+        ],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ],
+    )
     def post(self):
         """
         Create a user.
-
         To create a user the data provided by google is taken into
-        consideration. If a user with the provided google id does not exist,
-        the user is created. If a user exists and is deactivated, the user is
-        activated. If a user does not exist, the user is created with the data
-        provided by google.
-
+        consideration.
+        If a user with the provided google id does not exist,
+        the user is created with the data provided by google.
+        If a user exists and is deactivated, the user is reactivated.
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        parser = reqparse.RequestParser()
+        parser.add_argument('Authorization', location='headers', required=True)
+        args = parser.parse_args()
+
+        authorization = args['Authorization']
+        credentials = authorization.split(' ')
+
+        if len(credentials) != 2:
+            abort(400)
+
+        if credentials[0] != 'Token':
+            abort(400)
+
+        if credentials[1] == 'mock_user_001':
+            data = mock_users['mock_user_001']
+        elif credentials[1] == 'mock_user_002':
+            data = mock_users['mock_user_002']
+        else:
+            response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                    'tokeninfo?id_token=' + credentials[1])
+
+            if response.status_code != 200:
+                abort(401)
+
+            data = response.json()
+            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                              '.apps.googleusercontent.com':
+                abort(401)
+
+        user = UserModel.query.filter_by(google_id=data['sub']).first()
 
         if user is not None and user.is_deleted is False:
             raise errors.EntityAlreadyExistsError()
@@ -43,94 +119,253 @@ class User(Resource):
             user.is_deleted = False
         else:
             user = UserModel(
-                g.user['google_id'],
-                g.user['firstname'],
-                g.user['lastname'],
-                g.user['email']
+                data['sub'],
+                data['given_name'],
+                data['family_name'],
+                data['email']
             )
             db.session.add(user)
 
         db.session.commit()
 
+        fields = {
+            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'sub': user.google_id
+        }
+
+        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+
         return {
             'success': True,
-            'data': user.serialize
-        }, 200
+            'data': {
+                'access_token': encoded.decode('utf-8')
+            }
+        }
 
+
+class UserLogin(Resource):
+    """
+    Define the endpoints for the user login.
+    """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
+    def get(self):
+        """
+        Login a user.
+        In order to login a user, a valid JWT has to be provided to the server.
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('Authorization', location='headers', required=True)
+        args = parser.parse_args()
+
+        authorization = args['Authorization']
+        credentials = authorization.split(' ')
+
+        if len(credentials) != 2:
+            abort(400)
+
+        if credentials[0] != 'Token':
+            abort(400)
+
+        if credentials[1] == 'mock_user_001':
+            data = mock_users['mock_user_001']
+        elif credentials[1] == 'mock_user_002':
+            data = mock_users['mock_user_002']
+        else:
+            response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                    'tokeninfo?id_token=' + credentials[1])
+
+            if response.status_code != 200:
+                abort(401)
+
+            data = response.json()
+            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                              '.apps.googleusercontent.com':
+                abort(401)
+
+        user = UserModel.query.filter_by(google_id=data['sub']).first()
+        if user is None:
+            abort(401)
+
+        fields = {
+            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'sub': data['sub']
+        }
+
+        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+
+        return {
+            'success': True,
+            'data': {
+                'access_token': encoded.decode('utf-8')
+            }
+        }
+
+
+class User(Resource):
+    """
+    Define the endpoints for the user node.
+
+    """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def get(self):
         """
         Retrieve the authenticated user.
-
+        Retrieve the authenticated user from the database. A valid JWT must
+        be provided.
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }, {
+                'name': 'body',
+                'defaultValue': ("{'firstname': 'Daisy', 'lastname': "
+                                 "'Ducks', 'email': 'daisy' + token +  "
+                                 "'@tolli.com'}"),
+                'description': 'new user-data',
+                'required': 'true',
+                'type': 'JSON Object',
+                'paramType': 'body'
+        }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def put(self):
         """
         Edit the authenticated user.
-
-        Params:
-            firstname: The firstname of the authenticated user
-            lastname: The lastname of the authenticated user
-            email: The email address of the authenticated user
-
+        The authenticated user will be updated, by providing the server with
+        a valid JWT and the new user-data.
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
         parser.add_argument('lastname', required=True)
         parser.add_argument('email', required=True)
         args = parser.parse_args()
 
-        user.firstname = args['firstname']
-        user.lastname = args['lastname']
-        user.email = args['email']
+        g.user.firstname = args['firstname']
+        g.user.lastname = args['lastname']
+        g.user.email = args['email']
         db.session.commit()
 
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def delete(self):
         """
         Delete the authenticated user.
-
-        This endpoint sets the authenticated user's account to 'closed' and
-        the user's partnerships with organizations to 'inactive'. By signin-up
-        again with the same google account, the user's account is reopened. To
-        rejoin an organization, a new invitation is needed.
+        The state of the authenticated user will be set to 'closed' and the
+        user's partnerships with organizations will be set to 'inactive'.
+        The user's account will be reopened, as soon as a new user with the
+        same google account has signed in. In order to rejoin an organization,
+        a new invitation is needed. A valid JWT is needed.
 
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        g.user.is_deleted = True
 
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
-        user.is_deleted = True
-
-        for partner in user.partners:
+        for partner in g.user.partners:
             partner.is_deleted = True
 
         db.session.commit()
 
         return {
             'success': True,
-            'data': user.serialize
+            'data': g.user.serialize
         }, 200
 
 
@@ -139,26 +374,53 @@ class UserOrganizations(Resource):
     Define the endpoints for the organizations edge of the user node.
 
     """
+
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }, {
+                'name': 'body',
+                'defaultValue': ("{'name': token + ': Dagoberts ' + "
+                                 "'Empire'}"),
+                'description': 'name of the organization',
+                'required': 'true',
+                'type': 'JSON Object',
+                'paramType': 'body'
+                }
+        ],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def post(self):
         """
         Create an organization.
-
-        This endpoint creates a new organization with an anchor circle,
-        where three roles get created leadlink, secretary,
-        facilitator and adds the authenticated user as an admin to the
-        organization and to the role leadlink.
-
-        Params:
-            name: The name of the organization
-
+        A new organization with an anchor circle will be created. The
+        authenticated user becomes its admin. A valid JWT must be provided.
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
 
         if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
+            raise errors.EntityNotFoundError('user', g.user.google_id)
 
-        parser = reqparse.RequestParser(bundle_errors=True)
+        parser = reqparse.RequestParser()
         parser.add_argument('name', required=True)
         args = parser.parse_args()
 
@@ -173,6 +435,7 @@ class UserOrganizations(Resource):
         db.session.commit()
 
         anchor_circle = CircleModel('Strategy', organization.id, role.id)
+        organization.anchor_circle.append(anchor_circle)
         db.session.add(anchor_circle)
         db.session.commit()
 
@@ -197,51 +460,41 @@ class UserOrganizations(Resource):
             'data': organization.serialize
         }, 200
 
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+                'name': 'Authorization',
+                'defaultValue': ('Bearer + <mock_user_001>'),
+                'in': 'header',
+                'description': 'JWT to be passed as a header',
+                'required': 'true',
+                'paramType': 'header',
+                'type': 'string'
+                    }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def get(self):
         """
         List organizations for the authenticated user.
-
-        This endpoint only lists organizations that the authenticated user is
-        allowed to operate on as a member or an admin.
-
-        Args:
-
-        Body:
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'email': 'donald@gmail.de',
-                        'firstname': 'Donald',
-                        'google_id': 'mock_user_001',
-                        'id': '1',
-                        'is_deleted': false,
-                        'lastname': 'Duck'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The user with id 1 does not exist'
-                        }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
+        A list of all organizations in which the authenticated user is
+        allowed to operate in will be returned.
         """
-        user = UserModel.query.filter_by(google_id=g.user['google_id']).first()
+        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
 
         if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
+            raise errors.EntityNotFoundError('user', g.user.google_id)
 
         organizations = db.session.query(OrganizationModel).filter(
             OrganizationModel.partners.any(is_deleted=False, user=user))

@@ -135,15 +135,10 @@ class OrganizationAnchorCircle(Resource):
         if organization is None:
             raise errors.EntityNotFoundError('organization', organization_id)
 
-        anchor_circle = CircleModel.query.filter_by(
-            organization_id=organization.id).first()
-
-        if anchor_circle is None:
-            raise errors.EntityNotFoundError('circle', '')
-
+        data = [i.serialize for i in organization.anchor_circle]
         return {
             'sucess': True,
-            'data': anchor_circle.serialize
+            'data': data
         }, 200
 
 

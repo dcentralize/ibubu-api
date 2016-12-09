@@ -17,6 +17,8 @@ class Organization(db.Model):
     partners = db.relationship('Partner', backref='organization')
     invitations = db.relationship('Invitation', backref='organization',
                                   lazy='dynamic')
+    anchor_circle = db.relationship('Circle', backref='organization',
+                                  lazy='dynamic')
 
     def __init__(self,
                  name):
