@@ -1,0 +1,101 @@
+General Usage
+=============
+/{node-name}/{node-id}[/{edge-name}[/{edge-id}]]
+
+
+HTTP Requests
+=============
+GET		Used for retrieving resources or collections
+POST	Used for creating resources
+PUT		Used for replacing resources
+DELETE	Used for deleting resources
+
+
+HTTP Responses
+==============
+
+On Success
+----------
+
+200: Success
+201: Success created
+
+{
+	'success': True,
+	'data': []
+}
+
+On Error
+--------
+
+400: Error
+404: Error endpoint not found
+405: Error
+409: Error
+
+{
+	'success': False,
+	'errors': []
+}
+
+
+Endpoints
+=========
+
+User
+----
+/me - POST, GET, PUT, DELETE
+/me/organizations - POST, GET
+
+Organization
+------------
+/organizations/{organization-id} - GET, PUT, DELETE
+/organizations/{organization-id}/members - GET
+/organizations/{organization-id}/admins - GET
+/organizations/{organization-id}/invitations - POST, GET
+/organizations/{organization-id}/roles - GET
+/organizations/{organization-id}/anchor_circle - GET
+
+Partner
+-------
+/partners/{partner-id} - GET, PUT, DELETE
+/partners/{partner-id}/admin - PUT, DELETE
+/partners/{partner-id}/metrics - POST, GET
+/partners/{partner-id}/checklists - POST, GET
+/partners/{partner-id}/roles - GET
+
+Invitation
+----------
+/invitations/{invitation-id} - GET, DELETE
+/invitations/{invitation-id}/resend - GET
+/invitations/{invitation-code}/accept - GET
+
+Circle
+------
+/circles/{circle-id} - GET, PUT, DELETE
+/circles/{circle-id}/role - DELETE
+/circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/subcircles - GET
+/circles/{circle-id}/members - GET
+/circles/{circle-id}/members/{partner-id} - PUT, DELETE
+/circles/<circle_id>/domains - POST, GET
+/circles/<circle_id>/accountabilities - POST, GET
+
+
+Role
+----
+/roles/{role-id} - GET, PUT, DELETE
+/roles/{role-id}/members - GET
+/roles/{role-id}/members/{partner-id} - PUT, DELETE
+/roles/{role-id}/circle - PUT
+/roles/{role-id}/accountabilities - GET, POST
+/roles/{role-id}/domains - GET, POST
+
+Accountability
+------
+/accountabilities/{accountability-id} - GET, PUT, DELETE
+
+Domain
+---------
+/domains/{domain-id} - GET, PUT, DELETE
+/domains/{domain-id}/policies - GET, POST
