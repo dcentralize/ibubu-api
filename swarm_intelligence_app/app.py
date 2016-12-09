@@ -2,8 +2,9 @@
 Define the main entry point for the app.
 
 """
-from flask import Flask, render_template
+from flask import Blueprint, Flask, render_template
 from flask_restful import Api
+from flask_restful_swagger import swagger
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 from swarm_intelligence_app.common import errors
@@ -47,14 +48,30 @@ def register_error_handlers(app):
                                handlers.handle_method_not_implemented)
 
 
+my_blueprint1 = Blueprint('my_blueprint1', __name__)
+
+
 def create_app():
     """
     Create the main flask app.
 
     """
     app = Flask(__name__)
+
+    ###################################
+    # This is important:
+    api = swagger.docs(Api(my_blueprint1), apiVersion='0.1',
+                       basePath='http://localhost:5000',
+                       resourcePath='/',
+                       produces=['application/json", "text/html'],
+                       api_spec_url='/api',
+                       description='Swarm Intelligence')
+    ###################################
     load_config(app)
-    api = Api(app)
+    api.add_resource(user.UserRegistration,
+                     '/register')
+    api.add_resource(user.UserLogin,
+                     '/login')
     api.add_resource(user.User,
                      '/me')
     api.add_resource(user.UserOrganizations,
@@ -170,4 +187,6 @@ def populate():
 
 
 if __name__ == '__main__':
-    application.run(host='localhost', port=5432, debug=True)
+    application.register_blueprint(my_blueprint1,
+                                   url_prefix='')
+    application.run(host='localhost', port=5000, debug=True)
