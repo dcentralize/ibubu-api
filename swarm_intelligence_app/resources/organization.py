@@ -233,19 +233,37 @@ class OrganizationAnchorCircle(Resource):
 class OrganizationRoles(Resource):
     """
     Define the endpoints for the anchor circle edge of the organization node.
-
     """
+    @swagger.operation(
+        # Parameters can be automatically extracted from URLs (e.g.
+        # <string:id>)
+        # but you could also override them here, or add other parameters.
+        parameters=[{
+            'name': 'Authorization',
+            'defaultValue': ('Bearer + <mock_user_001>'),
+            'in': 'header',
+            'description': 'JWT to be passed as a header',
+            'required': 'true',
+            'paramType': 'header',
+            'type': 'string'
+        }],
+        responseMessages=[
+            {
+                'code': 400,
+                'message': 'BAD REQUEST'
+            },
+            {
+                'code': 401,
+                'message': 'UNAUTHORIZED'
+            }
+        ]
+    )
     @auth.login_required
     def get(self, organization_id):
         """
         List of all roles in a organization.
-
-        This endpoint retrieves a list of all roles in a organization.
-
-        Params:
-            organization_id: The id of the organization for which to retrieve
-            the anchor circle
-
+        This endpoint retrieves a list of all roles in a organization. A
+        valid JWT must be provided.
         """
         organization = OrganizationModel.query.get(organization_id)
 
