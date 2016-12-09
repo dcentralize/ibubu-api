@@ -11,7 +11,6 @@ class Circle(db.Model):
     Define a mapping to the database for a circle.
 
     """
-    # id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
                         primary_key=True)
     strategy = db.Column(db.String(255), nullable=True)
@@ -50,7 +49,6 @@ class Circle(db.Model):
 
         """
         return {
-            #'id': self.id,
             'strategy': self.strategy,
             'role_id': self.role_id,
             'organization_id': self.organization_id

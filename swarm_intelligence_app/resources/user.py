@@ -181,7 +181,7 @@ class UserOrganizations(Resource):
         role_secretary = RoleModel('SECRETARY', 'Purpose secretary',
                                    anchor_circle.role_id, RoleType.SECRETARY)
         role_facilitator = RoleModel('FACILITATOR', 'Purpose facilitator',
-                                     anchor_circle.role_id, 
+                                     anchor_circle.role_id,
                                      RoleType.FACILITATOR)
         db.session.add(role_leadlink)
         db.session.add(role_secretary)
