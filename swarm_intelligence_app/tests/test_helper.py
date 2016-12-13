@@ -40,12 +40,3 @@ class TestHelper:
 
         json_data = response.json['data']['access_token']
         return json_data
-
-    def get_organization_id(self, client, token):
-        """
-        Helper Method getting an organization_id
-        """
-        organization_id = client.get('/me/organizations', headers={
-            'Authorization': 'Bearer ' + token}, ).json['data']
-        print(organization)
-        return organization_id

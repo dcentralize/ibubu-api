@@ -48,14 +48,12 @@ class TestOrganizationException:
         """
         assert client.post(
             '/organizations/' + id).status == '405 METHOD NOT ALLOWED'
-        print("Passed nologin-test for creating a new user.")
 
     def organization_get_no_login(self, client, id):
         """
         Test if the me-page returns a valid http status-code when getting.
         """
         assert client.get('/organizations/' + id).status == '400 BAD REQUEST'
-        print("Passed nologin-test for getting a user.")
 
     def organization_put_no_login(self, client, id):
         """
@@ -63,7 +61,6 @@ class TestOrganizationException:
             """
         assert client.put('/organizations/' + id, headers={},
                           data={'name': 'Daisy'}).status == '400 BAD REQUEST'
-        print("Passed nologin-test for updating a user.")
 
     def organization_put_wrong_params(self, client, token, id):
         """
@@ -75,7 +72,6 @@ class TestOrganizationException:
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
                '400 BAD REQUEST'
-        print("Passed nologin-test for updating a user.")
 
     def organization_put_no_param(self, client, token, id):
         """
@@ -84,7 +80,6 @@ class TestOrganizationException:
         assert client.put('/organizations/' + id, headers={
             'Authorization': 'Bearer ' + token},
                           data={}).status == '400 BAD REQUEST'
-        print('Passed noparam-test for updating a user: ' + token)
 
     def organization_del_no_login(self, client, id):
         """
@@ -93,7 +88,6 @@ class TestOrganizationException:
         assert client.delete('/organizations/' + id, headers={},
                              data={'name': 'Daisy'}).status == \
                '400 BAD REQUEST'
-        print("Passed nologin-test for deleting a user.")
 
     def organization_del_no_param(self, client, token, id):
         """
@@ -103,7 +97,6 @@ class TestOrganizationException:
             'Authorization': 'Bearer ' + token},
                              data={}).status == '200 OK'
 
-        print("Passed noparam-test for deleting a user.")
 
     def organization_get_members_no_login(self, client, id):
         """

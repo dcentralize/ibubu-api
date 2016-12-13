@@ -53,8 +53,6 @@ class TestOrganization:
         assert client.get('/organizations/' + id, headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
 
-        print('Passed test for getting an Organization.')
-
     def put_organization(self, client, token, id):
         """
         Test if get request to API gets executed.
@@ -63,8 +61,6 @@ class TestOrganization:
             'Authorization': 'Bearer ' + token},
                           data={'is_deleted': 'False', 'name': 'Tolli Empire',
                                 'id': '1'}).status == '200 OK'
-
-        print('Passed test for putting an Organization.')
 
     def delete_organization(self, client, token, id):
         """
@@ -82,11 +78,9 @@ class TestOrganization:
         #   'Authorization': 'Bearer ' + token}).status == '200 OK'
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
-        #TODO PARTNERS?
-
-        print("HIER KOMMEN DIE MEMBER TOLL!!")
+        # TODO PARTNERS?
         json_response = response.json['data']
-        print(json_response)
+        return json_response
 
     def get_organization_admins(self, client, token, id):
         """
@@ -95,6 +89,9 @@ class TestOrganization:
 
         assert client.get('/organizations/' + id + '/admins', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
+
+        return client.get('/organizations/' + id + '/admins', headers={
+            'Authorization': 'Bearer ' + token})
 
     def get_organization_invitations(self, client, token, id):
         """
@@ -108,7 +105,12 @@ class TestOrganization:
         """
         Test if post request get executed.
         """
-        assert client.post('/organizations/' + id + '/invitations', headers={
+        # assert client.post('/organizations/' + id + '/invitations', headers={
+        #     'Authorization': 'Bearer ' + token}, data={
+        #     'email': 'donaldo@ducko.com',
+        #     'organization_id': id}).status == '200 OK'
+
+        return client.post('/organizations/' + id + '/invitations', headers={
             'Authorization': 'Bearer ' + token}, data={
-            'email': 'donaldo@ducko.com',
-            'organization_id': id}).status == '200 OK'
+            'email': 'dagobert@gmail.de',
+            'organization_id': id})
