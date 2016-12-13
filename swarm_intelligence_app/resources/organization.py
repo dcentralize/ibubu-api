@@ -2,8 +2,8 @@
 Define the classes for the organization API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -14,6 +14,7 @@ from swarm_intelligence_app.models.organization import \
 from swarm_intelligence_app.models.partner import \
     Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.role import Role as RoleModel
 
 
 class Organization(Resource):
@@ -21,6 +22,7 @@ class Organization(Resource):
     Define the endpoints for the organization node.
 
     """
+    # @permission_required('read_organization')
     @auth.login_required
     def get(self,
             organization_id):
@@ -36,14 +38,12 @@ class Organization(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
-        return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+        return organization.serialize, 200
 
+    # @permission_required('manage_organization')
     @auth.login_required
     def put(self,
             organization_id):
@@ -60,8 +60,8 @@ class Organization(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
@@ -70,11 +70,10 @@ class Organization(Resource):
         organization.name = args['name']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+        return organization.serialize, 200
 
+    # @permission_required('manage_organization')
+    @auth.login_required
     def delete(self,
                organization_id):
         """
@@ -91,20 +90,19 @@ class Organization(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
+        #if organization is None or organization.is_deleted is True:
         if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+            abort(404)
 
-        organization.is_deleted = True
+        #organization.is_deleted = True
 
-        for partner in organization.partners:
-            partner.is_deleted = True
+        #for partner in organization.partners:
+        #    partner.is_deleted = True
 
+        db.session.delete(organization)
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+        return None, 204
 
 
 class OrganizationAnchorCircle(Resource):
@@ -112,6 +110,7 @@ class OrganizationAnchorCircle(Resource):
     Define the endpoints for the anchor circle edge of the organization node.
 
     """
+    # @permission_required('read_organization')
     @auth.login_required
     def get(self,
             organization_id):
@@ -130,19 +129,23 @@ class OrganizationAnchorCircle(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
-        anchor_circle = CircleModel.query.filter_by(
-            organization_id=organization.id, circle_id=None).first()
+        role, circle = db.session.query(
+            RoleModel, CircleModel).join(
+            CircleModel, RoleModel.id == CircleModel.id).filter(
+            RoleModel.organization_id == organization.id).filter(
+            RoleModel.parent_circle_id == None).first()
 
-        if anchor_circle is None:
-            raise errors.EntityNotFoundError('circle', '')
+        if role is None or circle is None:
+            abort(404)
 
-        return {
-            'sucess': True,
-            'data': anchor_circle.serialize
-        }, 200
+        data = {}
+        data.update(role.serialize)
+        data.update(circle.serialize)
+
+        return data, 200
 
 
 class OrganizationMembers(Resource):
@@ -150,6 +153,7 @@ class OrganizationMembers(Resource):
     Define the endpoints for the members edge of the organization node.
 
     """
+    # @permission_required('read_organization')
     @auth.login_required
     def get(self,
             organization_id):
@@ -168,14 +172,12 @@ class OrganizationMembers(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
         data = [i.serialize for i in organization.partners]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+
+        return data, 200
 
 
 class OrganizationAdmins(Resource):
@@ -183,6 +185,7 @@ class OrganizationAdmins(Resource):
     Define the endpoints for the admins edge of the organization node.
 
     """
+    # @permission_required('read_organization')
     @auth.login_required
     def get(self,
             organization_id):
@@ -201,17 +204,15 @@ class OrganizationAdmins(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
         admins = PartnerModel.query.filter_by(organization=organization,
-                                              type=PartnerType.ADMIN).all()
+                                              type=PartnerType.admin).all()
 
         data = [i.serialize for i in admins]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+
+        return data, 200
 
 
 class OrganizationInvitations(Resource):
@@ -219,6 +220,7 @@ class OrganizationInvitations(Resource):
     Define the endpoints for the invitations edge of the organization node.
 
     """
+    # @permission_required('manage_organization')
     @auth.login_required
     def post(self,
              organization_id):
@@ -240,8 +242,8 @@ class OrganizationInvitations(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('email', required=True)
@@ -256,11 +258,9 @@ class OrganizationInvitations(Resource):
         db.session.add(invitation)
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': invitation.serialize
-        }, 200
+        return invitation.serialize, 201
 
+    # @permission_required('read_organization')
     @auth.login_required
     def get(self,
             organization_id):
@@ -279,14 +279,12 @@ class OrganizationInvitations(Resource):
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None:
-            raise errors.EntityNotFoundError('organization', organization_id)
+        if organization is None or organization.is_deleted is True:
+            abort(404)
 
         invitations = InvitationModel.query.filter_by(
             organization_id=organization.id)
 
         data = [i.serialize for i in invitations]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+
+        return data, 200

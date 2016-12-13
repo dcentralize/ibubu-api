@@ -13,9 +13,9 @@ class InvitationStatus(Enum):
     Define values for an invitation's status.
 
     """
-    PENDING = 'pending'
-    ACCEPTED = 'accepted'
-    CANCELLED = 'cancelled'
+    pending = 'pending'
+    accepted = 'accepted'
+    cancelled = 'cancelled'
 
 
 class Invitation(db.Model):
@@ -39,7 +39,7 @@ class Invitation(db.Model):
         """
         self.code = str(uuid.uuid4())
         self.email = email
-        self.status = InvitationStatus.PENDING
+        self.status = InvitationStatus.pending
         self.organization_id = organization_id
 
     def __repr__(self):

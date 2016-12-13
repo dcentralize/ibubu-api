@@ -14,9 +14,17 @@ class Organization(db.Model):
     name = db.Column(db.String(100), nullable=False)
     is_deleted = db.Column(db.Boolean(), nullable=False)
 
-    partners = db.relationship('Partner', backref='organization')
-    invitations = db.relationship('Invitation', backref='organization',
-                                  lazy='dynamic')
+    partners = db.relationship('Partner',
+                               backref='organization',
+                               cascade='all, delete-orphan')
+
+    invitations = db.relationship('Invitation',
+                                  backref='organization',
+                                  cascade='all, delete-orphan')
+
+    roles = db.relationship('Role',
+                            backref='organization',
+                            cascade='all, delete-orphan')
 
     def __init__(self,
                  name):

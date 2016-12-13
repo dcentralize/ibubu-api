@@ -7,9 +7,8 @@ from datetime import datetime, timedelta
 import jwt
 import requests
 
-from flask import g
+from flask import current_app, g
 from flask_restful import abort, reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -17,10 +16,9 @@ from swarm_intelligence_app.models.organization import \
     Organization as OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
+from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 from swarm_intelligence_app.models.user import User as UserModel
-
-APP_SECRET = 'top_secret'
-TOKEN_EXPIRATION = 3600
 
 mock_users = {
     'mock_user_001': {
@@ -86,7 +84,7 @@ class UserRegistration(Resource):
         user = UserModel.query.filter_by(google_id=data['sub']).first()
 
         if user is not None and user.is_deleted is False:
-            raise errors.EntityAlreadyExistsError()
+            abort(409, 'Cannot create user. The user already exists.')
 
         if user is not None and user.is_deleted is True:
             user.is_deleted = False
@@ -102,29 +100,29 @@ class UserRegistration(Resource):
         db.session.commit()
 
         fields = {
-            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'exp': datetime.utcnow() + timedelta(
+                seconds=current_app.config['SI_JWT_EXPIRATION']),
             'sub': user.google_id
         }
 
-        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+        encoded = jwt.encode(
+            fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
             'success': True,
             'data': {
                 'access_token': encoded.decode('utf-8')
             }
-        }
+        }, 201
 
 
 class UserLogin(Resource):
     """
     Define the endpoints for the user login.
-
     """
     def get(self):
         """
         Login a user.
-
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -139,34 +137,43 @@ class UserLogin(Resource):
         if credentials[0] != 'Token':
             abort(400)
 
-        response = requests.get('https://www.googleapis.com/oauth2/v3/'
-                                'tokeninfo?id_token=' + credentials[1])
+        if credentials[1] == 'mock_user_001':
+            data = mock_users['mock_user_001']
+        elif credentials[1] == 'mock_user_002':
+            data = mock_users['mock_user_002']
+        else:
+            response = requests.get('https://www.googleapis.com/oauth2/v3/'
+                                    'tokeninfo?id_token=' + credentials[1])
 
-        if response.status_code != 200:
-            abort(401)
+            if response.status_code != 200:
+                abort(401)
 
-        data = response.json()
-        if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
-                          '.apps.googleusercontent.com':
-            abort(401)
+            data = response.json()
+            if data['aud'] != '806916571874-7tnsbrr22526ioo36l8njtqj2st8nn54' \
+                              '.apps.googleusercontent.com':
+                abort(401)
 
-        user = UserModel.query.filter_by(google_id=data['sub']).first()
+        user = UserModel.query.filter_by(
+            google_id=data['sub'], is_deleted=False).first()
+
         if user is None:
             abort(401)
 
         fields = {
-            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'exp': datetime.utcnow() + timedelta(
+                seconds=current_app.config['SI_JWT_EXPIRATION']),
             'sub': data['sub']
         }
 
-        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+        encoded = jwt.encode(
+            fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
             'success': True,
             'data': {
                 'access_token': encoded.decode('utf-8')
             }
-        }
+        }, 200
 
 
 class User(Resource):
@@ -180,10 +187,7 @@ class User(Resource):
         Retrieve the authenticated user.
 
         """
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return g.user.serialize, 200
 
     @auth.login_required
     def put(self):
@@ -207,10 +211,7 @@ class User(Resource):
         g.user.email = args['email']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return g.user.serialize, 200
 
     @auth.login_required
     def delete(self):
@@ -230,10 +231,7 @@ class User(Resource):
 
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return None, 204
 
 
 class UserOrganizations(Resource):
@@ -257,20 +255,47 @@ class UserOrganizations(Resource):
         parser.add_argument('name', required=True)
         args = parser.parse_args()
 
-        organization = OrganizationModel(args['name'])
-        PartnerModel(PartnerType.ADMIN, g.user.firstname, g.user.lastname,
-                     g.user.email, g.user, organization)
-        db.session.commit()
+        try:
+            organization = OrganizationModel(args['name'])
 
-        anchor_circle = CircleModel('General', None, None, organization.id,
-                                    None)
-        db.session.add(anchor_circle)
-        db.session.commit()
+            partner = PartnerModel(PartnerType.admin, g.user.firstname,
+                g.user.lastname, g.user.email, g.user, organization)
+            db.session.add(partner)
+            db.session.flush()
 
-        return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+            role = RoleModel(RoleType.circle, 'General', 'General\'s Purpose',
+                None, organization.id)
+            db.session.add(role)
+            db.session.flush()
+
+            circle = CircleModel(role.id, None)
+            db.session.add(circle)
+            db.session.flush()
+
+            lead_link = RoleModel(RoleType.lead_link,'Lead Link',
+                'Lead Link\'s Purpose', role.id, role.organization_id)
+            db.session.add(lead_link)
+            db.session.flush()
+
+            secretary = RoleModel(RoleType.secretary, 'Secretary',
+                'Secretary\'s Purpose', role.id, role.organization_id)
+            db.session.add(secretary)
+            db.session.flush()
+
+            facilitator = RoleModel(RoleType.facilitator, 'Facilitator',
+                'Facilitator\'s Purpose', role.id, role.organization_id)
+            db.session.add(facilitator)
+            db.session.flush()
+
+            partner.memberships.append(role)
+            partner.memberships.append(lead_link)
+
+            db.session.commit()
+        except:
+            db.session.rollback()
+            abort(409)
+
+        return organization.serialize, 201
 
     @auth.login_required
     def get(self):
@@ -285,7 +310,5 @@ class UserOrganizations(Resource):
             OrganizationModel.partners.any(is_deleted=False, user=g.user))
 
         data = [item.serialize for item in organizations]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+
+        return data, 200

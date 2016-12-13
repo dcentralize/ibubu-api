@@ -2,11 +2,14 @@
 Define the classes for the circle API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
+from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
+from swarm_intelligence_app.models.role import Role as RoleModel
+from swarm_intelligence_app.models.role import RoleType
 
 
 class Circle(Resource):
@@ -14,6 +17,7 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
+    @auth.login_required
     def get(self,
             circle_id):
         """
@@ -26,16 +30,19 @@ class Circle(Resource):
             circle_id: The id of the circle to retrieve
 
         """
+
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
-        return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+        data = {}
+        data.update(circle.super.serialize)
+        data.update(circle.serialize)
 
+        return data, 200
+
+    @auth.login_required
     def put(self,
             circle_id):
         """
@@ -51,113 +58,24 @@ class Circle(Resource):
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
-        parser.add_argument('purpose')
+        parser.add_argument('purpose', required=True)
         parser.add_argument('strategy')
         args = parser.parse_args()
 
-        circle.name = args['name']
-        circle.purpose = args['purpose']
+        circle.super.name = args['name']
+        circle.super.purpose = args['purpose']
         circle.strategy = args['strategy']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+        data = {}
+        data.update(circle.super.serialize)
+        data.update(circle.serialize)
 
-    def delete(self,
-               circle_id):
-        """
-        Delete a circle.
-
-        In order to delete a circle, the authenticated user must be an admin
-        of the organization that the circle is associated with.
-
-        Args:
-            circle_id: The id of the circle to delete
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-
-        db.session.delete(circle)
-        db.session.commit()
-
-        return {
-            'success': True
-        }
-
-
-class CircleSubcircles(Resource):
-    """
-    Define the endpoints for the subcircles edge of the circle node.
-
-    """
-    def post(self,
-             circle_id):
-        """
-        Add a subcircle to a circle.
-
-        In order to add a subcircle to a circle, the authenticated user must
-        be an admin of the organization that the circle is associated with.
-
-        Args:
-            circle_id: The id of the circle to add the subcircle to
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True)
-        parser.add_argument('purpose')
-        parser.add_argument('strategy')
-        args = parser.parse_args()
-
-        subcircle = CircleModel(args['name'], args['purpose'],
-                                args['strategy'], circle.organization_id,
-                                circle.id)
-        db.session.add(subcircle)
-        db.session.commit()
-
-        return {
-            'success': True,
-            'data': subcircle.serialize
-        }, 200
-
-    def get(self,
-            circle_id):
-        """
-        List subcircles of a circle.
-
-        In order to list the subcircles of a circle, the authenticated user
-        must be a member or an admin of the organization that the circle is
-        associated with.
-
-        Args:
-            circle_id: The id of the circle for which to list the subcircles
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-
-        subcircles = CircleModel.query.filter_by(circle_id=circle.id).all()
-
-        data = [i.serialize for i in subcircles]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+        return data, 200
 
 
 class CircleRoles(Resource):
@@ -165,21 +83,48 @@ class CircleRoles(Resource):
     Define the endpoints for the roles edge of the circle node.
 
     """
+    @auth.login_required
     def post(self,
              circle_id):
         """
         Add a role to a circle.
 
         """
-        raise errors.MethodNotImplementedError()
+        circle = CircleModel.query.get(circle_id)
 
+        if circle is None:
+            abort(404)
+
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True)
+        parser.add_argument('purpose', required=True)
+        args = parser.parse_args()
+
+        role = RoleModel(RoleType.custom,
+                         args['name'],
+                         args['purpose'],
+                         circle.super.id,
+                         circle.super.organization_id)
+        circle.roles.append(role)
+        db.session.commit()
+
+        return role.serialize, 201
+
+    @auth.login_required
     def get(self,
             circle_id):
         """
         List roles of a circle.
 
         """
-        raise errors.MethodNotImplementedError()
+        circle = CircleModel.query.get(circle_id)
+
+        if circle is None:
+            abort(404)
+
+        data = [i.serialize for i in circle.roles]
+
+        return data, 200
 
 
 class CircleMembers(Resource):
@@ -203,15 +148,11 @@ class CircleMembers(Resource):
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
-        data = [i.serialize for i in circle.partners]
-        return {
-            'success': True,
-            'data': data
-        }
+        data = [i.serialize for i in circle.super.members]
 
-        raise errors.MethodNotImplementedError()
+        return data, 200
 
     def put(self,
             circle_id,
@@ -230,19 +171,17 @@ class CircleMembers(Resource):
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        circle.partners.append(partner)
+        circle.super.members.append(partner)
         db.session.commit()
 
-        return {
-            'success': True
-        }, 200
+        return None, 204
 
     def delete(self,
                circle_id,
@@ -262,16 +201,14 @@ class CircleMembers(Resource):
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        circle.partners.remove(partner)
+        circle.super.members.remove(partner)
         db.session.commit()
 
-        return {
-            'success': True
-        }, 200
+        return None, 204

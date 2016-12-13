@@ -3,7 +3,6 @@ Define the classes for the metric API.
 
 """
 from flask_restful import Resource
-from swarm_intelligence_app.common import errors
 
 
 class Metric(Resource):
@@ -17,7 +16,7 @@ class Metric(Resource):
         Retrieve a metric.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def put(self,
             metric_id):
@@ -25,7 +24,7 @@ class Metric(Resource):
         Edit a metric.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def delete(self,
                metric_id):
@@ -33,4 +32,4 @@ class Metric(Resource):
         Delete a metric.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)

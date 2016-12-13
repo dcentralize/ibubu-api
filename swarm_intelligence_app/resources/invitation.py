@@ -2,9 +2,8 @@
 Define the classes for the invitation API.
 
 """
-from flask import g
+from flask import abort, g
 from flask_restful import Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.invitation import \
@@ -36,71 +35,9 @@ class Invitation(Resource):
         invitation = InvitationModel.query.get(invitation_id)
 
         if invitation is None:
-            raise errors.EntityNotFoundError('invitation', invitation_id)
+            abort(404)
 
-        return {
-            'success': True,
-            'data': invitation.serialize
-        }, 200
-
-    @auth.login_required
-    def delete(self,
-               invitation_id):
-        """
-        Delete an invitation.
-
-        If an invitation's state is 'pending', this endpoint will set the
-        invitation's state to 'cancelled'. If an invitation's state is
-        'accepted' or 'cancelled', the invitation cannot be deleted at all or
-        deleted again. In order to delete an invitation, the authenticated
-        user must be an admin of the organization that the invitation is
-        associated with.
-
-        Params:
-            invitation_id: The id of the invitation to delete
-
-        """
-        invitation = InvitationModel.query.get(invitation_id)
-
-        if invitation is None:
-            raise errors.EntityNotFoundError('invitation', invitation_id)
-
-        if invitation.status == InvitationStatus.ACCEPTED:
-            raise errors.EntityNotModifiedError('The invitation has already '
-                                                'been accepted and cannot be '
-                                                'deleted.')
-
-        invitation.status = InvitationStatus.CANCELLED
-        db.session.commit()
-
-        data = invitation.serialize
-        return {
-            'success': True,
-            'data': data
-        }, 200
-
-
-class InvitationResend(Resource):
-    """
-    Define the endpoints for the resend edge of the invitation node.
-
-    """
-    def get(self,
-            invitation_id):
-        """
-        Resend an invitation.
-
-        If an invitation's state is 'pending', this endpoint will resend the
-        invitation to the associated email address. If an invitation's state
-        is 'accepted' or 'cancelled', the invitation cannot be resent. In
-        order to resend an invitation, the authenticated user must be an admin
-        of the organization that the invitation is associated with.
-
-        Params:
-            invitation_id: The id of the invitation to resend
-
-        """
-        raise errors.MethodNotImplementedError()
+        return invitation.serialize, 200
 
 
 class InvitationAccept(Resource):
@@ -128,16 +65,74 @@ class InvitationAccept(Resource):
         invitation = InvitationModel.query.filter_by(code=code).first()
 
         if invitation is None:
-            raise errors.EntityNotFoundError('invitation', code)
+            abort(404)
 
-        PartnerModel(PartnerType.MEMBER, g.user.firstname, g.user.lastname,
+        PartnerModel(PartnerType.member, g.user.firstname, g.user.lastname,
                      g.user.email, g.user, invitation.organization)
 
-        invitation.status = InvitationStatus.ACCEPTED
+        invitation.status = InvitationStatus.accepted
         db.session.commit()
 
-        data = invitation.serialize
-        return {
-            'success': True,
-            'data': data
-        }, 200
+        return invitation.serialize, 200
+
+
+class InvitationCancel(Resource):
+    """
+    Define the endpoints for the cancel edge of the invitation node.
+
+    """
+    @auth.login_required
+    def put(self,
+            invitation_id):
+        """
+        Cancel an invitation.
+
+        If an invitation's state is 'pending', this endpoint will set the
+        invitation's state to 'cancelled'. If an invitation's state is
+        'accepted' or 'cancelled', the invitation cannot be cancelled at all or
+        cancelled again. In order to cancel an invitation, the authenticated
+        user must be an admin of the organization that the invitation is
+        associated with.
+
+        Params:
+            invitation_id: The id of the invitation to cancel
+
+        """
+        invitation = InvitationModel.query.get(invitation_id)
+
+        if invitation is None:
+            abort(404)
+
+        if invitation.status == InvitationStatus.accepted:
+            abort(409, 'The invitation has already '
+                       'been accepted and cannot be '
+                       'cancelled.')
+
+        invitation.status = InvitationStatus.cancelled
+        db.session.commit()
+
+        return None, 204
+
+
+class InvitationResend(Resource):
+    """
+    Define the endpoints for the resend edge of the invitation node.
+
+    """
+    @auth.login_required
+    def get(self,
+            invitation_id):
+        """
+        Resend an invitation.
+
+        If an invitation's state is 'pending', this endpoint will resend the
+        invitation to the associated email address. If an invitation's state
+        is 'accepted' or 'cancelled', the invitation cannot be resent. In
+        order to resend an invitation, the authenticated user must be an admin
+        of the organization that the invitation is associated with.
+
+        Params:
+            invitation_id: The id of the invitation to resend
+
+        """
+        abort(501)

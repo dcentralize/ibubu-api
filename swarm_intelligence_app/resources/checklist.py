@@ -3,7 +3,6 @@ Define the classes for the checklist API.
 
 """
 from flask_restful import Resource
-from swarm_intelligence_app.common import errors
 
 
 class Checklist(Resource):
@@ -17,7 +16,7 @@ class Checklist(Resource):
         Retrieve a checklist.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def put(self,
             checklist_id):
@@ -25,7 +24,7 @@ class Checklist(Resource):
         Edit a checklist.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def delete(self,
                checklist_id):
@@ -33,4 +32,4 @@ class Checklist(Resource):
         Delete a checklist.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)

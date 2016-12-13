@@ -2,8 +2,8 @@
 Define the classes for the partner API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
@@ -32,12 +32,9 @@ class Partner(Resource):
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return partner.serialize, 200
 
     @auth.login_required
     def put(self,
@@ -55,7 +52,7 @@ class Partner(Resource):
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
@@ -68,10 +65,7 @@ class Partner(Resource):
         partner.email = args['email']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return partner.serialize, 200
 
     @auth.login_required
     def delete(self,
@@ -89,15 +83,12 @@ class Partner(Resource):
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
         partner.is_deleted = True
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return None, 204
 
 
 class PartnerAdmin(Resource):
@@ -122,15 +113,12 @@ class PartnerAdmin(Resource):
             partner = PartnerModel.query.get(partner_id)
 
             if partner is None:
-                raise errors.EntityNotFoundError('partner', partner_id)
+                abort(404)
 
-            partner.type = PartnerType.ADMIN
+            partner.type = PartnerType.admin
             db.session.commit()
 
-            return {
-                'success': True,
-                'data': partner.serialize
-            }, 200
+            return partner.serialize, 200
 
         @auth.login_required
         def delete(self,
@@ -149,18 +137,15 @@ class PartnerAdmin(Resource):
             partner = PartnerModel.query.get(partner_id)
 
             if partner is None:
-                raise errors.EntityNotFoundError('partner', partner_id)
+                abort(404)
 
-            partner.type = PartnerType.MEMBER
+            partner.type = PartnerType.member
             db.session.commit()
 
-            return {
-                'success': True,
-                'data': partner.serialize
-            }, 200
+            return None, 204
 
 
-class PartnerCircles(Resource):
+class PartnerMemberships(Resource):
     """
     Define the endpoints for the circles edge of the partner node.
 
@@ -181,13 +166,11 @@ class PartnerCircles(Resource):
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        data = [i.serialize for i in partner.circles]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+        data = [i.serialize for i in partner.memberships]
+
+        return data, 200
 
 
 class PartnerMetrics(Resource):
@@ -201,7 +184,7 @@ class PartnerMetrics(Resource):
         Add a metric to a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def get(self,
             partner_id):
@@ -209,7 +192,7 @@ class PartnerMetrics(Resource):
         List metrics of a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
 
 class PartnerChecklists(Resource):
@@ -223,7 +206,7 @@ class PartnerChecklists(Resource):
         Add a checklist to a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def get(self,
             partner_id):
@@ -231,4 +214,4 @@ class PartnerChecklists(Resource):
         List checklists of a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
