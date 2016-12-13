@@ -3,6 +3,7 @@ Define the main entry point for the app.
 
 """
 from flask import Blueprint, Flask, render_template
+from flask_cors import CORS
 from flask_restful import Api
 from flask_restful_swagger import swagger
 from sqlalchemy import create_engine
@@ -57,7 +58,7 @@ def create_app():
 
     """
     app = Flask(__name__)
-
+    CORS(app)
     ###################################
     # This is important:
     api = swagger.docs(Api(my_blueprint1), apiVersion='0.1',
