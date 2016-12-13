@@ -26,8 +26,24 @@ class Circle(Resource):
         In order to retrieve a circle, the authenticated user must be a member
         or an admin of the organization that the circle is associated with.
 
-        Args:
-            circle_id: The id of the circle to retrieve
+        Request:
+            GET /circles/{circle_id}
+
+        Response:
+            200 OK - If circle is retrieved
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'Circle\'s name',
+                    'purpose': 'Circle\'s purpose',
+                    'strategy': 'Circle\'s strategy',
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
         """
 
@@ -46,13 +62,34 @@ class Circle(Resource):
     def put(self,
             circle_id):
         """
-        Edit a circle.
+        Update a circle.
 
         In order to edit a circle, the authenticated user must be an admin
         of the organization that the circle is associated with.
 
-        Args:
-            circle_id: The id of the circle to edit
+        Request:
+            PUT /circles/{circle_id}
+
+            Parameters:
+                name (string): The name of the circle
+                purpose (string): The purpose of the circle
+                strategy (string): The strategy of the circle
+
+        Response:
+            200 OK - If circle is updated
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'Circle\'s name',
+                    'purpose': 'Circle\'s purpose',
+                    'strategy': 'Circle\'s strategy',
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
         """
         circle = CircleModel.query.get(circle_id)
@@ -89,6 +126,20 @@ class CircleRoles(Resource):
         """
         Add a role to a circle.
 
+        Request:
+            POST /circles/{circle_id}/roles
+
+            Parameters:
+                name (string): The name of the role
+                purpose (string): The purpose of the role
+
+        Response:
+            204 No Content - If role is added to circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+
         """
         circle = CircleModel.query.get(circle_id)
 
@@ -116,6 +167,26 @@ class CircleRoles(Resource):
         """
         List roles of a circle.
 
+        Request:
+            GET /circles/{circle_id}/roles
+
+        Response:
+            200 OK - If roles of circle are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'circle|lead_link|secretary|custom',
+                        'name': 'Role\'s name',
+                        'purpose': 'Role\'s purpose',
+                        'parent_circle_id': 1,
+                        'organization_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+
         """
         circle = CircleModel.query.get(circle_id)
 
@@ -141,8 +212,28 @@ class CircleMembers(Resource):
         be a member or an admin of the organization that the circle is
         associated with.
 
-        Args:
-            circle_id: The id of the circle for which to list the members
+        Request:
+            GET /circles/{circle_id}/members
+
+        Response:
+            200 OK - If members of circle are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'member|admin',
+                        'firstname': 'John',
+                        'lastname': 'Doe',
+                        'email': 'john@example.org',
+                        'is_active': True|False,
+                        'user_id': 1,
+                        'organization_id': 1,
+                        'invitation_id': null|1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
         """
         circle = CircleModel.query.get(circle_id)
@@ -154,6 +245,12 @@ class CircleMembers(Resource):
 
         return data, 200
 
+
+class CircleMembersAssociation(Resource):
+    """
+    Define the endpoints for the members association edge of the circle node.
+
+    """
     def put(self,
             circle_id,
             partner_id):
@@ -163,9 +260,16 @@ class CircleMembers(Resource):
         In order to assign a partner to a circle, the authenticated user must
         be an admin of the organization that the circle is associated with.
 
-        Args:
-            circle_id: The id of the circle to assign the partner to
-            partner_id: The id of the partner to assign
+        Request:
+            PUT /circles/{circle_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is assigned to circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+            404 Not Found - If partner is not found
 
         """
         circle = CircleModel.query.get(circle_id)
@@ -193,9 +297,16 @@ class CircleMembers(Resource):
         must be an admin of the organization that the circle is associated
         with.
 
-        Args:
-            circle_id: The id of the circle to unassign the partner from
-            partner_id: The id of the partner to unassign
+        Request:
+            DELETE /circles/{circle_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is unassigned from circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+            404 Not Found - If partner is not found
 
         """
         circle = CircleModel.query.get(circle_id)

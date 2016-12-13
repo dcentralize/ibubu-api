@@ -12,7 +12,6 @@ class Organization(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    is_deleted = db.Column(db.Boolean(), nullable=False)
 
     partners = db.relationship('Partner',
                                backref='organization',
@@ -33,7 +32,6 @@ class Organization(db.Model):
 
         """
         self.name = name
-        self.is_deleted = False
 
     def __repr__(self):
         """
@@ -51,5 +49,4 @@ class Organization(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'is_deleted': self.is_deleted
         }

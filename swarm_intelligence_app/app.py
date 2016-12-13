@@ -75,7 +75,8 @@ def create_app():
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
-                     '/roles/<role_id>/members',
+                     '/roles/<role_id>/members')
+    api.add_resource(role.RoleMembersAssociation,
                      '/roles/<role_id>/members/<partner_id>')
     api.add_resource(role.RoleDomains,
                      '/roles/<role_id>/domains')
@@ -88,7 +89,8 @@ def create_app():
     api.add_resource(circle.CircleRoles,
                      '/circles/<circle_id>/roles')
     api.add_resource(circle.CircleMembers,
-                     '/circles/<circle_id>/members',
+                     '/circles/<circle_id>/members')
+    api.add_resource(circle.CircleMembersAssociation,
                      '/circles/<circle_id>/members/<partner_id>')
     api.add_resource(domain.Domain,
                      '/domains/<domain_id>')

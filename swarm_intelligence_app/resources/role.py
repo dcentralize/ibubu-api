@@ -25,6 +25,24 @@ class Role(Resource):
         """
         Retrieve a role.
 
+        Request:
+            GET /roles/{role_id}
+
+        Response:
+            200 OK - If role is retrieved
+                {
+                    'id': 1,
+                    'type': 'circle|lead_link|secretary|facilitator|custom',
+                    'name': 'Role\'s name,
+                    'purpose': 'Role\'s purpose,
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+
         """
         role = RoleModel.query.get(role_id)
 
@@ -36,7 +54,29 @@ class Role(Resource):
     @auth.login_required
     def put(self, role_id):
         """
-        Edit a role.
+        Update a role.
+
+        Request:
+            PUT /roles/{role_id}
+
+            Parameters:
+                name (string): The name of the role
+                purpose (string): The purpose of the role
+
+        Response:
+            200 OK - If role is updated
+                {
+                    'id': 1,
+                    'type': 'circle|lead_link|secretary|facilitator|custom',
+                    'name': 'Role\'s name,
+                    'purpose': 'Role\'s purpose,
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -60,15 +100,33 @@ class Role(Resource):
         """
         Delete a role.
 
+        In order to delete a partner, the authenticated user must be an admin
+        of the organization that the partner is associated with.
+
+        Request:
+            DELETE /roles/{role_id}
+
+        Response:
+            204 No Content - If role is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not found - If role is not found
+            409 Conflict - If type of role is other than custom
+            409 Conflict - If role is an anchor circle of an organization
+
         """
         role = RoleModel.query.get(role_id)
 
         if role is None:
             abort(404)
 
+        if role.type != RoleType.custom:
+            abort(409, 'Cannot delete role of type other than custom circle.')
+
         if role.parent_circle_id is None:
-            abort(409, 'The anchor circle of an '
-                       'organization cannot be deleted.')
+            abort(409, 'The anchor circle of an organization cannot be '
+                       'deleted.')
 
         db.session.delete(role)
         db.session.commit()
@@ -86,6 +144,29 @@ class RoleMembers(Resource):
         """
         List members of a role.
 
+        Request:
+            GET /roles/{role_id}/members
+
+        Response:
+            200 OK - If members of role are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'member|admin',
+                        'firstname': 'John',
+                        'lastname': 'Doe',
+                        'email': 'john@example.org',
+                        'is_active': True|False,
+                        'user_id': 1,
+                        'organization_id': 1,
+                        'invitation_id': null|1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+
         """
         role = RoleModel.query.get(role_id)
 
@@ -96,11 +177,28 @@ class RoleMembers(Resource):
 
         return data, 200
 
+
+class RoleMembersAssociation(Resource):
+    """
+    Define the endpoints for the members association edge of the role node.
+
+    """
     def put(self,
             role_id,
             partner_id):
         """
         Assign a partner to a role.
+
+        Request:
+            PUT /roles/{role_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is assigned to role
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+            404 Not Found - If partner is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -123,6 +221,17 @@ class RoleMembers(Resource):
                partner_id):
         """
         Unassign a partner from a role.
+
+        Request:
+            DELETE /roles/{role_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is unassigned from role
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+            404 Not Found - If partner is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -151,6 +260,23 @@ class RoleDomains(Resource):
         """
         List all domains of a role.
 
+        Request:
+            GET /roles/{role_id}/domains
+
+        Response:
+            200 OK - If domains of role are listed
+                [
+                    {
+                        'id': 1,
+                        'title': 'Role\'s name',
+                        'role_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+
         """
         role = RoleModel.query.get(role_id)
 
@@ -165,6 +291,24 @@ class RoleDomains(Resource):
     def post(self, role_id):
         """
         Add a domain to a role.
+
+        Request:
+            POST /roles/role_id/domains
+
+            Parameters:
+                title (string): The title of the domain
+
+        Response:
+            201 Created - If domain is added
+                {
+                    'id': 1,
+                    'title': 'Role\'s name',
+                    'role_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Conflict - If role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -194,6 +338,23 @@ class RoleAccountabilities(Resource):
         """
         List all accountabilities of a role.
 
+        Request:
+            GET /roles/{role_id}/accountabilities
+
+        Response:
+            200 OK - If accountabilities of role are listed
+                [
+                    {
+                        'id': 1,
+                        'title': 'Accountabilities\' title',
+                        'role_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+
         """
         role = RoleModel.query.get(role_id)
 
@@ -208,6 +369,24 @@ class RoleAccountabilities(Resource):
     def post(self, role_id):
         """
         Add a accountability to a role.
+
+        Request:
+            POST /roles/{role_id}/accountabilities
+
+            Parameters:
+                title (string): The title of the accountability
+
+        Response:
+            201 Created - If accountability is added
+                {
+                    'id': 1,
+                    'title': 'Accountabilities\' title',
+                    'role_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -237,6 +416,17 @@ class RoleCircle(Resource):
             role_id):
         """
         Add circle properties to a role.
+
+        Request:
+            PUT /roles/{role_id}/circle
+
+        Response:
+            204 No Content - If circle properties are added to role
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+            409 Conflict - If type of role is other than custom
 
         """
         role = RoleModel.query.get(role_id)
@@ -282,6 +472,18 @@ class RoleCircle(Resource):
                role_id):
         """
         Remove circle properties from a role.
+
+        Request:
+            DELETE /roles/{role_id}/circle
+
+        Response:
+            204 No Content - If circle properties are removed from role
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If role is not found
+            409 Conflict - If type of role is other than custom
+            409 Conflict - If role is an anchor circle of an organization
 
         """
         role = RoleModel.query.get(role_id)

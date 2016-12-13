@@ -28,8 +28,22 @@ class Invitation(Resource):
         member or an admin of the organization that the invitation is
         associated with.
 
-        Params:
-            invitation_id: The id of the invitation to retrieve
+        Request:
+            GET /invitations/{invitation_id}
+
+        Response:
+            200 OK - If invitation is retrieved
+                {
+                    'id': 1,
+                    'code': '12345678-1234-1234-1234-123456789012',
+                    'email': 'john@example.org',
+                    'status': 'pending|accepted|cancelled',
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If invitation is not found
 
         """
         invitation = InvitationModel.query.get(invitation_id)
@@ -58,14 +72,33 @@ class InvitationAccept(Resource):
         accepted again or accepted at all. In order to accept an invitation,
         the user must be an authenticated user.
 
-        Params:
-            code: The code of the invitation to accept
+        Request:
+            GET /invitations/{code}/accept
+
+        Response:
+            200 OK - If invitation is accepted
+                {
+                    'id': 1,
+                    'code': '12345678-1234-1234-1234-123456789012',
+                    'email': 'john@example.org',
+                    'status': 'accepted',
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If invitation is not found
+            409 Conflict - If status of invitation is cancelled
 
         """
         invitation = InvitationModel.query.filter_by(code=code).first()
 
         if invitation is None:
             abort(404)
+
+        if invitation.status == InvitationStatus.cancelled:
+            abort(409, 'The invitation has been cancelled and cannot be '
+                       'accepted.')
 
         PartnerModel(PartnerType.member, g.user.firstname, g.user.lastname,
                      g.user.email, g.user, invitation.organization)
@@ -94,8 +127,23 @@ class InvitationCancel(Resource):
         user must be an admin of the organization that the invitation is
         associated with.
 
-        Params:
-            invitation_id: The id of the invitation to cancel
+        Request:
+            PUT /invitations/{invitation_id}/cancelled
+
+        Response:
+            200 OK - If invitation is cancelled
+                {
+                    'id': 1,
+                    'code': '12345678-1234-1234-1234-123456789012',
+                    'email': 'john@example.org',
+                    'status': 'cancelled',
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If invitation is not found
+            409 Conflict - If status of invitation is accepted
 
         """
         invitation = InvitationModel.query.get(invitation_id)
@@ -104,8 +152,7 @@ class InvitationCancel(Resource):
             abort(404)
 
         if invitation.status == InvitationStatus.accepted:
-            abort(409, 'The invitation has already '
-                       'been accepted and cannot be '
+            abort(409, 'The invitation has been accepted and cannot be '
                        'cancelled.')
 
         invitation.status = InvitationStatus.cancelled
@@ -130,9 +177,6 @@ class InvitationResend(Resource):
         is 'accepted' or 'cancelled', the invitation cannot be resent. In
         order to resend an invitation, the authenticated user must be an admin
         of the organization that the invitation is associated with.
-
-        Params:
-            invitation_id: The id of the invitation to resend
 
         """
         abort(501)

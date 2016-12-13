@@ -25,7 +25,7 @@ def verify_token(token):
         abort(400)
 
     user = UserModel.query.filter_by(
-        google_id=payload['sub'], is_deleted=False).first()
+        google_id=payload['sub'], is_active=True).first()
 
     if user is None:
         abort(401)

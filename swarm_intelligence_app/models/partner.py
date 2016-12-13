@@ -26,7 +26,7 @@ class Partner(db.Model):
     firstname = db.Column(db.String(45), nullable=False)
     lastname = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    is_deleted = db.Column(db.Boolean(), nullable=False)
+    is_active = db.Column(db.Boolean(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
@@ -57,7 +57,7 @@ class Partner(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.is_deleted = False
+        self.is_active = True
         self.user = user
         self.organization = organization
         self.invitation_id = invitation_id
@@ -81,7 +81,7 @@ class Partner(db.Model):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
-            'is_deleted': self.is_deleted,
+            'is_active': self.is_active,
             'user_id': self.user.id,
             'organization_id': self.organization.id,
             'invitation_id': self.invitation_id

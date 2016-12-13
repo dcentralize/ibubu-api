@@ -7,13 +7,13 @@ from datetime import datetime, timedelta
 import jwt
 import requests
 
-from flask import current_app, g
-from flask_restful import abort, reqparse, Resource
+from flask import abort, current_app, g
+from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
-from swarm_intelligence_app.models.organization import \
-    Organization as OrganizationModel
+from swarm_intelligence_app.models.organization import Organization as \
+    OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
 from swarm_intelligence_app.models.role import Role as RoleModel
@@ -51,6 +51,23 @@ class UserRegistration(Resource):
         activated. If a user does not exist, the user is created with the data
         provided by google.
 
+        Request:
+            POST /register
+
+        Response:
+            201 Created - If user is created
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token is not authorized by google
+            409 Conflict - If user already exists
+
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -83,11 +100,11 @@ class UserRegistration(Resource):
 
         user = UserModel.query.filter_by(google_id=data['sub']).first()
 
-        if user is not None and user.is_deleted is False:
+        if user is not None and user.is_active is True:
             abort(409, 'Cannot create user. The user already exists.')
 
-        if user is not None and user.is_deleted is True:
-            user.is_deleted = False
+        if user is not None and user.is_active is False:
+            user.is_active = True
         else:
             user = UserModel(
                 data['sub'],
@@ -109,10 +126,7 @@ class UserRegistration(Resource):
             fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
-            'success': True,
-            'data': {
-                'access_token': encoded.decode('utf-8')
-            }
+            'access_token': encoded.decode('utf-8')
         }, 201
 
 
@@ -123,6 +137,18 @@ class UserLogin(Resource):
     def get(self):
         """
         Login a user.
+
+        Request:
+            GET /login
+
+        Response:
+            200 OK - If user is logged in
+                {
+                    'access_token': JSON Web Token
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token is not authorized by google
+
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -154,7 +180,7 @@ class UserLogin(Resource):
                 abort(401)
 
         user = UserModel.query.filter_by(
-            google_id=data['sub'], is_deleted=False).first()
+            google_id=data['sub'], is_active=True).first()
 
         if user is None:
             abort(401)
@@ -169,10 +195,7 @@ class UserLogin(Resource):
             fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
-            'success': True,
-            'data': {
-                'access_token': encoded.decode('utf-8')
-            }
+            'access_token': encoded.decode('utf-8')
         }, 200
 
 
@@ -186,18 +209,52 @@ class User(Resource):
         """
         Retrieve the authenticated user.
 
+        Request:
+            GET /me
+
+        Response:
+            200 OK - If user is retrieved
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
         return g.user.serialize, 200
 
     @auth.login_required
     def put(self):
         """
-        Edit the authenticated user.
+        Update the authenticated user.
 
-        Params:
-            firstname: The firstname of the authenticated user
-            lastname: The lastname of the authenticated user
-            email: The email address of the authenticated user
+        Request:
+            PUT /me
+
+            Parameters:
+                firstname (string): The firstname of the authenticated user
+                lastname (string): The lastname of the authenticated user
+                email (string): The email address of the authenticated user
+
+        Response:
+            200 OK - If user is updated
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
 
         """
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -223,11 +280,20 @@ class User(Resource):
         again with the same google account, the user's account is reopened. To
         rejoin an organization, a new invitation is needed.
 
+        Request:
+            DELETE /me
+
+        Response:
+            204 No Content - If user is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
-        g.user.is_deleted = True
+        g.user.is_active = False
 
         for partner in g.user.partners:
-            partner.is_deleted = True
+            partner.is_active = False
 
         db.session.commit()
 
@@ -247,8 +313,22 @@ class UserOrganizations(Resource):
         This endpoint creates a new organization with an anchor circle and
         adds the authenticated user as an admin to the organization.
 
-        Params:
-            name: The name of the organization
+        Request:
+            POST /me/organizations
+
+            Parameters:
+                name (string): The name of the organization
+
+        Response:
+            201 Created - If organization is created
+                {
+                    'id': 1,
+                    'name': 'My Company'
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            409 Conflict - If organization cannot be created
 
         """
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -305,9 +385,24 @@ class UserOrganizations(Resource):
         This endpoint only lists organizations that the authenticated user is
         allowed to operate on as a member or an admin.
 
+        Request:
+            GET /me/organizations
+
+        Response:
+            200 OK - If organizations of user are listed
+                [
+                    {
+                        'id': 1,
+                        'name': 'My Company'
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
         organizations = db.session.query(OrganizationModel).filter(
-            OrganizationModel.partners.any(is_deleted=False, user=g.user))
+            OrganizationModel.partners.any(is_active=True, user=g.user))
 
         data = [item.serialize for item in organizations]
 

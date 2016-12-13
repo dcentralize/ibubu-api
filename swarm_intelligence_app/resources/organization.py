@@ -32,13 +32,24 @@ class Organization(Resource):
         In order to retrieve an organization, the authenticated user must be a
         member or an admin of the organization.
 
-        Params:
-            organization_id: The id of the organization to retrieve
+        Request:
+            GET /organizations/{organization_id}
+
+        Response:
+            200 OK - If organization is retrieved
+                {
+                    'id': 1,
+                    'name': 'My Company'
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         return organization.serialize, 200
@@ -48,19 +59,32 @@ class Organization(Resource):
     def put(self,
             organization_id):
         """
-        Edit an organization.
+        Update an organization.
 
         In order to edit an organization, the authenticated user must be an
         admin of the organization.
 
-        Params:
-            organization_id: The id of the organization to edit
-            name: The name of the organization
+        Request:
+            PUT /organizations/{organization_id}
+
+            Parameters:
+                name (string): The name of the organization
+
+        Response:
+            200 OK - If organization is updated
+                {
+                    'id': 1,
+                    'name': 'My Company'
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -84,20 +108,21 @@ class Organization(Resource):
         delete an organization, the authenticated user must be an admin of the
         organization.
 
-        Params:
-            organization_id: The id of the organization to delete
+        Request:
+            DELETE /organizations/{organization_id}
+
+        Response:
+            204 No Content - If organization is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        #if organization is None or organization.is_deleted is True:
         if organization is None:
             abort(404)
-
-        #organization.is_deleted = True
-
-        #for partner in organization.partners:
-        #    partner.is_deleted = True
 
         db.session.delete(organization)
         db.session.commit()
@@ -122,14 +147,29 @@ class OrganizationAnchorCircle(Resource):
         retrieve the anchor circle of an organization, the authenticated user
         must be a member or an admin of the organization.
 
-        Params:
-            organization_id: The id of the organization for which to retrieve
-            the anchor circle
+        Request:
+            GET /organizations/{organization_id}/anchor_circle
+
+        Response:
+            200 OK - If organization's anchor circle is retrieved
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'My Company',
+                    'pupose': 'My Company\'s purpose',
+                    'strategy': 'My Company\'s strategy',
+                    'parent_circle_id': null,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         role, circle = db.session.query(
@@ -165,14 +205,33 @@ class OrganizationMembers(Resource):
         not. In order to list the members of an organization, the
         authenticated user must be a member or an admin of the organization.
 
-        Params:
-            organization_id: The id of the organization for which to list the
-            members
+        Request:
+            GET /organizations/{organization_id}/members
+
+        Response:
+            200 OK - If members of organization are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'member|admin',
+                        'firstname': 'John',
+                        'lastname': 'Doe',
+                        'email': 'john@example.org',
+                        'is_active': True|False,
+                        'user_id': 1,
+                        'organization_id': 1,
+                        'invitation_id': null|1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         data = [i.serialize for i in organization.partners]
@@ -197,14 +256,33 @@ class OrganizationAdmins(Resource):
         to list the admins of an organization, the authenticated user must be
         a member or an admin of the organization.
 
-        Params:
-            organization_id: The id of the organization for which to list the
-            admins
+        Request:
+            GET /organizations/{organization_id}/admins
+
+        Response:
+            200 OK - If admins of organization are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'admin',
+                        'firstname': 'John',
+                        'lastname': 'Doe',
+                        'email': 'john@example.org',
+                        'is_active': True|False,
+                        'user_id': 1,
+                        'organization_id': 1,
+                        'invitation_id': null|1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         admins = PartnerModel.query.filter_by(organization=organization,
@@ -234,15 +312,30 @@ class OrganizationInvitations(Resource):
         the organization. In order to invite a user to an organization, the
         authenticated user must be an admin of the organization.
 
-        Params:
-            organization_id: The id of the organization for which to invite
-            the user
-            email: The email address the invitation will be sent to
+        Request:
+            POST /organizations/{organization_id}/invitations
+
+            Parameters:
+                email (string): The email address the invitation is sent to
+
+        Response:
+            201 Created - If invitation is created
+                {
+                    'id': 1,
+                    'code': '12345678-1234-1234-1234-123456789012',
+                    'email': 'john@example.org',
+                    'status': 'pending|accepted|cancelled',
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -272,14 +365,29 @@ class OrganizationInvitations(Resource):
         organization, the authenticated user must be a member or an admin of
         the organization.
 
-        Params:
-            organization_id: The id of the organization for which to list the
-            invitations
+        Request:
+            GET /organizations/{organization_id}/invitations
+
+        Response:
+            200 OK - If invitations to organization are listed
+                [
+                    {
+                        'id': 1,
+                        'code': '12345678-1234-1234-1234-123456789012',
+                        'email': 'john@example.org',
+                        'status': 'pending|accepted|cancelled',
+                        'organization_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
 
-        if organization is None or organization.is_deleted is True:
+        if organization is None:
             abort(404)
 
         invitations = InvitationModel.query.filter_by(

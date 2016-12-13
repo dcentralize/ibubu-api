@@ -2,6 +2,7 @@
 Define the classes for the policy API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -17,7 +18,22 @@ class Policy(Resource):
     @auth.login_required
     def get(self, policy_id):
         """
-        Retrieve a accountability.
+        Retrieve a policy.
+
+        Request:
+            GET /policies/{policy_id}
+
+        Response:
+            200 OK - If policy is retrieved
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title'
+                    'domain_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)
@@ -30,7 +46,25 @@ class Policy(Resource):
     @auth.login_required
     def put(self, policy_id):
         """
-        Edit a policy.
+        Update a policy.
+
+        Request:
+            PUT /policies/{policy_id}
+
+            Parameters:
+                title (string): The new title of the policy
+
+        Response:
+            200 OK - If policy is updated
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title',
+                    'domain_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)
@@ -53,6 +87,16 @@ class Policy(Resource):
     def delete(self, policy_id):
         """
         Delete a policy.
+
+        Request:
+            DELETE /policies/{policy_id}
+
+        Response:
+            204 No Content - If policy is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)

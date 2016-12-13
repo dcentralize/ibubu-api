@@ -2,6 +2,7 @@
 Define the classes for the accountability API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
@@ -23,13 +24,16 @@ class Accountability(Resource):
             GET /accountabilities/{accountability_id}
 
         Response:
-            200 OK - If the accountability was retrieved
+            200 OK - If accountability is retrieved
                 {
-                    'id': '1',
-                    'title': 'The title of the accountability'
-                    'role_id': '99'
+                    'id': 1,
+                    'title': 'Accountability\'s title'
+                    'role_id': 99
                 }
-            404 Not Found - If the accountability was not found
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)
@@ -42,7 +46,7 @@ class Accountability(Resource):
     @auth.login_required
     def put(self, accountability_id):
         """
-        Edit an accountability.
+        Update an accountability.
 
         Request:
             PUT /accountabilities/{accountability_id}
@@ -51,13 +55,16 @@ class Accountability(Resource):
                 title (string): The new title of the accountability
 
         Response:
-            200 OK - If accountability was updated
+            200 OK - If accountability is updated
                 {
                     'id': 1,
-                    'title': 'The new title of the accountability',
+                    'title': 'Accountability\'s title',
                     'role_id': 99
                 }
-            404 Not Found - If accountability was not found
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)
@@ -84,7 +91,10 @@ class Accountability(Resource):
 
         Response:
             204 No Content - If the accountability was deleted
-            404 Not found - If the accountability was not found
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)
