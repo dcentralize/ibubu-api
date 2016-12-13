@@ -1,0 +1,8 @@
+# Covers JetBrains IDE: Pycharm
+
+# User-specific stuff:
+.idea/*
+.swarm_intelligence_app/__pycache__/*
+.swarm_intelligence_app/common/__pycache__/*
+.swarm_intelligence_app/models/__pycache__/*
+.swarm_intelligence_app/resources/__pycache__/*
