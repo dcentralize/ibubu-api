@@ -5,10 +5,10 @@ General Usage
 
 HTTP Requests
 =============
-GET		Used for retrieving resources or collections
-POST	Used for creating resources
-PUT		Used for replacing resources
-DELETE	Used for deleting resources
+GET     Used for retrieving resources or collections
+POST    Used for creating resources
+PUT     Used for replacing resources
+DELETE  Used for deleting resources
 
 
 HTTP Responses
@@ -22,7 +22,7 @@ Success
 204 No Content
 
 {
-	Key: Value
+    Key: Value
 }
 
 Client Error
@@ -36,7 +36,7 @@ Client Error
 409 Conflict
 
 {
-	'message': String
+    'message': String
 }
 
 Server Error
@@ -44,7 +44,7 @@ Server Error
 501 Not implemented
 
 {
-	'message': String
+    'message': String
 }
 
 
