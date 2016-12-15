@@ -83,7 +83,7 @@ class TestPartners:
     def put_partner(self, client, token, id):
         """
         Test if get request to API gets executed.
-        
+
 
         """
         assert client.put('/partners/' + id, headers={
