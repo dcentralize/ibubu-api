@@ -47,8 +47,8 @@ class TestOrganization:
         """
         Helper Method for getting an organization ID for further tests.
         :return Organization-ID as String.
-        """
 
+        """
         data = client.get('/me/organizations', headers={
             'Authorization': 'Bearer ' + token}).json[0]['id']
         organization_id = str(data)

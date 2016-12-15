@@ -5,7 +5,7 @@ Define classes for a partner.
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.role_member import  role_member
+from swarm_intelligence_app.models.role_member import role_member
 
 
 class PartnerType(Enum):
