@@ -199,6 +199,8 @@ class RoleMembersAssociation(Resource):
             401 Unauthorized - If user is not authorized
             404 Not Found - If role is not found
             404 Not Found - If partner is not found
+            409 Conflict - If role is not associated with partner's
+                organization
 
         """
         role = RoleModel.query.get(role_id)
@@ -210,6 +212,10 @@ class RoleMembersAssociation(Resource):
 
         if partner is None:
             abort(404)
+
+        if role.organization_id != partner.organization_id:
+            abort(409, 'Cannot assign a partner to a role that is not '
+                       'associated with the partner\'s organization.')
 
         role.members.append(partner)
         db.session.commit()

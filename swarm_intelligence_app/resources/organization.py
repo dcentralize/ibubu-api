@@ -273,11 +273,12 @@ class OrganizationAnchorCircle(Resource):
         if organization is None:
             abort(404)
 
+        null_value = None
         role, circle = db.session.query(
             RoleModel, CircleModel).join(
             CircleModel, RoleModel.id == CircleModel.id).filter(
             RoleModel.organization_id == organization.id).filter(
-            RoleModel.parent_circle_id == None).first()
+            RoleModel.parent_circle_id == null_value).first()
 
         if role is None or circle is None:
             abort(404)

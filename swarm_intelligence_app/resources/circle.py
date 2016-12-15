@@ -296,6 +296,8 @@ class CircleMembersAssociation(Resource):
             401 Unauthorized - If user is not authorized
             404 Not Found - If circle is not found
             404 Not Found - If partner is not found
+            409 Conflict - If circle is not associated with partner's
+                organization
 
         """
         circle = CircleModel.query.get(circle_id)
@@ -307,6 +309,10 @@ class CircleMembersAssociation(Resource):
 
         if partner is None:
             abort(404)
+
+        if circle.organization_id != partner.organization_id:
+            abort(409, 'Cannot assign a partner to a circle that is not '
+                       'associated with the partner\'s organization.')
 
         circle.super.members.append(partner)
         db.session.commit()
