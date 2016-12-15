@@ -1,5 +1,6 @@
 """
 Test user api-functionality.
+
 """
 import uuid
 
@@ -17,7 +18,7 @@ class TestUser:
 
     def test_me(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -44,6 +45,7 @@ class TestUser:
     def me_post(self, client, token):
         """
         Test if the me-page returns the expected http status-code when posting.
+
         """
         assert client.post('/register', headers={
             'Authorization': 'Token ' + token}).status == '201 CREATED'
@@ -51,6 +53,7 @@ class TestUser:
     def me_get(self, client, token):
         """
         Test if the me-page returns the expected http status-code when getting.
+
         """
         assert client.get('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
@@ -58,6 +61,7 @@ class TestUser:
     def me_put(self, client, token):
         """
         Test if the me-page returns the expected http status-code when putting.
+
         """
         assert client.put('/me', headers={
             'Authorization': 'Bearer ' + token},
@@ -70,26 +74,29 @@ class TestUser:
         """
         Test if the me-page returns the expected http status-code when
         deleting.
+
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def me_organizations_post(self, client, token):
         """
-        Test if the me-organizations-page returns the expected http status-code.
+        Test if the me-organizations-page returns the expected http status-code
         when posting.
+
         """
         assert client.post('/me/organizations', headers={
             'Authorization': 'Bearer ' + token},
                            data={'name': str(uuid.uuid4()) + 'Dagoberts ' +
-                                         'Empire'}).status == \
-               '201 CREATED'
+                                 'Empire'}).status == \
+            '201 CREATED'
 
     def me_organizations_get(self, client, token):
         """
-        Test if the me-organizations-page returns the expected http status-code.
+        Test if the me-organizations-page returns the expected http status-code
         when getting.
+
         """
         assert client.get('/me/organizations', headers={
             'Authorization': 'Bearer ' + token}, ).status == \
-               '200 OK'
+            '200 OK'

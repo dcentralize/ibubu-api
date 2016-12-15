@@ -26,7 +26,7 @@ class TestPartners:
 
     def test_partners(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -64,7 +64,6 @@ class TestPartners:
         Helper Method for getting an organization ID for further tests.
 
         """
-
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
         json_response = response.json[1]['id']
@@ -89,7 +88,6 @@ class TestPartners:
         """
         Test if put request to API gets executed.
 
-
         """
         assert client.put('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token},
@@ -101,7 +99,6 @@ class TestPartners:
     def delete_partner(self, client, token, id):
         """
         Test if delete request gets executed.
-
 
         """
         assert client.delete('/partners/' + id, headers={
@@ -122,7 +119,6 @@ class TestPartners:
         """
         Test if the get request gets executed.
 
-
         """
         # #TODO Implement Metrics
         # # assert client.get('/organizations/' + id + '/members', headers={
@@ -135,7 +131,6 @@ class TestPartners:
         Test if the put request gets executed.
 
         """
-
         assert client.put('/partners/' + id + '/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
@@ -144,7 +139,6 @@ class TestPartners:
         Test if the delete request gets executed.
 
         """
-
         assert client.delete('/partners/' + id + '/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
@@ -170,6 +164,7 @@ class TestPartners:
         """
         Helper Method for adding a user to an organization in order to make
         test the /admins api functionality.
+
         """
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
@@ -178,4 +173,4 @@ class TestPartners:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-               '200 OK'
+            '200 OK'

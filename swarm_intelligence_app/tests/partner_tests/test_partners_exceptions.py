@@ -26,7 +26,7 @@ class TestPartnerException:
 
     def test_organization_exceptions(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -93,7 +93,7 @@ class TestPartnerException:
         assert client.put('/partners/' + id, headers={},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def partner_put_no_param(self, client, token, id):
         """
@@ -116,7 +116,7 @@ class TestPartnerException:
                           data={'google_id': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def partner_get_no_login(self, client, id):
         """
@@ -140,6 +140,7 @@ class TestPartnerException:
         """
         Test if the partner api returns the expected http status-code
         when getting with a wrong ID.
+
         """
         assert client.get('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
@@ -213,7 +214,7 @@ class TestPartnerException:
                           data={'firstname': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def partner_del_no_login(self, client, id):
         """
@@ -244,7 +245,8 @@ class TestPartnerException:
 
     def add_user_to_organization(self, client, token, id_organization):
         """
-        Helper Method adding a User to an Organization
+        Helper Method adding a User to an Organization.
+
         """
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
@@ -253,4 +255,4 @@ class TestPartnerException:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-               '200 OK'
+            '200 OK'
