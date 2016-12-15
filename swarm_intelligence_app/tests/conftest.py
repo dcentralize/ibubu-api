@@ -2,8 +2,9 @@
 Define the main entry point for the tests.
 
 """
-import pytest
 import os
+import pytest
+
 from flask import Flask, render_template
 from flask_restful import Api
 from sqlalchemy import create_engine
@@ -28,6 +29,7 @@ def load_config(app):
     """
     config_name = os.environ.get('SI_CONFIG_NAME') or 'default'
     app.config.from_object(config[config_name])
+
 
 @pytest.fixture
 def app():

@@ -1,10 +1,12 @@
 """
 Test user api-functionality.
+
 """
 
 import uuid
-from swarm_intelligence_app.tests import test_helper
+
 from swarm_intelligence_app.common import authentication
+from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.tests.user_tests import test_me
 from swarm_intelligence_app.tests.organization_tests import test_organization
 
@@ -12,6 +14,7 @@ from swarm_intelligence_app.tests.organization_tests import test_organization
 class TestPartners:
     """
     Class for testing user api-functionality.
+
     """
     user1 = test_me.TestUser
     user2 = test_me.TestUser
@@ -54,6 +57,7 @@ class TestPartners:
     def get_organization_members_id(self, client, token, id):
         """
         Helper Method for getting an organization ID for further tests.
+
         """
 
         response = client.get('/organizations/' + id + '/members', headers={
@@ -64,6 +68,7 @@ class TestPartners:
     def get_partner(self, client, token, id):
         """
         Test if get request to API gets executed.
+
         """
         assert client.get('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
@@ -78,6 +83,8 @@ class TestPartners:
     def put_partner(self, client, token, id):
         """
         Test if get request to API gets executed.
+        
+
         """
         assert client.put('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token},
@@ -89,6 +96,8 @@ class TestPartners:
     def delete_partner(self, client, token, id):
         """
         Test if the delete request gets executed.
+
+
         """
         assert client.delete('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
@@ -96,6 +105,7 @@ class TestPartners:
     def post_partner_metrics(self, client, token, id):
         """
         Test if the get request gets executed.
+
         """
         # #TODO Implement Metrics
         # # assert client.get('/organizations/' + id + '/members', headers={
@@ -106,6 +116,8 @@ class TestPartners:
     def get_partner_metrics(self, client, token, id):
         """
         Test if the get request gets executed.
+
+
         """
         # #TODO Implement Metrics
         # # assert client.get('/organizations/' + id + '/members', headers={
@@ -116,6 +128,7 @@ class TestPartners:
     def put_partner_admins(self, client, token, id):
         """
         Test if the get request gets executed.
+
         """
 
         assert client.put('/partners/' + id + '/admin', headers={
@@ -124,6 +137,7 @@ class TestPartners:
     def delete_partner_admins(self, client, token, id):
         """
         Test if the get request gets executed.
+
         """
 
         assert client.delete('/partners/' + id + '/admin', headers={
@@ -132,6 +146,7 @@ class TestPartners:
     def post_partner_checklist(self, client, token, id):
         """
         Test if post request get executed.
+
         """
         # #TODO Implement Checklists
         # assert client.post('/partners/' + id + '/checklists', headers={
@@ -140,6 +155,7 @@ class TestPartners:
     def get_partner_checklist(self, client, token, id):
         """
         Test if the get request gets executed.
+
         """
         # #TODO Implement Checklists
         # assert client.get('/partners/' + id + '/checklists', headers={

@@ -3,6 +3,7 @@ Define the main entry point for the app.
 
 """
 import os
+
 from flask import Blueprint, Flask, render_template
 from flask_cors import CORS
 from flask_restful import Api

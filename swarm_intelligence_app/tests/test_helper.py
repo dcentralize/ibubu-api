@@ -1,8 +1,6 @@
 """
 Use for Setting Up tests.
 """
-import json
-
 from flask import url_for
 
 from swarm_intelligence_app.models import organization

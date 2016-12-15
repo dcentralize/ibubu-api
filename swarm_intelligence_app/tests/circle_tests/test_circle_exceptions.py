@@ -22,36 +22,37 @@ class TestCircle:
 
         for token in self.tokens:
             self.user.me_post(test_me, client, token)
-            jwtToken = self.helper.login(test_helper, client, token)
-            self.user.me_organizations_post(test_me, client, jwtToken)
-            id = self.circle.get_organization_id(test_circle, client, jwtToken)
-            circleId = self.circle.get_circle_id(test_circle, client, jwtToken,
+            jwt_token = self.helper.login(test_helper, client, token)
+            self.user.me_organizations_post(test_me, client, jwt_token)
+            id = self.circle.get_organization_id(test_circle, client, jwt_token)
+            circle_id = self.circle.get_circle_id(test_circle, client, jwt_token,
                                                  id)
-            partnerId = self.circle.get_partner_id(test_circle, client, id,
-                                                   jwtToken)
-            roleId = self.circle.get_role_id(test_circle, client, jwtToken,
-                                             circleId)
+            partner_id = self.circle.get_partner_id(test_circle, client, id,
+                                                   jwt_token)
+            role_id = self.circle.get_role_id(test_circle, client, jwt_token,
+                                             circle_id)
 
-            self.circle_get_no_login(client, circleId)
-            self.circle_put_no_login(client, circleId)
-            self.circle_put_no_param(client, circleId, jwtToken)
-            self.circle_put_wrong_param(client, circleId, jwtToken)
-            self.circle_post_roles_no_login(client, circleId)
-            self.circle_post_roles_no_param(client, circleId, jwtToken)
-            self.circle_post_roles_wrong_param(client, circleId, jwtToken)
-            self.circle_get_roles_no_login(client, circleId)
-            self.circle_put_subcircles_no_login(client, roleId)
-            self.circle_put_subcircles_no_param(client, circleId, jwtToken)
-            self.circle_put_subcircles_wrong_param(client, circleId, jwtToken)
-            self.circle_get_subcircles_no_login(client, circleId)
-            self.circle_get_members_no_login(client, circleId)
-            self.circle_put_partner_no_login(client, circleId, partnerId)
-            self.circle_delete_partner_no_login(client, circleId, partnerId)
+            self.circle_get_no_login(client, circle_id)
+            self.circle_put_no_login(client, circle_id)
+            self.circle_put_no_param(client, circle_id, jwt_token)
+            self.circle_put_wrong_param(client, circle_id, jwt_token)
+            self.circle_post_roles_no_login(client, circle_id)
+            self.circle_post_roles_no_param(client, circle_id, jwt_token)
+            self.circle_post_roles_wrong_param(client, circle_id, jwt_token)
+            self.circle_get_roles_no_login(client, circle_id)
+            self.circle_put_subcircles_no_login(client, role_id)
+            self.circle_put_subcircles_no_param(client, circle_id, jwt_token)
+            self.circle_put_subcircles_wrong_param(client, circle_id, jwt_token)
+            self.circle_get_subcircles_no_login(client, circle_id)
+            self.circle_get_members_no_login(client, circle_id)
+            self.circle_put_partner_no_login(client, circle_id, partner_id)
+            self.circle_delete_partner_no_login(client, circle_id, partner_id)
 
     def circle_get_no_login(self, client, circleId):
         """
         Test if the get requests without a valid token returns a 400 status
         code.
+
         """
         assert client.get('/circles/' + circleId).status == '400 BAD REQUEST'
 
@@ -59,6 +60,7 @@ class TestCircle:
         """
         Test if the put request without a valid token returns a 400 status
         code.
+
         """
         assert client.put('/circles/' + circleId, headers={},
                           data={'name': 'Name2',
@@ -69,6 +71,7 @@ class TestCircle:
     def circle_put_no_param(self, client, circleId, token):
         """
         Test if the put request with a missing body returns a 400 status code.
+
         """
         assert client.put('/circles/' + circleId, headers={
             'Authorization': 'Bearer ' + token},
@@ -79,6 +82,7 @@ class TestCircle:
         """
         Test if the put request without a correct body returns a 400 status
         code.
+
         """
         assert client.put('/circles/' + circleId, headers={
             'Authorization': 'Bearer ' + token},
@@ -90,6 +94,7 @@ class TestCircle:
         """
         Test if the post request without a valid token returns a 400 status
         code.
+
         """
         assert client.post('/circles/' + circleId + '/roles', headers={},
                            data={'name': 'NewRole',
@@ -100,6 +105,7 @@ class TestCircle:
     def circle_post_roles_no_param(self, client, circleId, token):
         """
         Test if the post request with a missing body returns a 400 status code.
+
         """
         assert client.post('/circles/' + circleId + '/roles', headers={
             'Authorization': 'Bearer ' + token},
@@ -110,6 +116,7 @@ class TestCircle:
         """
         Test if the post request without a correct body returns a 400 status
         code.
+
         """
         assert client.post('/circles/' + circleId + '/roles', headers={
             'Authorization': 'Bearer ' + token},
@@ -121,6 +128,7 @@ class TestCircle:
         """
         Test if the get request without a valid token returns a 400 status
         code.
+
         """
         assert client.get('/circles/' + circleId + '/roles', headers={},
                            data={}).status == '400 BAD REQUEST'
@@ -129,6 +137,7 @@ class TestCircle:
         """
         Test if the put request without a valid token returns a 400 status
         code.
+
         """
         assert client.put('/roles/' + roleId + '/circle', headers={},
                           data={'name': 'NewRole',
@@ -140,6 +149,7 @@ class TestCircle:
     def circle_put_subcircles_no_param(self, client, roleId, token):
         """
         Test if the put request with a missing body returns a 400 status code.
+
         """
         assert client.put('/roles/' + roleId + '/circle', headers={
             'Authorization': 'Bearer ' + token}, data={}).status ==\
@@ -149,6 +159,7 @@ class TestCircle:
         """
         Test if the put request without a correct body returns a 400 status
         code.
+
         """
         assert client.put('/roles/' + roleId + '/circle', headers={
             'Authorization': 'Bearer ' + token},

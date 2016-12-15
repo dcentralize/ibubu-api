@@ -2,8 +2,9 @@
 Test user api-functionality.
 """
 import uuid
-from swarm_intelligence_app.tests import test_helper
+
 from swarm_intelligence_app.common import authentication
+from swarm_intelligence_app.tests import test_helper
 
 
 class TestUser:
@@ -15,6 +16,9 @@ class TestUser:
     helper = test_helper.TestHelper
 
     def test_me(self, client):
+        """
+        Test the endpoints /me and /me/organizations
+        """
         self.helper.set_up(test_helper, client)
         for token in self.tokens:
             """
@@ -22,18 +26,18 @@ class TestUser:
             """
 
             self.me_post(client, token)
-            jwtToken = self.helper.login(test_helper, client, token)
-            self.me_get(client, jwtToken)
-            self.me_put(client, jwtToken)
-            self.me_del(client, jwtToken)
+            jwt_token = self.helper.login(test_helper, client, token)
+            self.me_get(client, jwt_token)
+            self.me_put(client, jwt_token)
+            self.me_del(client, jwt_token)
 
             """
             Test /me/organizations Endpoint
             """
             self.me_post(client, token)
-            jwtToken = self.helper.login(test_helper, client, token)
-            self.me_organizations_post(client, jwtToken)
-            self.me_organizations_get(client, jwtToken)
+            jwt_token = self.helper.login(test_helper, client, token)
+            self.me_organizations_post(client, jwt_token)
+            self.me_organizations_get(client, jwt_token)
 
     def me_post(self, client, token):
         """

@@ -1,5 +1,6 @@
 """
 Define Organization Exception Tests.
+
 """
 
 from swarm_intelligence_app.common import authentication
@@ -12,6 +13,7 @@ from swarm_intelligence_app.tests.partner_tests import test_partners
 class TestPartnerException:
     """
     Test API for exceptions.
+
     """
     partner_helper = test_partners.TestPartners
     helper = test_helper.TestHelper
@@ -25,6 +27,7 @@ class TestPartnerException:
     def test_organization_exceptions(self, client):
         """
         Test with multiple token.
+
         """
         self.helper.set_up(test_helper, client)
 
@@ -74,6 +77,7 @@ class TestPartnerException:
     def partner_post_not_allowed(self, client, id):
         """
         Test if the me-page returns a valid http status-code when posting.
+
         """
         assert client.post(
             '/partners/' + id).status == '405 METHOD NOT ALLOWED'
@@ -81,6 +85,7 @@ class TestPartnerException:
     def partner_put_no_login(self, client, id):
         """
         Test if the me-page returns a valid http status-code when getting.
+
         """
         assert client.put('/partners/' + id, headers={},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
@@ -89,8 +94,9 @@ class TestPartnerException:
 
     def partner_put_no_param(self, client, token, id):
         """
-            Test if the me-page returns a valid http status-code when putting.
-            """
+        Test if the me-page returns a valid http status-code when putting.
+
+        """
         assert client.put('/partners/' + id,
                           headers={'Authorization': 'Bearer ' + token},
                           data={}).status == '400 BAD REQUEST'
@@ -98,6 +104,7 @@ class TestPartnerException:
     def partner_put_wrong_params(self, client, token, id):
         """
         Test if the me-page returns a valid http status-code when putting.
+
         """
         assert client.put('/partners/' + id,
                           headers={'Authorization': 'Bearer ' + token},

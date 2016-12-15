@@ -1,7 +1,14 @@
+"""
+Define classes for app configuration.
+
+"""
 import os
 
 
 class Config:
+    """
+    Define base configuration.
+    """
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'sqlite://:memory:'
     SI_GOOGLE_CLIENT_ID = os.environ.get('SI_GOOGLE_CLIENT_ID')
@@ -10,16 +17,25 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+    """
+    Define development configuration.
+    """
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = \
         'mysql+pymysql://root@localhost:3306/swarm_intelligence'
 
 
 class TestingConfig(Config):
+    """
+    Define testing configuration.
+    """
     pass
 
 
 class ProductionConfig(Config):
+    """
+    Define production configuration.
+    """
     pass
 
 

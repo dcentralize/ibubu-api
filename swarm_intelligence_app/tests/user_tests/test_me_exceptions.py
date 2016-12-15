@@ -2,8 +2,8 @@
 Test User-Api exceptions.
 """
 
-from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.common import authentication
+from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.tests.user_tests import test_me
 
 
@@ -27,10 +27,10 @@ class TestUserExceptions:
 
         for token in self.tokens:
             self.endpoint_me.me_post(test_me, client, token)
-            jwtToken = self.helper.login(test_helper, client, token)
-            self.me_organizations_post_no_param(client, jwtToken)
-            self.me_del_no_param(client, jwtToken)
-            self.me_delete_deleted_user(client, jwtToken)
+            jwt_token = self.helper.login(test_helper, client, token)
+            self.me_organizations_post_no_param(client, jwt_token)
+            self.me_del_no_param(client, jwt_token)
+            self.me_delete_deleted_user(client, jwt_token)
 
     def me_post_no_login(self, client):
         """
