@@ -39,8 +39,6 @@ class TestUser:
         """
         Test if the me-page returns a valid http status-code when posting.
         """
-        print('Passed test for creating a new user')
-
         assert client.post('/register', headers={
             'Authorization': 'Token ' + token}).status == '200 OK'
 
@@ -48,7 +46,6 @@ class TestUser:
         """
         Test if the me-page returns a valid http status-code when getting.
         """
-
         assert client.get('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
 
@@ -69,7 +66,6 @@ class TestUser:
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
-        print('Passed test for deleting a user.')
 
     def me_organizations_post(self, client, token):
         """
@@ -81,7 +77,6 @@ class TestUser:
                            data={'name': str(uuid.uuid4()) + 'Dagoberts ' +
                                                  'Empire'}).status == \
                '200 OK'
-        print('Passed test for creating a new organization')
 
     def me_organizations_get(self, client, token):
         """
@@ -91,5 +86,3 @@ class TestUser:
         assert client.get('/me/organizations', headers={
             'Authorization': 'Bearer ' + token}, ).status == \
                '200 OK'
-
-        print('Passed test for getting an organization')
