@@ -506,12 +506,13 @@ class UserOrganizations(Resource):
             organization = OrganizationModel(args['name'])
 
             partner = PartnerModel(PartnerType.admin, g.user.firstname,
-                g.user.lastname, g.user.email, g.user, organization)
+                                   g.user.lastname, g.user.email, g.user,
+                                   organization)
             db.session.add(partner)
             db.session.flush()
 
             role = RoleModel(RoleType.circle, 'General', 'General\'s Purpose',
-                None, organization.id)
+                             None, organization.id)
             db.session.add(role)
             db.session.flush()
 
@@ -519,7 +520,7 @@ class UserOrganizations(Resource):
             db.session.add(circle)
             db.session.flush()
 
-            lead_link = RoleModel(RoleType.lead_link,'Lead Link',
+            lead_link = RoleModel(RoleType.lead_link, 'Lead Link',
                                   'Lead Link\'s Purpose', role.id,
                                   role.organization_id)
             db.session.add(lead_link)

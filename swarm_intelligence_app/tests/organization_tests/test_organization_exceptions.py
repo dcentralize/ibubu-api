@@ -4,8 +4,8 @@ Define Organization Exception Tests.
 """
 
 from swarm_intelligence_app.common import authentication
-from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests import test_helper
+from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests.user_tests import test_me
 
 

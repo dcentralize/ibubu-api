@@ -14,7 +14,7 @@ class Policy(db.Model):
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=True)
     domain_id = db.Column(db.Integer, db.ForeignKey('domain.id'),
-        nullable=False)
+                          nullable=False)
 
     def __init__(self, title, description, domain_id):
         """

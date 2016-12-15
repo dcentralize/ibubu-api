@@ -5,7 +5,6 @@ Define classes for a role.
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.role_member import role_member
 
 
 class RoleType(Enum):
@@ -32,14 +31,13 @@ class Role(db.Model):
     name = db.Column(db.String(100), nullable=False)
     purpose = db.Column(db.String(255), nullable=False)
     parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
-        nullable=True)
+                                 nullable=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
-        nullable=False)
+                                nullable=False)
 
     members = db.relationship('Partner',
                               secondary='role_member',
                               back_populates='memberships')
-                              #cascade='all, delete-orphan')
 
     domains = db.relationship('Domain',
                               backref='role',
