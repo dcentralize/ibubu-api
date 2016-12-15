@@ -84,7 +84,8 @@ class TestPartnerException:
         """
         assert client.put('/partners/' + id, headers={},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
-                                'email': 'daisy@tolli.com'}).status == '400 BAD REQUEST'
+                                'email': 'daisy@tolli.com'}).status == \
+            '400 BAD REQUEST'
 
     def partner_put_no_param(self, client, token, id):
         """
@@ -103,7 +104,7 @@ class TestPartnerException:
                           data={'google_id': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def partner_get_no_login(self, client, id):
         assert client.get('/partners/' + id, headers={}).status == '400 BAD ' \
@@ -151,7 +152,7 @@ class TestPartnerException:
                           data={'firstname': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def partner_del_no_login(self, client, id):
         assert client.delete('/partners/' + id,
@@ -172,4 +173,5 @@ class TestPartnerException:
         invitation_code = invitation_response.json['data']['code']
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
-                              'Authorization': 'Bearer ' + token}).status == '200 OK'
+                              'Authorization': 'Bearer ' + token}).status == \
+            '200 OK'

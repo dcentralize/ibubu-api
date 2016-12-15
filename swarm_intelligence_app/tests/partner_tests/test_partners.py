@@ -2,11 +2,11 @@
 Test user api-functionality.
 """
 
+import uuid
 from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.common import authentication
 from swarm_intelligence_app.tests.user_tests import test_me
 from swarm_intelligence_app.tests.organization_tests import test_organization
-from swarm_intelligence_app.resources import invitation
 
 
 class TestPartners:
@@ -22,7 +22,6 @@ class TestPartners:
     jwtToken2 = ''
 
     def test_partners(self, client):
-        # TODO
         self.helper.set_up(test_helper, client)
 
         self.user1.me_post(test_me, client, 'mock_user_001')
@@ -84,7 +83,7 @@ class TestPartners:
             'Authorization': 'Bearer ' + token},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy' +
-                                         token + '@tolli.com'})
+                                         str(uuid.uuid4()) + '@tolli.com'})
         print('Passed test for editing a Partner.')
 
     def delete_partner(self, client, token, id):
@@ -146,12 +145,12 @@ class TestPartners:
         # assert client.get('/partners/' + id + '/checklists', headers={
         #     'Authorization': 'Bearer ' + token}).status == '200 OK'
 
-    def add_user_to_organization(self, client, token, \
-                                 id_organization):
+    def add_user_to_organization(self, client, token, id_organization):
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
 
         invitation_code = invitation_response.json['data']['code']
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
-                              'Authorization': 'Bearer ' + token}).status == '200 OK'
+                              'Authorization': 'Bearer ' + token}).status == \
+            '200 OK'
