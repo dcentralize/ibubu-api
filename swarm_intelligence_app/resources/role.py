@@ -445,15 +445,18 @@ class RoleCircle(Resource):
                 db.session.flush()
 
                 lead_link = RoleModel(RoleType.lead_link, 'Lead Link',
-                    'Lead Link\'s Purpose', role.id, role.organization_id)
+                                      'Lead Link\'s Purpose', role.id,
+                                      role.organization_id)
                 db.session.add(lead_link)
 
                 secretary = RoleModel(RoleType.secretary, 'Secretary',
-                    'Secretary\'s Purpose', role.id, role.organization_id)
+                                      'Secretary\'s Purpose', role.id,
+                                      role.organization_id)
                 db.session.add(secretary)
 
                 facilitator = RoleModel(RoleType.facilitator, 'Facilitator',
-                    'Facilitator\'s Purpose', role.id, role.organization_id)
+                                        'Facilitator\'s Purpose', role.id,
+                                        role.organization_id)
                 db.session.add(facilitator)
 
                 db.session.commit()
@@ -465,7 +468,6 @@ class RoleCircle(Resource):
                        'custom role.')
 
         return None, 204
-
 
     @auth.login_required
     def delete(self,

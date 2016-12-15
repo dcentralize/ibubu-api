@@ -277,7 +277,7 @@ class OrganizationAnchorCircle(Resource):
             RoleModel, CircleModel).join(
             CircleModel, RoleModel.id == CircleModel.id).filter(
             RoleModel.organization_id == organization.id).filter(
-            RoleModel.parent_circle_id == None).first()
+            RoleModel.parent_circle_id is None).first()
 
         if role is None or circle is None:
             abort(404)

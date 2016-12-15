@@ -123,8 +123,8 @@ class TestCircle:
         response = client.post('/circles/' + circle_id2 + '/roles', headers={
             'Authorization': 'Bearer ' + token},
                                data={'name': 'NewRole',
-                                 'purpose': 'This is a new Role added to a '
-                                            'Circle.'})
+                                     'purpose': 'This is a new Role added to '
+                                                'a Circle.'})
         data = response.json['id']
         role_id = str(data)
         return role_id
@@ -135,10 +135,11 @@ class TestCircle:
 
         """
         assert client.put('/roles/' + role_id + '/circle', headers={
-            'Authorization': 'Bearer ' + token}, data={'name': 'NewRole',
-                                 'purpose': 'This is a new Role added to a '
-                                            'Circle.',
-                                 'strategy': 'NewStrategy'}).status == \
+            'Authorization': 'Bearer ' + token},
+                          data={'name': 'NewRole',
+                                'purpose': 'This is a new Role added to a '
+                                           'Circle.',
+                                'strategy': 'NewStrategy'}).status == \
             '204 NO CONTENT'
 
     def get_circle_members(self, client, circle_id2, token):
@@ -157,8 +158,8 @@ class TestCircle:
         response = client.get('/organizations/' + id2 + '/members', headers={
             'Authorization': 'Bearer ' + token})
         data = response.json[0]['id']
-        partnerId = str(data)
-        return partnerId
+        partner_id = str(data)
+        return partner_id
 
     def put_circle_partner(self, client, partner_id, circle_id2, token):
         """
