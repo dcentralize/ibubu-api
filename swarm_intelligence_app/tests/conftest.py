@@ -3,6 +3,7 @@ Define the main entry point for the tests.
 
 """
 import os
+
 import pytest
 
 from flask import Flask, render_template

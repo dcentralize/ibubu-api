@@ -4,10 +4,10 @@ Define Organization Exception Tests.
 """
 
 from swarm_intelligence_app.common import authentication
-from swarm_intelligence_app.tests.user_tests import test_me
-from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests import test_helper
+from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests.partner_tests import test_partners
+from swarm_intelligence_app.tests.user_tests import test_me
 
 
 class TestPartnerException:
@@ -48,10 +48,10 @@ class TestPartnerException:
         self.add_user_to_organization(client, self.jwtToken2,
                                       organization_id)
 
-        member_id = self.partner_helper.get_organization_members_id \
-            (test_partners, client,
-             self.jwtToken,
-             organization_id)
+        member_id = self.partner_helper.get_organization_members_id(
+            test_partners, client,
+            self.jwtToken,
+            organization_id)
 
         partner_id = self.partner_helper.get_partner(test_partners, client,
                                                      self.jwtToken,
