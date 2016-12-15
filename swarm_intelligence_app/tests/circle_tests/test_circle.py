@@ -53,7 +53,6 @@ class TestCircle:
         Helper Method for getting an organization ID for further tests.
 
         """
-
         data = client.get('/me/organizations', headers={
             'Authorization': 'Bearer ' + token}).json[0]['id']
         organization_id = str(data)
@@ -64,7 +63,6 @@ class TestCircle:
         Helper Method for getting a circle id for further tests.
 
         """
-
         data = client.get('/organizations/' + id + '/anchor_circle', headers={
             'Authorization': 'Bearer ' + token}).json['id']
         circle_id = str(data)

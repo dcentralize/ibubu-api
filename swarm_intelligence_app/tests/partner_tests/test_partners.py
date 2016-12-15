@@ -64,7 +64,6 @@ class TestPartners:
         Helper Method for getting an organization ID for further tests.
 
         """
-
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
         json_response = response.json[1]['id']
@@ -132,7 +131,6 @@ class TestPartners:
         Test if the put request gets executed.
 
         """
-
         assert client.put('/partners/' + id + '/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
@@ -141,7 +139,6 @@ class TestPartners:
         Test if the delete request gets executed.
 
         """
-
         assert client.delete('/partners/' + id + '/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 

@@ -47,7 +47,6 @@ class TestOrganization:
         """
         Helper Method for getting an organization ID for further tests.
         :return Organization-ID as String.
-
         """
 
         data = client.get('/me/organizations', headers={
@@ -87,7 +86,6 @@ class TestOrganization:
         :return JSON object with all members.
 
         """
-
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
         json_response = response.json
@@ -99,7 +97,6 @@ class TestOrganization:
         :return JSON Object with all admins of an Organization.
 
         """
-
         assert client.get('/organizations/' + id + '/admins', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
 
@@ -111,7 +108,6 @@ class TestOrganization:
         Test if the get request for Invitations gets executed.
 
         """
-
         assert client.get('/organizations/' + id + '/invitations', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
 
