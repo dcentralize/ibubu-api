@@ -2,6 +2,7 @@
 Define the classes for the metric API.
 
 """
+from flask import abort
 from flask_restful import Resource
 
 

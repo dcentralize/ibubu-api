@@ -520,17 +520,20 @@ class UserOrganizations(Resource):
             db.session.flush()
 
             lead_link = RoleModel(RoleType.lead_link,'Lead Link',
-                'Lead Link\'s Purpose', role.id, role.organization_id)
+                                  'Lead Link\'s Purpose', role.id,
+                                  role.organization_id)
             db.session.add(lead_link)
             db.session.flush()
 
             secretary = RoleModel(RoleType.secretary, 'Secretary',
-                'Secretary\'s Purpose', role.id, role.organization_id)
+                                  'Secretary\'s Purpose', role.id,
+                                  role.organization_id)
             db.session.add(secretary)
             db.session.flush()
 
             facilitator = RoleModel(RoleType.facilitator, 'Facilitator',
-                'Facilitator\'s Purpose', role.id, role.organization_id)
+                                    'Facilitator\'s Purpose', role.id,
+                                    role.organization_id)
             db.session.add(facilitator)
             db.session.flush()
 

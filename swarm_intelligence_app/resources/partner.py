@@ -251,7 +251,7 @@ class PartnerMemberships(Resource):
                 [
                     {
                         'id': 1,
-                        'type': 'circle|lead_link|secretary|facilitator|custom',
+                        'type': 'circle|lead_link|secretary|facilitator|custom'
                         'name': 'Role\'s name',
                         'purpose': 'Role\'s purpose',
                         'strategy': 'null|Role\'s strategy',
