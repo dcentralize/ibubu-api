@@ -1,5 +1,6 @@
 """
 Test User-Api exceptions.
+
 """
 
 from swarm_intelligence_app.common import authentication
@@ -10,6 +11,7 @@ from swarm_intelligence_app.tests.user_tests import test_me
 class TestUserExceptions:
     """
     Class for testing exceptions at the /me(/*) endpoint.
+
     """
     tokens = authentication.get_mock_user()
     endpoint_me = test_me.TestUser
@@ -17,7 +19,9 @@ class TestUserExceptions:
 
     def test_me_exceptions(self, client):
         """
-        Test with multiple tokens
+        Sets up the Database and checks the functionality for a given set of
+        mock users.
+
         """
         self.helper.set_up(test_helper, client)
 
@@ -34,19 +38,25 @@ class TestUserExceptions:
 
     def me_post_no_login(self, client):
         """
-        Test if the me-page returns a valid http status-code when posting.
+        Test if the me-page returns the expected http status-code when posting
+        without an authorization token.
+
         """
         assert client.post('/me').status == '400 BAD REQUEST'
 
     def me_get_no_login(self, client):
         """
-        Test if the me-page returns a valid http status-code when getting.
+        Test if the me-page returns the expected http status-code when getting
+        without an authorization token.
+
         """
         assert client.get('/me').status == '400 BAD REQUEST'
 
     def me_put_no_login(self, client):
         """
-        Test if the me-page returns a valid http status-code when putting.
+        Test if the me-page returns the expected http status-code when putting
+        without an authorization token.
+
         """
         assert client.put('/me', headers={},
                           data={'firstname': 'Daisy',
@@ -56,7 +66,8 @@ class TestUserExceptions:
 
     def me_put_no_param(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when putting.
+        Test if the me-page returns the expected http status-code when putting.
+
         """
         assert client.put('/me', headers={
             'Authorization': 'Bearer ' + token},
@@ -64,7 +75,9 @@ class TestUserExceptions:
 
     def me_del_no_login(self, client):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the me-page returns the expected http status-code when deleting
+        without an authorization token.
+
         """
         assert client.delete('/me', headers={},
                              data={'firstname': 'Daisy', 'lastname': 'Ducks',
@@ -73,7 +86,9 @@ class TestUserExceptions:
 
     def me_del_no_param(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the me-page returns the expected http status-code
+        when deleting.
+
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token},
@@ -81,8 +96,9 @@ class TestUserExceptions:
 
     def me_organizations_post_no_login(self, client):
         """
-        Test if the me-organizations-page returns a valid http status-code
-        when posting.
+        Test if the me-organizations-page returns the expected http status-code
+        when posting without an authorization token.
+
         """
         assert client.post('/me/organizations', headers={},
                            data={'name': 'Dagoberts ' +
@@ -91,9 +107,9 @@ class TestUserExceptions:
 
     def me_organizations_post_no_param(self, client, token):
         """
-        Test if the me-organizations-page returns a valid http
-        status-code
-        when posting.
+        Test if the me-organizations-page returns the expected http
+        status-code when posting.
+
         """
         assert client.post('/me/organizations', headers={
             'Authorization': 'Bearer ' + token},
@@ -102,6 +118,7 @@ class TestUserExceptions:
     def me_delete_deleted_user(self, client, token):
         """
         Test if the delete request works on a deleted user.
+
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '401 UNAUTHORIZED'

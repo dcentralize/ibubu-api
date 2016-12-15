@@ -1,5 +1,5 @@
 """
-Test user api-functionality.
+Test Partner api-functionality.
 
 """
 
@@ -13,7 +13,7 @@ from swarm_intelligence_app.tests.organization_tests import test_organization
 
 class TestPartners:
     """
-    Class for testing user api-functionality.
+    Class for testing Partner api-functionality.
 
     """
     user1 = test_me.TestUser
@@ -25,6 +25,11 @@ class TestPartners:
     jwtToken2 = ''
 
     def test_partners(self, client):
+        """
+        Sets up the Database and checks the functionality for a given set of
+        mock users.
+
+        """
         self.helper.set_up(test_helper, client)
 
         self.user1.me_post(test_me, client, 'mock_user_001')
@@ -82,7 +87,7 @@ class TestPartners:
 
     def put_partner(self, client, token, id):
         """
-        Test if get request to API gets executed.
+        Test if put request to API gets executed.
 
 
         """
@@ -95,7 +100,7 @@ class TestPartners:
 
     def delete_partner(self, client, token, id):
         """
-        Test if the delete request gets executed.
+        Test if delete request gets executed.
 
 
         """
@@ -104,7 +109,7 @@ class TestPartners:
 
     def post_partner_metrics(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Test if the post request gets executed.
 
         """
         # #TODO Implement Metrics
@@ -127,7 +132,7 @@ class TestPartners:
 
     def put_partner_admins(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Test if the put request gets executed.
 
         """
 
@@ -136,7 +141,7 @@ class TestPartners:
 
     def delete_partner_admins(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Test if the delete request gets executed.
 
         """
 
@@ -162,6 +167,10 @@ class TestPartners:
         #     'Authorization': 'Bearer ' + token}).status == '200 OK'
 
     def add_user_to_organization(self, client, token, id_organization):
+        """
+        Helper Method for adding a user to an organization in order to make
+        test the /admins api functionality.
+        """
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
 
@@ -169,4 +178,4 @@ class TestPartners:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-            '200 OK'
+               '200 OK'

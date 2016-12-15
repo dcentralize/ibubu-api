@@ -1,5 +1,5 @@
 """
-Test user api-functionality.
+Test Organization api-functionality.
 
 """
 
@@ -10,7 +10,7 @@ from swarm_intelligence_app.tests.user_tests import test_me
 
 class TestOrganization:
     """
-    Class for testing user api-functionality.
+    Class for testing Organization api-functionality.
 
     """
     user = test_me.TestUser
@@ -18,6 +18,11 @@ class TestOrganization:
     tokens = authentication.get_mock_user()
 
     def test_organization(self, client):
+        """
+        Sets up the Database and checks the functionality for a given set of
+        mock users.
+
+        """
         self.helper.set_up(test_helper, client)
 
         for token in self.tokens:
@@ -42,6 +47,7 @@ class TestOrganization:
         """
         Helper Method for getting an organization ID for further tests.
 
+        :return Organization-ID as String
         """
 
         data = client.get('/me/organizations', headers={
@@ -59,7 +65,7 @@ class TestOrganization:
 
     def put_organization(self, client, token, id):
         """
-        Test if get request to API gets executed.
+        Test if put request to API gets executed.
 
         """
         assert client.put('/organizations/' + id, headers={
@@ -77,22 +83,21 @@ class TestOrganization:
 
     def get_organization_members(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Gets all organization members for further testing.
 
+        :return JSON object with all members.
         """
 
-        # assert client.get('/organizations/' + id + '/members', headers={
-        #   'Authorization': 'Bearer ' + token}).status == '200 OK'
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
-        # TODO PARTNERS?
         json_response = response.json
         return json_response
 
     def get_organization_admins(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Test if the get request for Admins of an organization gets executed.
 
+        :return JSON Object with all admins of an Organization.
         """
 
         assert client.get('/organizations/' + id + '/admins', headers={
@@ -103,7 +108,7 @@ class TestOrganization:
 
     def get_organization_invitations(self, client, token, id):
         """
-        Test if the get request gets executed.
+        Test if the get request for Invitations gets executed.
 
         """
 
@@ -112,14 +117,9 @@ class TestOrganization:
 
     def post_organization_invitation(self, client, token, id):
         """
-        Test if post request get executed.
+        Posts a Mock Invitation to an Organization.
 
         """
-        # assert client.post('/organizations/' + id + '/invitations', headers={
-        #     'Authorization': 'Bearer ' + token}, data={
-        #     'email': 'donaldo@ducko.com',
-        #     'organization_id': id}).status == '200 OK'
-
         return client.post('/organizations/' + id + '/invitations', headers={
             'Authorization': 'Bearer ' + token}, data={
             'email': 'dagobert@gmail.de',
