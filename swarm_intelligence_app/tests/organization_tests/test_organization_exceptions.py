@@ -2,10 +2,11 @@
 Define Organization Exception Tests.
 
 """
+
 from swarm_intelligence_app.common import authentication
+from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests import test_helper
 from swarm_intelligence_app.tests.user_tests import test_me
-from swarm_intelligence_app.tests.organization_tests import test_organization
 
 
 class TestOrganizationException:
@@ -20,7 +21,7 @@ class TestOrganizationException:
 
     def test_organization_exceptions(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
