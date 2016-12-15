@@ -7,23 +7,19 @@ from datetime import datetime, timedelta
 import jwt
 import requests
 
-from flask import g
-from flask_restful import abort, reqparse, Resource
+from flask import abort, current_app, g
+from flask_restful import reqparse, Resource
 from flask_restful_swagger import swagger
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
-from swarm_intelligence_app.models.organization import \
-    Organization as OrganizationModel
+from swarm_intelligence_app.models.organization import Organization as \
+    OrganizationModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.partner import PartnerType
 from swarm_intelligence_app.models.role import Role as RoleModel
 from swarm_intelligence_app.models.role import RoleType
 from swarm_intelligence_app.models.user import User as UserModel
-
-APP_SECRET = 'top_secret'
-TOKEN_EXPIRATION = 3600
 
 mock_users = {
     'mock_user_001': {
@@ -75,11 +71,30 @@ class UserRegistration(Resource):
     def post(self):
         """
         Create a user.
+
         To create a user the data provided by google is taken into
-        consideration.
-        If a user with the provided google id does not exist,
-        the user is created with the data provided by google.
-        If a user exists and is deactivated, the user is reactivated.
+        consideration. If a user with the provided google id does not exist,
+        the user is created. If a user exists and is deactivated, the user is
+        activated. If a user does not exist, the user is created with the data
+        provided by google.
+
+        Request:
+            POST /register
+
+        Response:
+            201 Created - If user is created
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token is not authorized by google
+            409 Conflict - If user already exists
+
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -112,11 +127,11 @@ class UserRegistration(Resource):
 
         user = UserModel.query.filter_by(google_id=data['sub']).first()
 
-        if user is not None and user.is_deleted is False:
-            raise errors.EntityAlreadyExistsError()
+        if user is not None and user.is_active is True:
+            abort(409, 'Cannot create user. The user already exists.')
 
-        if user is not None and user.is_deleted is True:
-            user.is_deleted = False
+        if user is not None and user.is_active is False:
+            user.is_active = True
         else:
             user = UserModel(
                 data['sub'],
@@ -129,23 +144,23 @@ class UserRegistration(Resource):
         db.session.commit()
 
         fields = {
-            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'exp': datetime.utcnow() + timedelta(
+                seconds=current_app.config['SI_JWT_EXPIRATION']),
             'sub': user.google_id
         }
 
-        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+        encoded = jwt.encode(
+            fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
-            'success': True,
-            'data': {
-                'access_token': encoded.decode('utf-8')
-            }
-        }
+            'access_token': encoded.decode('utf-8')
+        }, 201
 
 
 class UserLogin(Resource):
     """
     Define the endpoints for the user login.
+
     """
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
@@ -174,7 +189,18 @@ class UserLogin(Resource):
     def get(self):
         """
         Login a user.
-        In order to login a user, a valid JWT has to be provided to the server.
+
+        Request:
+            GET /login
+
+        Response:
+            200 OK - If user is logged in
+                {
+                    'access_token': JSON Web Token
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token is not authorized by google
+
         """
         parser = reqparse.RequestParser()
         parser.add_argument('Authorization', location='headers', required=True)
@@ -205,23 +231,24 @@ class UserLogin(Resource):
                               '.apps.googleusercontent.com':
                 abort(401)
 
-        user = UserModel.query.filter_by(google_id=data['sub']).first()
+        user = UserModel.query.filter_by(
+            google_id=data['sub'], is_active=True).first()
+
         if user is None:
             abort(401)
 
         fields = {
-            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRATION),
+            'exp': datetime.utcnow() + timedelta(
+                seconds=current_app.config['SI_JWT_EXPIRATION']),
             'sub': data['sub']
         }
 
-        encoded = jwt.encode(fields, APP_SECRET, algorithm='HS256')
+        encoded = jwt.encode(
+            fields, current_app.config['SI_JWT_SECRET'], algorithm='HS256')
 
         return {
-            'success': True,
-            'data': {
-                'access_token': encoded.decode('utf-8')
-            }
-        }
+            'access_token': encoded.decode('utf-8')
+        }, 200
 
 
 class User(Resource):
@@ -257,13 +284,26 @@ class User(Resource):
     def get(self):
         """
         Retrieve the authenticated user.
-        Retrieve the authenticated user from the database. A valid JWT must
-        be provided.
+
+        Request:
+            GET /me
+
+        Response:
+            200 OK - If user is retrieved
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return g.user.serialize, 200
 
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
@@ -301,9 +341,30 @@ class User(Resource):
     @auth.login_required
     def put(self):
         """
-        Edit the authenticated user.
-        The authenticated user will be updated, by providing the server with
-        a valid JWT and the new user-data.
+        Update the authenticated user.
+
+        Request:
+            PUT /me
+
+            Parameters:
+                firstname (string): The firstname of the authenticated user
+                lastname (string): The lastname of the authenticated user
+                email (string): The email address of the authenticated user
+
+        Response:
+            200 OK - If user is updated
+                {
+                    'id': 1,
+                    'google_id': '123456789',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
@@ -316,10 +377,7 @@ class User(Resource):
         g.user.email = args['email']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return g.user.serialize, 200
 
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
@@ -349,24 +407,30 @@ class User(Resource):
     def delete(self):
         """
         Delete the authenticated user.
-        The state of the authenticated user will be set to 'closed' and the
-        user's partnerships with organizations will be set to 'inactive'.
-        The user's account will be reopened, as soon as a new user with the
-        same google account has signed in. In order to rejoin an organization,
-        a new invitation is needed. A valid JWT is needed.
+
+        This endpoint sets the authenticated user's account to 'closed' and
+        the user's partnerships with organizations to 'inactive'. By signin-up
+        again with the same google account, the user's account is reopened. To
+        rejoin an organization, a new invitation is needed.
+
+        Request:
+            DELETE /me
+
+        Response:
+            204 No Content - If user is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
 
         """
-        g.user.is_deleted = True
+        g.user.is_active = False
 
         for partner in g.user.partners:
-            partner.is_deleted = True
+            partner.is_active = False
 
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': g.user.serialize
-        }, 200
+        return None, 204
 
 
 class UserOrganizations(Resource):
@@ -412,52 +476,73 @@ class UserOrganizations(Resource):
     def post(self):
         """
         Create an organization.
-        A new organization with an anchor circle will be created. The
-        authenticated user becomes its admin. A valid JWT must be provided.
-        """
-        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
 
-        parser = reqparse.RequestParser()
+        This endpoint creates a new organization with an anchor circle and
+        adds the authenticated user as an admin to the organization.
+
+        Request:
+            POST /me/organizations
+
+            Parameters:
+                name (string): The name of the organization
+
+        Response:
+            201 Created - If organization is created
+                {
+                    'id': 1,
+                    'name': 'My Company'
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            409 Conflict - If organization cannot be created
+
+        """
+        parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
         args = parser.parse_args()
 
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
+        try:
+            organization = OrganizationModel(args['name'])
 
-        organization = OrganizationModel(args['name'])
-        partner = PartnerModel(PartnerType.ADMIN, user.firstname,
-                               user.lastname, user.email, user, organization)
-        db.session.add(partner)
-        db.session.commit()
+            partner = PartnerModel(PartnerType.admin, g.user.firstname,
+                g.user.lastname, g.user.email, g.user, organization)
+            db.session.add(partner)
+            db.session.flush()
 
-        role = RoleModel('General', 'Purpose', None, RoleType.CIRCLE)
-        db.session.add(role)
-        db.session.commit()
+            role = RoleModel(RoleType.circle, 'General', 'General\'s Purpose',
+                None, organization.id)
+            db.session.add(role)
+            db.session.flush()
 
-        anchor_circle = CircleModel('Strategy', organization.id, role.id)
-        db.session.add(anchor_circle)
-        db.session.commit()
+            circle = CircleModel(role.id, None)
+            db.session.add(circle)
+            db.session.flush()
 
-        role_leadlink = RoleModel('LEAD_LINK', 'Purpose leadlink',
-                                  anchor_circle.role_id, RoleType.LEAD_LINK)
-        role_secretary = RoleModel('SECRETARY', 'Purpose secretary',
-                                   anchor_circle.role_id, RoleType.SECRETARY)
-        role_facilitator = RoleModel('FACILITATOR', 'Purpose facilitator',
-                                     anchor_circle.role_id,
-                                     RoleType.FACILITATOR)
-        db.session.add(role_leadlink)
-        db.session.add(role_secretary)
-        db.session.add(role_facilitator)
-        db.session.commit()
+            lead_link = RoleModel(RoleType.lead_link,'Lead Link',
+                'Lead Link\'s Purpose', role.id, role.organization_id)
+            db.session.add(lead_link)
+            db.session.flush()
 
-        partner.circles.append(anchor_circle)
-        partner.roles.append(role_leadlink)
-        db.session.commit()
+            secretary = RoleModel(RoleType.secretary, 'Secretary',
+                'Secretary\'s Purpose', role.id, role.organization_id)
+            db.session.add(secretary)
+            db.session.flush()
 
-        return {
-            'success': True,
-            'data': organization.serialize
-        }, 200
+            facilitator = RoleModel(RoleType.facilitator, 'Facilitator',
+                'Facilitator\'s Purpose', role.id, role.organization_id)
+            db.session.add(facilitator)
+            db.session.flush()
+
+            partner.memberships.append(role)
+            partner.memberships.append(lead_link)
+
+            db.session.commit()
+        except:
+            db.session.rollback()
+            abort(409)
+
+        return organization.serialize, 201
 
     @swagger.operation(
         # Parameters can be automatically extracted from URLs (e.g.
@@ -487,19 +572,29 @@ class UserOrganizations(Resource):
     def get(self):
         """
         List organizations for the authenticated user.
-        A list of all organizations in which the authenticated user is
-        allowed to operate in will be returned.
+
+        This endpoint only lists organizations that the authenticated user is
+        allowed to operate on as a member or an admin.
+
+        Request:
+            GET /me/organizations
+
+        Response:
+            200 OK - If organizations of user are listed
+                [
+                    {
+                        'id': 1,
+                        'name': 'My Company'
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+
         """
-        user = UserModel.query.filter_by(google_id=g.user.google_id).first()
-
-        if user is None or user.is_deleted is True:
-            raise errors.EntityNotFoundError('user', g.user['google_id'])
-
         organizations = db.session.query(OrganizationModel).filter(
-            OrganizationModel.partners.any(is_deleted=False, user=user))
+            OrganizationModel.partners.any(is_active=True, user=g.user))
 
         data = [item.serialize for item in organizations]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+
+        return data, 200

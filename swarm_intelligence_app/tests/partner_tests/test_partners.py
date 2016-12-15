@@ -58,7 +58,7 @@ class TestPartners:
 
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
-        json_response = response.json['data'][1]['id']
+        json_response = response.json[1]['id']
         return str(json_response)
 
     def get_partner(self, client, token, id):
@@ -71,7 +71,7 @@ class TestPartners:
         json_response = client.get('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token})
 
-        partner_id = json_response.json['data']['id']
+        partner_id = json_response.json['id']
         print('Passed test for getting a Partner:' + str(partner_id))
         return str(partner_id)
 
@@ -91,7 +91,7 @@ class TestPartners:
         Test if the delete request gets executed.
         """
         assert client.delete('/partners/' + id, headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def post_partner_metrics(self, client, token, id):
         """
@@ -119,7 +119,7 @@ class TestPartners:
         """
 
         assert client.put('/partners/' + id + '/admin', headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def delete_partner_admins(self, client, token, id):
         """
@@ -127,7 +127,7 @@ class TestPartners:
         """
 
         assert client.delete('/partners/' + id + '/admin', headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def post_partner_checklist(self, client, token, id):
         """
@@ -149,7 +149,7 @@ class TestPartners:
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
 
-        invitation_code = invitation_response.json['data']['code']
+        invitation_code = invitation_response.json['code']
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \

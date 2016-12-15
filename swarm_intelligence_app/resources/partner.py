@@ -2,8 +2,8 @@
 Define the classes for the partner API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
@@ -25,37 +25,75 @@ class Partner(Resource):
         member or an admin of the organization that the partner is
         associated with.
 
-        Args:
-            partner_id: The id of the partner to retrieve
+        Request:
+            GET /partners/{partner_id}
+
+        Response:
+            200 OK - If partner is retrieved
+                {
+                    'id': 1,
+                    'type': 'member|admin',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True|False,
+                    'user_id': 1,
+                    'organization_id': 1,
+                    'invitation_id': null|1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return partner.serialize, 200
 
     @auth.login_required
     def put(self,
             partner_id):
         """
-        Edit a partner.
+        Update a partner.
 
         In order to edit a partner, the authenticated user must be an admin of
         the organization that the partner is associated with.
 
-        Args:
-            partner_id: The id of the partner to edit
+        Request:
+            PUT /partners/{partner_id}
+
+            Parameters:
+                firstname (string): The firstname of the partner
+                lastname (string): The lastname of the partner
+                email (string): The email address of the partner
+
+        Response:
+            200 OK - If partner is updated
+                {
+                    'id': 1,
+                    'type': 'member|admin',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True|False,
+                    'user_id': 1,
+                    'organization_id': 1,
+                    'invitation_id': null|1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('firstname', required=True)
@@ -68,10 +106,7 @@ class Partner(Resource):
         partner.email = args['email']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return partner.serialize, 200
 
     @auth.login_required
     def delete(self,
@@ -82,85 +117,119 @@ class Partner(Resource):
         In order to delete a partner, the authenticated user must be an admin
         of the organization that the partner is associated with.
 
-        Args:
-            partner_id: The id of the partner to delete
+        Request:
+            DELETE /partners/{partner_id}
+
+        Response:
+            204 No Content - If partner is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not found - If partner is not found
+            409 Conflict - If partner is the only admin of an organization
 
         """
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        partner.is_deleted = True
+        if partner.type == PartnerType.admin and partner.is_active is True:
+            admins = PartnerModel.query.filter_by(
+                organization_id=partner.organization_id,
+                type=PartnerType.admin,
+                is_active=True).all()
+
+            if len(admins) <= 1:
+                abort(409, 'Cannot delete partner. There must be at least one '
+                           'admin of an organization.')
+
+        partner.is_active = False
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': partner.serialize
-        }, 200
+        return None, 204
 
 
 class PartnerAdmin(Resource):
+    """
+    Define the endpoints for the admin edge of the partner node.
+
+    """
+    @auth.login_required
+    def put(self,
+            partner_id):
         """
-        Define the endpoints for the admin edge of the partner node.
+        Grant admin access to a partner to an organization.
+
+        In order to grant admin access to a partner to an organization,
+        the authenticated user must be an admin of the organization that
+        the partner is associated with.
+
+        Request:
+            PUT /partners/{partner_id}/admin
+
+        Response:
+            204 No Content - If admin access is grant to partner
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If partner is not found
 
         """
-        @auth.login_required
-        def put(self,
-                partner_id):
-            """
-            Grant admin access to a partner to an organization.
+        partner = PartnerModel.query.get(partner_id)
 
-            In order to grant admin access to a partner to an organization,
-            the authenticated user must be an admin of the organization that
-            the partner is associated with.
+        if partner is None:
+            abort(404)
 
-            Args:
-                partner_id: The id of the partner to grant admin access to
+        partner.type = PartnerType.admin
+        db.session.commit()
 
-            """
-            partner = PartnerModel.query.get(partner_id)
+        return None, 204
 
-            if partner is None:
-                raise errors.EntityNotFoundError('partner', partner_id)
+    @auth.login_required
+    def delete(self,
+               partner_id):
+        """
+        Revoke admin access from a partner to an organization.
 
-            partner.type = PartnerType.ADMIN
-            db.session.commit()
+        In order to revoke admin access from a partner to an organization,
+        the authenticated user must be an admin of the organization that
+        the partner is associated with.
 
-            return {
-                'success': True,
-                'data': partner.serialize
-            }, 200
+        Request:
+            DELETE /partners/{partner_id}/admin
 
-        @auth.login_required
-        def delete(self,
-                   partner_id):
-            """
-            Revoke admin access from a partner to an organization.
+        Response:
+            204 No Content - If admin access is revoked from partner
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If partner is not found
+            409 Conflict - If partner is the only admin of an organization
 
-            In order to revoke admin access from a partner to an organization,
-            the authenticated user must be an admin of the organization that
-            the partner is associated with.
+        """
+        partner = PartnerModel.query.get(partner_id)
 
-            Args:
-                partner_id: The id of the partner to revoke admin access from
+        if partner is None:
+            abort(404)
 
-            """
-            partner = PartnerModel.query.get(partner_id)
+        if partner.type == PartnerType.admin and partner.is_active is True:
+            admins = PartnerModel.query.filter_by(
+                organization_id=partner.organization_id,
+                type=PartnerType.admin,
+                is_active=True).all()
 
-            if partner is None:
-                raise errors.EntityNotFoundError('partner', partner_id)
+            if len(admins) <= 1:
+                abort(409, 'Cannot delete partner. There must be at least one '
+                           'admin of an organization.')
 
-            partner.type = PartnerType.MEMBER
-            db.session.commit()
+        partner.type = PartnerType.member
+        db.session.commit()
 
-            return {
-                'success': True,
-                'data': partner.serialize
-            }, 200
+        return None, 204
 
 
-class PartnerCircles(Resource):
+class PartnerMemberships(Resource):
     """
     Define the endpoints for the circles edge of the partner node.
 
@@ -174,20 +243,36 @@ class PartnerCircles(Resource):
         must be a member or an admin of the organization that the partner is
         associated with.
 
-        Args:
-            partner_id: The id of the partner for which to list the circles
+        Request:
+            GET /partners/{partner_id}/memberships
+
+        Response:
+            200 OK - If memberships of partner are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'circle|lead_link|secretary|facilitator|custom',
+                        'name': 'Role\'s name',
+                        'purpose': 'Role\'s purpose',
+                        'strategy': 'null|Role\'s strategy',
+                        'parent_circle_id': 1,
+                        'organization_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        data = [i.serialize for i in partner.circles]
-        return {
-            'success': True,
-            'data': data
-        }, 200
+        data = [i.serialize for i in partner.memberships]
+
+        return data, 200
 
 
 class PartnerMetrics(Resource):
@@ -201,7 +286,7 @@ class PartnerMetrics(Resource):
         Add a metric to a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def get(self,
             partner_id):
@@ -209,7 +294,7 @@ class PartnerMetrics(Resource):
         List metrics of a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
 
 class PartnerChecklists(Resource):
@@ -223,7 +308,7 @@ class PartnerChecklists(Resource):
         Add a checklist to a partner.
 
         """
-        raise errors.MethodNotImplementedError()
+        abort(501)
 
     def get(self,
             partner_id):
@@ -231,61 +316,4 @@ class PartnerChecklists(Resource):
         List checklists of a partner.
 
         """
-        raise errors.MethodNotImplementedError()
-
-
-class PartnerRoles(Resource):
-    """
-    Define the endpoints for the role edge of the partner node.
-
-    """
-
-    @auth.login_required
-    def get(self, partner_id):
-        """
-        List all roles of a partner.
-
-        Args:
-            partner_id: The id of the partner for which to list the circles.
-
-        Body:
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'circle_id': '3',
-                        'id': '2',
-                        'name': 'Manager',
-                        'parent_circle_id': 2,
-                        'purpose': 'Purpose of the Role',
-                        'type': 'custom'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The circle with id 1 does not exist'
-                        }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
-        """
-        partner = PartnerModel.query.get(partner_id)
-
-        if partner is None:
-            raise errors.EntityNotFoundError('circle', partner_id)
-
-        data = [i.serialize for i in partner.roles]
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
+        abort(501)

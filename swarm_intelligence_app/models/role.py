@@ -1,24 +1,25 @@
 """
-Define the classes for the role API.
+Define classes for a role.
 
 """
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.member_role import members_roles
+from swarm_intelligence_app.models.role_member import role_member
 
 
 class RoleType(Enum):
     """
-    Define values for an Role status.
+    Define values for a role's type.
 
     """
-    LEAD_LINK = 'lead_link'
-    REP_LINK = 'rep_link'
-    FACILITATOR = 'facilitator'
-    SECRETARY = 'secretary'
-    CIRCLE = 'circle'
-    CUSTOM = 'custom'
+    lead_link = 'lead_link'
+    rep_link = 'rep_link'
+    cross_link = 'cross_link'
+    facilitator = 'facilitator'
+    secretary = 'secretary'
+    circle = 'circle'
+    custom = 'custom'
 
 
 class Role(db.Model):
@@ -27,30 +28,49 @@ class Role(db.Model):
 
     """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    purpose = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Enum(RoleType), nullable=False)
-    circle_id = db.Column(db.Integer, db.ForeignKey('circle.role_id'),
-                          nullable=True)
+    name = db.Column(db.String(100), nullable=False)
+    purpose = db.Column(db.String(255), nullable=False)
+    parent_circle_id = db.Column(db.Integer, db.ForeignKey('circle.id'),
+        nullable=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
+        nullable=False)
 
-    members = db.relationship('Partner', secondary=members_roles,
-                              back_populates='roles', cascade='all,delete')
-    subcircle = db.relationship('Circle', backref='role',
-                                primaryjoin='Circle.role_id==Role.id',
-                                cascade='all,delete')
-    domains = db.relationship('Domain', backref='role', cascade='all,delete')
-    accountabilities = db.relationship('Accountability', backref='role',
-                                       cascade='all,delete')
+    members = db.relationship('Partner',
+                              secondary='role_member',
+                              back_populates='memberships')
+                              #cascade='all, delete-orphan')
 
-    def __init__(self, name, purpose, circle_id, type):
+    domains = db.relationship('Domain',
+                              backref='role',
+                              cascade='all, delete-orphan')
+
+    accountabilities = db.relationship('Accountability',
+                                       backref='role',
+                                       cascade='all, delete-orphan')
+
+    # implement inheritance, circle extends role
+    derived_circle = db.relationship('Circle',
+                                     back_populates='super',
+                                     foreign_keys='Circle.id',
+                                     uselist=False,
+                                     cascade='all, delete-orphan')
+
+    def __init__(self,
+                 type,
+                 name,
+                 purpose,
+                 parent_circle_id,
+                 organization_id):
         """
         Initialize a role.
 
         """
-        self.name = name
         self.type = type
-        self.circle_id = circle_id
+        self.name = name
         self.purpose = purpose
+        self.parent_circle_id = parent_circle_id
+        self.organization_id = organization_id
 
     def __repr__(self):
         """
@@ -67,8 +87,9 @@ class Role(db.Model):
         """
         return {
             'id': self.id,
-            'name': self.name,
             'type': self.type.value,
-            'circle_id': self.circle_id,
-            'purpose': self.purpose
+            'name': self.name,
+            'purpose': self.purpose,
+            'parent_circle_id': self.parent_circle_id,
+            'organization_id': self.organization_id
         }

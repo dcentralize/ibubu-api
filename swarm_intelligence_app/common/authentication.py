@@ -3,11 +3,10 @@ Define any authentication functions for the application.
 
 """
 import jwt
-from flask import abort, g
+
+from flask import abort, current_app, g
 from flask_httpauth import HTTPTokenAuth
 from swarm_intelligence_app.models.user import User as UserModel
-
-APP_SECRET = 'top_secret'
 
 auth = HTTPTokenAuth('Bearer')
 
@@ -41,7 +40,7 @@ def verify_token(token):
 
     """
     try:
-        payload = jwt.decode(token, APP_SECRET)
+        payload = jwt.decode(token, current_app.config['SI_JWT_SECRET'])
     except jwt.ExpiredSignatureError:
         print('The access token has expired.')
         abort(401)
@@ -50,7 +49,7 @@ def verify_token(token):
         abort(400)
 
     user = UserModel.query.filter_by(
-        google_id=payload['sub'], is_deleted=False).first()
+        google_id=payload['sub'], is_active=True).first()
 
     if user is None:
         print('The user is not found or is deleted.')

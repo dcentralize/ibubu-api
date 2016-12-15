@@ -95,7 +95,7 @@ class TestOrganizationException:
         """
         assert client.delete('/organizations/' + id, headers={
             'Authorization': 'Bearer ' + token},
-                             data={}).status == '200 OK'
+                             data={}).status == '204 NO CONTENT'
 
 
     def organization_get_members_no_login(self, client, id):

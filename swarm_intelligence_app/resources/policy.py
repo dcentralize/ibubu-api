@@ -2,8 +2,8 @@
 Define the classes for the policy API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.policy import Policy as \
@@ -15,99 +15,62 @@ class Policy(Resource):
     Define the endpoints for the policy node.
 
     """
-
     @auth.login_required
     def get(self, policy_id):
         """
-        Retrieve a accountability.
+        Retrieve a policy.
 
-        Args:
-            policy_id: The id of the policy to display.
+        Request:
+            GET /policies/{policy_id}
 
-        Body:
+        Response:
+            200 OK - If policy is retrieved
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title'
+                    'domain_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'title': 'Finances',
-                        'description': 'Keys for the safe.',
-                        'domain_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The policy with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         policy = PolicyModel.query.get(policy_id)
 
         if policy is None:
-            raise errors.EntityNotFoundError('policy', policy_id)
+            abort(404)
 
-        return {
-                   'success': True,
-                   'data': policy.serialize
-               }, 200
+        return policy.serialize, 200
 
     @auth.login_required
     def put(self, policy_id):
         """
-        Edit a policy.
+        Update a policy.
 
-        Args:
-            policy_id: The id of the policy which to edit.
+        Request:
+            PUT /policies/{policy_id}
 
-        Body:
-            title: The title of the policy.
-            description: The description of the policy.
+            Parameters:
+                title (string): The new title of the policy
 
-        Headers:
-            Authorization: A string of the authorization token.
+        Response:
+            200 OK - If policy is updated
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title',
+                    'domain_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'title': 'Finances',
-                        'description': 'Keys for the safe.',
-                        'domain_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The policy with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         policy = PolicyModel.query.get(policy_id)
 
         if policy is None:
-            raise errors.EntityNotFoundError('policy', policy_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('title', required=True)
@@ -118,52 +81,30 @@ class Policy(Resource):
         policy.description = args['descrition']
         db.session.commit()
 
-        return {
-                   'success': True,
-                   'data': policy.serialize
-               }, 200
+        return policy.serialize, 200
 
     @auth.login_required
     def delete(self, policy_id):
         """
         Delete a policy.
 
-        Args:
-            policy_id: The id of the policy which to delete.
+        Request:
+            DELETE /policies/{policy_id}
 
-        Body:
+        Response:
+            204 No Content - If policy is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If policy is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': { }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The policy with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         policy = PolicyModel.query.get(policy_id)
 
         if policy is None:
-            raise errors.EntityNotFoundError('policy', policy_id)
+            abort(404)
 
         db.session.delete(policy)
         db.session.commit()
 
-        return {
-                   'success': True
-               }, 200
+        return None, 204

@@ -38,7 +38,7 @@ class TestHelper:
         response = client.get('/login', headers={
             'Authorization': 'Token ' + token})
 
-        json_data = response.json['data']['access_token']
+        json_data = response.json['access_token']
         return json_data
 
     def get_organization_id(self, client, token):

@@ -12,13 +12,13 @@ class Policy(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(255), nullable=True)
     domain_id = db.Column(db.Integer, db.ForeignKey('domain.id'),
-                          nullable=False)
+        nullable=False)
 
     def __init__(self, title, description, domain_id):
         """
-        Initialize a role.
+        Initialize a policy.
 
         """
         self.title = title
@@ -43,5 +43,4 @@ class Policy(db.Model):
             'title': self.title,
             'description': self.description,
             'domain': self.domain_id
-
         }

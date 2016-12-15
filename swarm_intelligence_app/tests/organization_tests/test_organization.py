@@ -42,7 +42,7 @@ class TestOrganization:
         """
 
         data = client.get('/me/organizations', headers={
-            'Authorization': 'Bearer ' + token}).json['data'][0]['id']
+            'Authorization': 'Bearer ' + token}).json[0]['id']
         organization_id = str(data)
         return organization_id
 
@@ -67,7 +67,7 @@ class TestOrganization:
         Test if the delete request gets executed.
         """
         assert client.delete('/organizations/' + id, headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def get_organization_members(self, client, token, id):
         """
@@ -79,7 +79,7 @@ class TestOrganization:
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
         # TODO PARTNERS?
-        json_response = response.json['data']
+        json_response = response.json
         return json_response
 
     def get_organization_admins(self, client, token, id):

@@ -5,37 +5,46 @@ General Usage
 
 HTTP Requests
 =============
-GET		Used for retrieving resources or collections
-POST	Used for creating resources
-PUT		Used for replacing resources
-DELETE	Used for deleting resources
+GET     Used for retrieving resources or collections
+POST    Used for creating resources
+PUT     Used for replacing resources
+DELETE  Used for deleting resources
 
 
 HTTP Responses
 ==============
 
-On Success
-----------
+Success
+-------
 
-200: Success
-201: Success created
+200 OK
+201 Created
+204 No Content
 
 {
-	'success': True,
-	'data': []
+    Key: Value
 }
 
-On Error
---------
+Client Error
+------------
 
-400: Error
-404: Error endpoint not found
-405: Error
-409: Error
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+409 Conflict
 
 {
-	'success': False,
-	'errors': []
+    'message': String
+}
+
+Server Error
+------------
+501 Not implemented
+
+{
+    'message': String
 }
 
 
@@ -44,58 +53,59 @@ Endpoints
 
 User
 ----
-/me - POST, GET, PUT, DELETE								Implemented	Tested
-/me/organizations - POST, GET								Implemented	Tested
+/register - POST
+/login - GET
+/me - GET, PUT, DELETE
+/me/organizations - POST, GET
 
 Organization
 ------------
-/organizations/{organization-id} - GET, PUT, DELETE			Implemented	Tested
-/organizations/{organization-id}/members - GET				Implemented	Tested
-/organizations/{organization-id}/admins - GET				Implemented	Tested
-/organizations/{organization-id}/invitations - POST, GET	Implemented	Tested
-/organizations/{organization-id}/roles - GET				Implemented	Tested
-/organizations/{organization-id}/anchor_circle - GET		Implemented	Tested
+/organizations/{organization-id} - GET, PUT, DELETE
+/organizations/{organization-id}/anchor_circle - GET
+/organizations/{organization-id}/members - GET
+/organizations/{organization-id}/admins - GET
+/organizations/{organization-id}/invitations - POST, GET
 
 Partner
 -------
-/partners/{partner-id} - GET, PUT, DELETE					Implemented Tested
-/partners/{partner-id}/admin - PUT, DELETE					Implemented Tested
-/partners/{partner-id}/metrics - POST, GET					Implemented Tested
-/partners/{partner-id}/checklists - POST, GET				Implemented Tested
-/partners/{partner-id}/roles - GET							Implemented 
+/partners/{partner-id} - GET, PUT, DELETE
+/partners/{partner-id}/admin - PUT, DELETE
+/partners/{partner-id}/memberships - GET
+/partners/{partner-id}/metrics - POST, GET
+/partners/{partner-id}/checklists - POST, GET
 
 Invitation
 ----------
-/invitations/{invitation-id} - GET, DELETE					Implemented
-/invitations/{invitation-id}/resend - GET					Implemented
-/invitations/{invitation-code}/accept - GET					Implemented
-
-Circle
-------
-/circles/{circle-id} - GET, PUT, DELETE						Implemented	Tested
-/circles/{circle-id}/role - DELETE							Implemented	Tested
-/circles/{circle-id}/roles - POST, GET						Implemented	Tested
-/circles/{circle-id}/subcircles - GET						Implemented	Tested
-/circles/{circle-id}/members - GET							Implemented Tested
-/circles/{circle-id}/members/{partner-id} - PUT, DELETE		Implemented Tested
-/circles/<circle_id>/domains - POST, GET					Implemented Tested
-/circles/<circle_id>/accountabilities - POST, GET			Implemented Tested
-
+/invitations/{invitation-id} - GET
+/invitations/{invitation-code}/accept - GET
+/invitations/{invitation-id}/cancel - PUT
+/invitations/{invitation-id}/resend - PUT
 
 Role
 ----
-/roles/{role-id} - GET, PUT, DELETE							Implemented
-/roles/{role-id}/members - GET								Implemented
-/roles/{role-id}/members/{partner-id} - PUT, DELETE			Implemented
-/roles/{role-id}/circle - PUT								Implemented
-/roles/{role-id}/accountabilities - GET, POST				Implemented
-/roles/{role-id}/domains - GET, POST						Implemented
+/roles/{role-id} - GET, PUT, DELETE
+/roles/{role-id}/members - GET
+/roles/{role-id}/members/{partner-id} - PUT, DELETE
+/roles/{role-id}/domains - GET, POST
+/roles/{role-id}/accountabilities - GET, POST
+/roles/{role-id}/circle - PUT, DELETE
 
-Accountability
+Circle
 ------
-/accountabilities/{accountability-id} - GET, PUT, DELETE	Implemented
+/circles/{circle-id} - GET, PUT
+/circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/members - GET
+/circles/{circle-id}/members/{partner-id} - PUT, DELETE
 
 Domain
----------
-/domains/{domain-id} - GET, PUT, DELETE						Implemented
-/domains/{domain-id}/policies - GET, POST					Implemented
+------
+/domains/{domain-id} - GET, PUT, DELETE
+/domains/{domain-id}/policies - GET, POST
+
+Policy
+------
+/policies/{policy_id} - GET, PUT, DELETE
+
+Accountability
+--------------
+/accountabilities/{accountability-id} - GET, PUT, DELETE

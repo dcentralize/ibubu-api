@@ -3,7 +3,6 @@ Define classes for a circle.
 
 """
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.circle_member import circle_members
 
 
 class Circle(db.Model):
@@ -11,29 +10,29 @@ class Circle(db.Model):
     Define a mapping to the database for a circle.
 
     """
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
-                        primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
     strategy = db.Column(db.String(255), nullable=True)
-    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
-                                nullable=False)
 
-    partners = db.relationship('Partner', secondary=circle_members,
-                               back_populates='circles', cascade='all,delete')
-    roles = db.relationship('Role', backref='circle',
-                            primaryjoin='Role.circle_id==Circle.role_id',
-                            cascade='all,delete')
+    roles = db.relationship('Role',
+                            backref='parent_circle',
+                            foreign_keys='Role.parent_circle_id',
+                            cascade='all, delete-orphan')
+
+    # implement inheritance, circle extends role
+    super = db.relationship('Role',
+                            back_populates='derived_circle',
+                            foreign_keys='Circle.id',
+                            single_parent=True)
 
     def __init__(self,
-                 strategy,
-                 organization_id,
-                 role_id):
+                 id,
+                 strategy):
         """
         Initialize a circle.
 
         """
+        self.id = id
         self.strategy = strategy
-        self.role_id = role_id
-        self.organization_id = organization_id
 
     def __repr__(self):
         """
@@ -49,7 +48,6 @@ class Circle(db.Model):
 
         """
         return {
-            'strategy': self.strategy,
-            'role_id': self.role_id,
-            'organization_id': self.organization_id
+            'id': self.id,
+            'strategy': self.strategy
         }

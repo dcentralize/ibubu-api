@@ -16,7 +16,7 @@ class User(db.Model):
     firstname = db.Column(db.String(45), nullable=False)
     lastname = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    is_deleted = db.Column(db.Boolean(), nullable=False)
+    is_active = db.Column(db.Boolean(), nullable=False)
 
     partners = db.relationship('Partner', backref='user')
     organizations = association_proxy('partners', 'organization')
@@ -34,7 +34,7 @@ class User(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.is_deleted = False
+        self.is_active = True
 
     def __repr__(self):
         """
@@ -55,5 +55,5 @@ class User(db.Model):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
-            'is_deleted': self.is_deleted
+            'is_active': self.is_active
         }

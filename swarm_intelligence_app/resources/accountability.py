@@ -2,8 +2,8 @@
 Define the classes for the accountability API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.accountability import Accountability as \
@@ -15,152 +15,94 @@ class Accountability(Resource):
     Define the endpoints for the accountability node.
 
     """
-
     @auth.login_required
     def get(self, accountability_id):
         """
-        Retrieve a accountability.
+        Retrieve an accountability.
 
-        Args:
-            accountability_id: The id of the accountability to display.
+        Request:
+            GET /accountabilities/{accountability_id}
 
-        Body:
+        Response:
+            200 OK - If accountability is retrieved
+                {
+                    'id': 1,
+                    'title': 'Accountability\'s title'
+                    'role_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The accountability with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         accountability = AccountabilityModel.query.get(accountability_id)
 
         if accountability is None:
-            raise errors.EntityNotFoundError('accountability',
-                                             accountability_id)
+            abort(404)
 
-        return {
-                   'success': True,
-                   'data': accountability.serialize
-               }, 200
+        return accountability.serialize, 200
 
     @auth.login_required
     def put(self, accountability_id):
         """
-        Edit a accountability.
+        Update an accountability.
 
-        Args:
-            accountability_id: The id of the accountability which to edit.
+        Request:
+            PUT /accountabilities/{accountability_id}
 
-        Body:
-            name: The name of the accountability.
+            Parameters:
+                title (string): The new title of the accountability
 
-        Headers:
-            Authorization: A string of the authorization token.
+        Response:
+            200 OK - If accountability is updated
+                {
+                    'id': 1,
+                    'title': 'Accountability\'s title',
+                    'role_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The accountability with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         accountability = AccountabilityModel.query.get(accountability_id)
 
         if accountability is None:
-            raise errors.EntityNotFoundError('accountability',
-                                             accountability_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True)
+        parser.add_argument('title', required=True)
         args = parser.parse_args()
 
-        accountability.name = args['name']
+        accountability.title = args['title']
         db.session.commit()
 
-        return {
-                   'success': True,
-                   'data': accountability.serialize
-               }, 200
+        return accountability.serialize, 200
 
     @auth.login_required
     def delete(self, accountability_id):
         """
-        Delete a accountability.
+        Delete an accountability.
 
-        Args:
-            accountability_id: The id of the accountability which to delete.
+        Request:
+            DELETE /accountabilities/{accountability_id}
 
-        Body:
+        Response:
+            204 No Content - If the accountability was deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If accountability is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The accountability with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         accountability = AccountabilityModel.query.get(accountability_id)
 
         if accountability is None:
-            raise errors.EntityNotFoundError('accountability',
-                                             accountability_id)
+            abort(404)
 
         db.session.delete(accountability)
         db.session.commit()
 
-        return {
-                   'success': True
-               }, 200
+        return None, 204

@@ -2,15 +2,12 @@
 Define the classes for the circle API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
 from flask_restful_swagger import swagger
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.accountability import Accountability as \
-    AccountabilityModel
 from swarm_intelligence_app.models.circle import Circle as CircleModel
-from swarm_intelligence_app.models.domain import Domain as DomainModel
 from swarm_intelligence_app.models.partner import Partner as PartnerModel
 from swarm_intelligence_app.models.role import Role as RoleModel
 from swarm_intelligence_app.models.role import RoleType
@@ -50,150 +47,96 @@ class Circle(Resource):
             circle_id):
         """
         Retrieve a circle.
+
         In order to retrieve a circle, the authenticated user must be a member
         or an admin of the organization that the circle is associated with.
-        A valid JWT must be provided.
+
+        Request:
+            GET /circles/{circle_id}
+
+        Response:
+            200 OK - If circle is retrieved
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'Circle\'s name',
+                    'purpose': 'Circle\'s purpose',
+                    'strategy': 'Circle\'s strategy',
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
-        return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+        data = {}
+        data.update(circle.super.serialize)
+        data.update(circle.serialize)
+
+        return data, 200
 
     @auth.login_required
     def put(self,
             circle_id):
         """
-        Edit a circle.
+        Update a circle.
 
         In order to edit a circle, the authenticated user must be an admin
         of the organization that the circle is associated with.
 
-        Args:
-            circle_id: The id of the circle to edit
+        Request:
+            PUT /circles/{circle_id}
+
+            Parameters:
+                name (string): The name of the circle
+                purpose (string): The purpose of the circle
+                strategy (string): The strategy of the circle
+
+        Response:
+            200 OK - If circle is updated
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'Circle\'s name',
+                    'purpose': 'Circle\'s purpose',
+                    'strategy': 'Circle\'s strategy',
+                    'parent_circle_id': null|1,
+                    'organization_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
-        parser.add_argument('purpose')
+        parser.add_argument('purpose', required=True)
         parser.add_argument('strategy')
         args = parser.parse_args()
 
-        circle.name = args['name']
-        circle.purpose = args['purpose']
+        circle.super.name = args['name']
+        circle.super.purpose = args['purpose']
         circle.strategy = args['strategy']
         db.session.commit()
 
-        return {
-            'success': True,
-            'data': circle.serialize
-        }, 200
+        data = {}
+        data.update(circle.super.serialize)
+        data.update(circle.serialize)
 
-    @auth.login_required
-    def delete(self,
-               circle_id):
-        """
-        Delete a circle.
-
-        In order to delete a circle, the authenticated user must be an admin
-        of the organization that the circle is associated with.
-
-        Args:
-            circle_id: The id of the circle to delete
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-
-        db.session.delete(circle)
-        db.session.commit()
-
-        return {
-            'success': True
-        }
-
-
-class CircleSubcircles(Resource):
-    """
-    Define the endpoints for the subcircles edge of the circle node.
-
-    """
-
-    @auth.login_required
-    def get(self,
-            circle_id):
-        """
-        List subcircles of a circle.
-
-        In order to list the subcircles of a circle, the authenticated user
-        must be a member or an admin of the organization that the circle is
-        associated with.
-
-        Args:
-            circle_id: The id of the circle for which to list the subcircles
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-
-        data = []
-        for i in circle.roles:
-            if i.type == RoleType.CIRCLE:
-
-                data.append({
-                    'role_id': i.id,
-                    'name': i.name,
-                    'type': i.type.value,
-                    'purpose': i.purpose,
-                    'circle_id': i.subcircle[0].role_id,
-                    'strategy': i.circle.strategy,
-                    'organization_id': i.circle.organization_id
-                })
-
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
-
-
-class CircleRole(Resource):
-    """
-    Define the endpoints for the role edge of the circle node.
-
-    """
-
-    @auth.login_required
-    def delete(self, circle_id):
-        """
-        Change the circle back to the role.
-
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-        role = RoleModel.query.get(circle.role_id)
-        role.type = RoleType.CUSTOM
-
-        db.session.delete(circle)
-        db.session.commit()
-
-        return {
-                   'success': True,
-               }, 200
+        return data, 200
 
 
 class CircleRoles(Resource):
@@ -201,89 +144,82 @@ class CircleRoles(Resource):
     Define the endpoints for the roles edge of the circle node.
 
     """
-
     @auth.login_required
-    def post(self, circle_id):
+    def post(self,
+             circle_id):
         """
         Add a role to a circle.
 
-        Args:
-            circle_id: The id of the circle for which to add the new role
+        Request:
+            POST /circles/{circle_id}/roles
 
-        Body:
-            name: The name of the role
-            purpose: A Description of the purpose role
+            Parameters:
+                name (string): The name of the role
+                purpose (string): The purpose of the role
 
-        Headers:
-            Authorization: A string of the authorization token.
+        Response:
+            204 No Content - If role is added to circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'email': 'donald@gmail.de',
-                        'firstname': 'Donald',
-                        'google_id': 'mock_user_001',
-                        'id': '1',
-                        'is_deleted': false,
-                        'lastname': 'Duck'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The user with id 1 does not exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('name', required=True)
         parser.add_argument('purpose', required=True)
         args = parser.parse_args()
 
-        role = RoleModel(args['name'], args['purpose'], circle_id,
-                         RoleType.CUSTOM)
-        db.session.add(role)
+        role = RoleModel(RoleType.custom,
+                         args['name'],
+                         args['purpose'],
+                         circle.super.id,
+                         circle.super.organization_id)
         circle.roles.append(role)
         db.session.commit()
-        return {
-                   'success': True,
-                   'data': role.serialize
-               }, 200
+
+        return role.serialize, 201
 
     @auth.login_required
-    def get(self, circle_id):
+    def get(self,
+            circle_id):
         """
-        List all roles of a circle.
+        List roles of a circle.
 
-        Params:
-            circle_id: The id of the circle for which to add the new role
+        Request:
+            GET /circles/{circle_id}/roles
+
+        Response:
+            200 OK - If roles of circle are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'circle|lead_link|secretary|custom',
+                        'name': 'Role\'s name',
+                        'purpose': 'Role\'s purpose',
+                        'parent_circle_id': 1,
+                        'organization_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
-        data = []
-        for i in circle.roles:
-            if i.type != RoleType.CIRCLE:
-                data.append(i.serialize)
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
+        data = [i.serialize for i in circle.roles]
+
+        return data, 200
 
 
 class CircleMembers(Resource):
@@ -291,9 +227,9 @@ class CircleMembers(Resource):
     Define the endpoints for the members edge of the circle node.
 
     """
-
     @auth.login_required
-    def get(self, circle_id):
+    def get(self,
+            circle_id):
         """
         List members of a circle.
 
@@ -301,21 +237,45 @@ class CircleMembers(Resource):
         be a member or an admin of the organization that the circle is
         associated with.
 
-        Args:
-            circle_id: The id of the circle for which to list the members
+        Request:
+            GET /circles/{circle_id}/members
+
+        Response:
+            200 OK - If members of circle are listed
+                [
+                    {
+                        'id': 1,
+                        'type': 'member|admin',
+                        'firstname': 'John',
+                        'lastname': 'Doe',
+                        'email': 'john@example.org',
+                        'is_active': True|False,
+                        'user_id': 1,
+                        'organization_id': 1,
+                        'invitation_id': null|1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
 
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
-        data = [i.serialize for i in circle.partners]
-        return {
-            'success': True,
-            'data': data
-        }
+        data = [i.serialize for i in circle.super.members]
 
+        return data, 200
+
+
+class CircleMembersAssociation(Resource):
+    """
+    Define the endpoints for the members association edge of the circle node.
+
+    """
     @auth.login_required
     def put(self,
             circle_id,
@@ -326,27 +286,32 @@ class CircleMembers(Resource):
         In order to assign a partner to a circle, the authenticated user must
         be an admin of the organization that the circle is associated with.
 
-        Args:
-            circle_id: The id of the circle to assign the partner to
-            partner_id: The id of the partner to assign
+        Request:
+            PUT /circles/{circle_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is assigned to circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+            404 Not Found - If partner is not found
 
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        circle.partners.append(partner)
+        circle.super.members.append(partner)
         db.session.commit()
 
-        return {
-                   'success': True
-               }, 200
+        return None, 204
 
     @auth.login_required
     def delete(self,
@@ -359,258 +324,29 @@ class CircleMembers(Resource):
         must be an admin of the organization that the circle is associated
         with.
 
-        Args:
-            circle_id: The id of the circle to unassign the partner from
-            partner_id: The id of the partner to unassign
+        Request:
+            DELETE /circles/{circle_id}/members/{partner_id}
+
+        Response:
+            204 No Content - If partner is unassigned from circle
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If circle is not found
+            404 Not Found - If partner is not found
 
         """
         circle = CircleModel.query.get(circle_id)
 
         if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
+            abort(404)
 
         partner = PartnerModel.query.get(partner_id)
 
         if partner is None:
-            raise errors.EntityNotFoundError('partner', partner_id)
+            abort(404)
 
-        circle.partners.remove(partner)
+        circle.super.members.remove(partner)
         db.session.commit()
 
-        return {
-                   'success': True
-               }, 200
-
-
-class CircleAccountabilities(Resource):
-    """
-    Define the endpoints for the accountability edge of the circle node.
-
-    """
-
-    @auth.login_required
-    def get(self, circle_id):
-        """
-        List all accountabilities of a circle.
-
-        Args:
-            circle_id: The id of the circle to display.
-
-        Body:
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        },
-                        {
-                        'id': '4',
-                        'name': 'Persmission',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The circle with id 1 does not exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-        role = RoleModel.query.get(circle.role_id)
-
-        data = [i.serialize for i in role.accountabilities]
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
-
-    @auth.login_required
-    def post(self, circle_id):
-        """
-        Add a domain to a circle.
-
-        Args:
-            circle_id: The id of the circle to add a domain.
-
-        Body:
-            name: The name of the accountability.
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The role with id 1 does not exist'
-                        }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('role', circle_id)
-
-        role = RoleModel.query.get(circle.role_id)
-
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True)
-        args = parser.parse_args()
-
-        accountability = AccountabilityModel(args['name'], role.id)
-
-        role.accountabilities.append(accountability)
-        db.session.commit()
-        return {
-                   'success': True,
-                   'data': accountability.serialize
-               }, 200
-
-
-class CircleDomains(Resource):
-    """
-    Define the endpoints for the accountability edge of the circle node.
-
-    """
-
-    @auth.login_required
-    def get(self, circle_id):
-        """
-        List all domains of a circle.
-
-        Args:
-            circle_id: The id of the circle to display.
-
-        Body:
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        },
-                        {
-                        'id': '4',
-                        'name': 'Persmission',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The circle with id 1 does not exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('circle', circle_id)
-        role = RoleModel.query.get(circle.role_id)
-
-        data = [i.serialize for i in role.domains]
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
-
-    @auth.login_required
-    def post(self, circle_id):
-        """
-        Add a domain to a circle.
-
-        Args:
-            circle_id: The id of the circle to add a domain.
-
-        Body:
-            name: The name of the domain.
-
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The role with id 1 does not exist'
-                        }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
-        """
-        circle = CircleModel.query.get(circle_id)
-
-        if circle is None:
-            raise errors.EntityNotFoundError('role', circle_id)
-
-        role = RoleModel.query.get(circle.role_id)
-
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True)
-        args = parser.parse_args()
-
-        domain = DomainModel(args['name'], role.id)
-
-        role.domains.append(domain)
-        db.session.commit()
-        return {
-                   'success': True,
-                   'data': domain.serialize
-               }, 200
+        return None, 204

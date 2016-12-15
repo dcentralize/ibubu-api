@@ -5,8 +5,6 @@ Define classes for a partner.
 from enum import Enum
 
 from swarm_intelligence_app.models import db
-from swarm_intelligence_app.models.circle_member import circle_members
-from swarm_intelligence_app.models.member_role import members_roles
 
 
 class PartnerType(Enum):
@@ -14,8 +12,8 @@ class PartnerType(Enum):
     Define values for a partner's type.
 
     """
-    ADMIN = 'admin'
-    MEMBER = 'member'
+    admin = 'admin'
+    member = 'member'
 
 
 class Partner(db.Model):
@@ -28,17 +26,20 @@ class Partner(db.Model):
     firstname = db.Column(db.String(45), nullable=False)
     lastname = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    is_deleted = db.Column(db.Boolean(), nullable=False)
+    is_active = db.Column(db.Boolean(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'),
                                 nullable=False)
     invitation_id = db.Column(db.Integer, db.ForeignKey('invitation.id'),
                               nullable=True)
 
-    circles = db.relationship(
-        'Circle', secondary=circle_members, back_populates='partners')
-    roles = db.relationship('Role', secondary=members_roles,
-                            back_populates='members')
+    memberships = db.relationship('Role',
+                                  secondary='role_member',
+                                  back_populates='members')
+
+    __table_args__ = (db.UniqueConstraint('user_id', 'organization_id',
+                                          name='UNIQUE_organization_id_user_id'
+                                          ),)
 
     def __init__(self,
                  type,
@@ -56,7 +57,7 @@ class Partner(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.is_deleted = False
+        self.is_active = True
         self.user = user
         self.organization = organization
         self.invitation_id = invitation_id
@@ -80,7 +81,7 @@ class Partner(db.Model):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
-            'is_deleted': self.is_deleted,
+            'is_active': self.is_active,
             'user_id': self.user.id,
             'organization_id': self.organization.id,
             'invitation_id': self.invitation_id

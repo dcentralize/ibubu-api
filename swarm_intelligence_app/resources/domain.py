@@ -2,8 +2,8 @@
 Define the classes for the domain API.
 
 """
+from flask import abort
 from flask_restful import reqparse, Resource
-from swarm_intelligence_app.common import errors
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.domain import Domain as \
@@ -16,153 +16,97 @@ class Domain(Resource):
     Define the endpoints for the domain node.
 
     """
-
     @auth.login_required
     def get(self, domain_id):
         """
         Retrieve a domain.
 
-        Args:
-            domain_id: The id of the domain to display.
+        Request:
+            GET /domains/{domain_id}
 
-        Body:
+        Response:
+            200 OK - If domain is retrieved
+                {
+                    'id': 1,
+                    'title': 'Domain\'s title'
+                    'role_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If domain is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The domain with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         domain = DomainModel.query.get(domain_id)
 
         if domain is None:
-            raise errors.EntityNotFoundError('domain', domain_id)
+            abort(404)
 
-        return {
-                   'success': True,
-                   'data': domain.serialize
-               }, 200
+        return domain.serialize, 200
 
     @auth.login_required
     def put(self, domain_id):
         """
-        Edit a domain.
+        Update a domain.
 
-        Args:
-            domain_id: The id of the domain which to edit.
+        Request:
+            PUT /domains/{domain_id}
 
-        Body:
-            name: The name of the domain.
+            Parameters:
+                title (string): The new title of the domain
 
-        Headers:
-            Authorization: A string of the authorization token.
+        Response:
+            200 OK - If domain is updated
+                {
+                    'id': 1,
+                    'title': 'Domain\'s title',
+                    'role_id': 99
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If domain is not found
 
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The domain with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         domain = DomainModel.query.get(domain_id)
 
         if domain is None:
-            raise errors.EntityNotFoundError('domain', domain_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True)
+        parser.add_argument('title', required=True)
         args = parser.parse_args()
 
-        domain.name = args['name']
+        domain.title = args['title']
         db.session.commit()
 
-        return {
-                   'success': True,
-                   'data': domain.serialize
-               }, 200
+        return domain.serialize, 200
 
     @auth.login_required
     def delete(self, domain_id):
         """
-        Delete a policy.
+        Delete a domain.
 
-        Args:
-            domain_id: The id of the domain which to delete.
+        Request:
+            DELETE /domains/{domain_id}
 
-        Body:
+        Response:
+            204 No Content - If the domain is deleted
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If domain is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': { }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The domain with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         domain = DomainModel.query.get(domain_id)
 
         if domain is None:
-            raise errors.EntityNotFoundError('domain', domain_id)
+            abort(404)
 
         db.session.delete(domain)
         db.session.commit()
 
-        return {
-                   'success': True
-               }, 200
+        return None, 204
 
 
 class DomainPolicies(Resource):
@@ -170,107 +114,69 @@ class DomainPolicies(Resource):
     Define the endpoints for the policy edge of the domain node.
 
     """
-
     @auth.login_required
     def get(self, domain_id):
         """
         List of all policies of a domain.
 
-        Args:
-            domain_id: The id of the domain to display.
+        Request:
+            GET /domains/{domain_id}/policies
 
-        Body:
+        Response:
+            200 OK - If policies of domain are listed
+                [
+                    {
+                        'id': 1,
+                        'title': 'Policy\'s name',
+                        'description': 'Policy\'s description',
+                        'domain_id': 1
+                    }
+                ]
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If domain is not found
 
-        Headers:
-            Authorization: A string of the authorization token.
-
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                            {
-                            'id': '2',
-                            'title': 'Finances',
-                            'description': 'Keys for the safe.',
-                            'domain_id': '1'
-                            },
-                            {
-                            'id': '3',
-                            'title': 'Permissions',
-                            'description': 'Description of persmissions.',
-                            'domain_id': '1'
-                            }
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The domain with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         domain = DomainModel.query.get(domain_id)
 
         if domain is None:
-            raise errors.EntityNotFoundError('domain', domain_id)
+            abort(404)
 
         data = [i.serialize for i in domain.policies]
-        return {
-                   'success': True,
-                   'data': data
-               }, 200
+
+        return data, 200
 
     @auth.login_required
     def post(self, domain_id):
         """
-        Create a new policy for the domain.
+        Add a policy to a domain.
 
-        Args:
-            domain_id: The id of the domain which to edit.
+        Request:
+            POST /domains/{domain_id}/policies
 
-        Body:
-            title: The title of the policy.
-            description: The description of the policy.
+            Parameters:
+                title (string): The title of the policy
+                description (string): The description of the policy
 
-        Headers:
-            Authorization: A string of the authorization token.
+        Response:
+            201 Created - If policy is added
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title',
+                    'description': 'Policy\'s description',
+                    'domain_id': 1
+                }
+            400 Bad Request - If token is not well-formed
+            401 Unauthorized - If token has expired
+            401 Unauthorized - If user is not authorized
+            404 Not Found - If domain is not found
 
-        Return:
-            A dictionary mapping keys to the corresponding table row data
-            fetched and converted to json. Each row is represented as a
-            tuple of strings. For example:
-            {
-                'success': True,
-                'data': {
-                        'id': '2',
-                        'name': 'Finances',
-                        'role_id': '1'
-                        }
-            }
-            {
-                'success': False,
-                'errors': [{
-                            'type': 'EntityNotFoundError',
-                            'message': 'The domain with id 1 does not
-                            exist'
-                          }]
-            }
-
-        Raises:
-            EntityNotFoundError: There is no entry found with the id.
         """
         domain = DomainModel.query.get(domain_id)
 
         if domain is None:
-            raise errors.EntityNotFoundError('domain', domain_id)
+            abort(404)
 
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('title', required=True)
@@ -281,7 +187,4 @@ class DomainPolicies(Resource):
         domain.policies.append(policy)
         db.session.commit()
 
-        return {
-                   'success': True,
-                   'data': policy.serialize
-               }, 200
+        return policy.serialize, 201

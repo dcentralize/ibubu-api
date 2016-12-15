@@ -170,7 +170,7 @@ class TestPartnerException:
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
 
-        invitation_code = invitation_response.json['data']['code']
+        invitation_code = invitation_response.json['code']
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \

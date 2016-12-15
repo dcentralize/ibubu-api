@@ -36,7 +36,6 @@ class TestCircle:
             self.circle_put_no_login(client, circleId)
             self.circle_put_no_param(client, circleId, jwtToken)
             self.circle_put_wrong_param(client, circleId, jwtToken)
-            self.circle_delete_no_login(client, circleId)
             self.circle_post_roles_no_login(client, circleId)
             self.circle_post_roles_no_param(client, circleId, jwtToken)
             self.circle_post_roles_wrong_param(client, circleId, jwtToken)
@@ -48,13 +47,6 @@ class TestCircle:
             self.circle_get_members_no_login(client, circleId)
             self.circle_put_partner_no_login(client, circleId, partnerId)
             self.circle_delete_partner_no_login(client, circleId, partnerId)
-            self.circle_post_domain_no_login(client, circleId)
-            self.circle_post_domain_no_param(client, circleId, jwtToken)
-            self.circle_get_domain_no_login(client, circleId)
-            self.circle_post_accountability_no_login(client, circleId)
-            self.circle_post_accountability_no_param(client, circleId,
-                                                      jwtToken)
-            self.circle_get_accountability_no_login(client, circleId)
 
     def circle_get_no_login(self, client, circleId):
         """
@@ -93,14 +85,6 @@ class TestCircle:
                           data={'purpose': 'Purpose2',
                                 'strategy': 'Strategy2'}) \
             .status == '400 BAD REQUEST'
-
-    def circle_delete_no_login(self, client, circleId):
-        """
-        Test if the delete request without a valid token returns a 400
-        status code.
-        """
-        assert client.delete('/circles/' + circleId, headers={},
-                             data={}).status == '400 BAD REQUEST'
 
     def circle_post_roles_no_login(self, client, circleId):
         """
@@ -159,7 +143,7 @@ class TestCircle:
         """
         assert client.put('/roles/' + roleId + '/circle', headers={
             'Authorization': 'Bearer ' + token}, data={}).status ==\
-            '400 BAD REQUEST'
+            '204 NO CONTENT'
 
     def circle_put_subcircles_wrong_param(self, client, roleId, token):
         """
@@ -169,7 +153,7 @@ class TestCircle:
         assert client.put('/roles/' + roleId + '/circle', headers={
             'Authorization': 'Bearer ' + token},
                           data={'name': 'NewRole', 'strategy': 'NewStrategy'})\
-            .status == '400 BAD REQUEST'
+            .status == '204 NO CONTENT'
 
     def circle_get_subcircles_no_login(self, client, roleId):
         """
@@ -206,55 +190,3 @@ class TestCircle:
         assert client.delete('/circles/' + circleId + '/members/' + partnerId,
                              headers={}
                              ).status == '400 BAD REQUEST'
-
-    def circle_post_domain_no_login(self, client, circleId):
-        """
-        Test if the post request without a valid token returns a 400 status
-        code.
-        """
-        assert client.post('/circles/' + circleId + '/domains',
-                           headers={},
-                           data={'name': 'DomainName'}).status == '400 BAD ' \
-                                                                  'REQUEST'
-    def circle_post_domain_no_param(self, client, circleId, token):
-        """
-        Test if the post request with a missing body returns a 400 status
-        code.
-        """
-        assert client.post('/circles/' + circleId + '/domains',
-                           headers={'Authorization': 'Bearer ' + token},
-                           data={}).status == '400 BAD REQUEST'
-
-    def circle_get_domain_no_login(self, client, circleId):
-        """
-        Test if the get request without a valid token returns a 400 status
-        code.
-        """
-        assert client.get('/circles/' + circleId + '/domains',
-                          headers={}).status == '400 BAD REQUEST'
-
-    def circle_post_accountability_no_login(self, client, circleId):
-        """
-        Test if the post request without a valid token returns a 400
-        status code.
-        """
-        assert client.post('/circles/' + circleId + '/accountabilities',
-                           headers={},
-                           data={'name': 'AccName'}).status == '400 BAD ' \
-                                                               'REQUEST'
-
-    def circle_post_accountability_no_param(self, client, circleId, token):
-        """
-        Test if the post request with a missing body returns a 400 status code.
-        """
-        assert client.post('/circles/' + circleId + '/accountabilities',
-                           headers={'Authorization': 'Bearer ' + token},
-                           data={}).status == '400 BAD REQUEST'
-
-    def circle_get_accountability_no_login(self, client, circleId):
-        """
-        Test if the get request without a valid token returns a 400 status
-        code.
-        """
-        assert client.get('/circles/' + circleId + '/accountabilities',
-                          headers={}).status == '400 BAD REQUEST'

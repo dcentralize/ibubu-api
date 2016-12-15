@@ -27,7 +27,6 @@ class TestCircle:
 
             self.get_circle(client, jwtToken, circleId)
             self.put_circle(client, jwtToken, id, circleId)
-            self.delete_circle(client, jwtToken, circleId)
             self.delete_organization(client, jwtToken, id)
 
             self.user.me_organizations_post(test_me, client, jwtToken)
@@ -37,15 +36,10 @@ class TestCircle:
             self.get_circle_roles(client, jwtToken, circleId2)
             roleId = self.get_role_id(client, jwtToken, circleId2)
             self.put_circle_subcircles(client, roleId, jwtToken)
-            self.get_circle_subcircles(client, circleId2, jwtToken)
             self.get_circle_members(client, circleId2, jwtToken)
             partnerId = self.get_partner_id(client, id2, jwtToken)
             self.put_circle_partner(client, partnerId, circleId2, jwtToken)
             self.delete_circle_partner(client, partnerId, circleId2, jwtToken)
-            self.post_circle_domain(client, circleId2, jwtToken)
-            self.get_circle_domain(client, circleId2, jwtToken)
-            self.post_circle_accountability(client, circleId2, jwtToken)
-            self.get_circle_accountability(client, circleId2, jwtToken)
 
     def get_organization_id(self, client, token):
         """
@@ -53,7 +47,7 @@ class TestCircle:
         """
 
         data = client.get('/me/organizations', headers={
-            'Authorization': 'Bearer ' + token}).json['data'][0]['id']
+            'Authorization': 'Bearer ' + token}).json[0]['id']
         organization_id = str(data)
         return organization_id
 
@@ -63,7 +57,7 @@ class TestCircle:
         """
 
         data = client.get('/organizations/' + id + '/anchor_circle', headers={
-            'Authorization': 'Bearer ' + token}).json['data'][0]['role_id']
+            'Authorization': 'Bearer ' + token}).json['id']
         circle_id = str(data)
         return circle_id
 
@@ -72,7 +66,7 @@ class TestCircle:
         Test if the delete request gets executed.
         """
         assert client.delete('/organizations/' + id, headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def get_circle(self, client, token, circleId):
         """
@@ -93,12 +87,6 @@ class TestCircle:
                                 'purpose': 'Purpose2',
                                 'strategy': 'Strategy2'}).status == '200 OK'
 
-    def delete_circle(self, client, token, circleId):
-        """
-        Test if the delete request gets executed.
-        """
-        assert client.delete('/circles/' + circleId, headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
 
     def post_circle_roles(self, client, token, circleId2):
         """
@@ -109,7 +97,7 @@ class TestCircle:
                            data={'name': 'NewRole',
                                  'purpose': 'This is a new Role added to a '
                                             'Circle.'}).status \
-            == '200 OK'
+            == '201 CREATED'
 
     def get_circle_roles(self, client, token, circleId2):
         """
@@ -127,7 +115,7 @@ class TestCircle:
                            data={'name': 'NewRole',
                                  'purpose': 'This is a new Role added to a '
                                             'Circle.'})
-        data = response.json['data']['id']
+        data = response.json['id']
         role_id = str(data)
         return role_id
 
@@ -139,14 +127,8 @@ class TestCircle:
             'Authorization': 'Bearer ' + token}, data={'name': 'NewRole',
                                  'purpose': 'This is a new Role added to a '
                                             'Circle.',
-                                 'strategy': 'NewStrategy'}).status == '200 OK'
-
-    def get_circle_subcircles(self, client, circleId2, token):
-        """
-        Test if the get request gets executed.
-        """
-        assert client.get('/circles/' + circleId2 + '/subcircles', headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+                                 'strategy': 'NewStrategy'}).status == \
+            '204 NO CONTENT'
 
     def get_circle_members(self, client, circleId2, token):
         """
@@ -161,7 +143,7 @@ class TestCircle:
         """
         response = client.get('/organizations/' + id2 + '/members', headers={
             'Authorization': 'Bearer ' + token})
-        data = response.json['data'][0]['id']
+        data = response.json[0]['id']
         partnerId = str(data)
         return partnerId
 
@@ -173,7 +155,7 @@ class TestCircle:
                           headers={'Authorization': 'Bearer ' + token},
                           data={'firstname': 'Manuel', 'lastname':
                               'Neuer', 'email': 'm.neuer@mail.com'}).status \
-            == '200 OK'
+            == '204 NO CONTENT'
 
     def delete_circle_partner(self, client, partnerId, circleId2, token):
         """
@@ -181,36 +163,4 @@ class TestCircle:
         """
         assert client.delete('/circles/' + circleId2 + '/members/' + partnerId,
                              headers={'Authorization': 'Bearer ' + token}
-                             ).status == '200 OK'
-
-    def post_circle_domain(self, client, circleId2, token):
-        """
-        Test if the post request gets executed.
-        """
-        assert client.post('/circles/' + circleId2 + '/domains',
-                           headers={'Authorization': 'Bearer ' + token},
-                           data={'name': 'DomainName'}).status == '200 OK'
-
-    def get_circle_domain(self, client, circleId2, token):
-        """
-        Test if the get request gets executed.
-        """
-        assert client.get('/circles/' + circleId2 + '/domains',
-                          headers={'Authorization': 'Bearer ' +
-                                   token}).status == '200 OK'
-
-    def post_circle_accountability(self, client, circleId2, token):
-        """
-        Test if the post request gets executed.
-        """
-        assert client.post('/circles/' + circleId2 + '/accountabilities',
-                           headers={'Authorization': 'Bearer ' + token},
-                           data={'name': 'AccName'}).status == '200 OK'
-
-    def get_circle_accountability(self, client, circleId2, token):
-        """
-        Test if the get request gets executed.
-        """
-        assert client.get('/circles/' + circleId2 + '/accountabilities',
-                          headers={'Authorization': 'Bearer ' +
-                                                    token}).status == '200 OK'
+                             ).status == '204 NO CONTENT'

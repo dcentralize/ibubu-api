@@ -40,7 +40,7 @@ class TestUser:
         Test if the me-page returns a valid http status-code when posting.
         """
         assert client.post('/register', headers={
-            'Authorization': 'Token ' + token}).status == '200 OK'
+            'Authorization': 'Token ' + token}).status == '201 CREATED'
 
     def me_get(self, client, token):
         """
@@ -65,7 +65,7 @@ class TestUser:
         Test if the me-page returns a valid http status-code when deleting.
         """
         assert client.delete('/me', headers={
-            'Authorization': 'Bearer ' + token}).status == '200 OK'
+            'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def me_organizations_post(self, client, token):
         """
@@ -76,7 +76,7 @@ class TestUser:
             'Authorization': 'Bearer ' + token},
                            data={'name': str(uuid.uuid4()) + 'Dagoberts ' +
                                                  'Empire'}).status == \
-               '200 OK'
+               '201 CREATED'
 
     def me_organizations_get(self, client, token):
         """

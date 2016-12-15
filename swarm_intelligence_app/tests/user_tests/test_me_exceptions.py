@@ -77,7 +77,7 @@ class TestUserExceptions:
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token},
-                             data={}).status == '200 OK'
+                             data={}).status == '204 NO CONTENT'
 
     def me_organizations_post_no_login(self, client):
         """

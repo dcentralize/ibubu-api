@@ -11,18 +11,19 @@ class Domain(db.Model):
 
     """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+    title = db.Column(db.String(255), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
 
-    policies = db.relationship('Policy', backref='domain', cascade='all,'
-                                                                   'delete')
+    policies = db.relationship('Policy',
+                               backref='domain',
+                               cascade='all, delete-orphan')
 
-    def __init__(self, name, role_id):
+    def __init__(self, title, role_id):
         """
         Initialize a domain.
 
         """
-        self.name = name
+        self.title = title
         self.role_id = role_id
 
     def __repr__(self):
@@ -40,6 +41,6 @@ class Domain(db.Model):
         """
         return {
             'id': self.id,
-            'title': self.name,
+            'title': self.title,
             'role_id': self.role_id
         }
