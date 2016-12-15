@@ -35,7 +35,7 @@ class TestCircle:
             circle_id = self.circle.get_circle_id(test_circle, client,
                                                   jwt_token,
                                                   id)
-            partner_id = self.circle.get_partner_id(test_circle, client, id,
+            id_partner = self.circle.get_partner_id(test_circle, client, id,
                                                     jwt_token)
             role_id = self.circle.get_role_id(test_circle, client, jwt_token,
                                               circle_id)
@@ -54,8 +54,8 @@ class TestCircle:
                                                    jwt_token)
             self.circle_get_subcircles_no_login(client, circle_id)
             self.circle_get_members_no_login(client, circle_id)
-            self.circle_put_partner_no_login(client, circle_id, partner_id)
-            self.circle_delete_partner_no_login(client, circle_id, partner_id)
+            self.circle_put_partner_no_login(client, circle_id, id_partner)
+            self.circle_delete_partner_no_login(client, circle_id, id_partner)
 
     def circle_get_no_login(self, client, circle_id):
         """
@@ -193,25 +193,25 @@ class TestCircle:
         assert client.get('/circles/' + circle_id + '/members',
                           headers={}).status == '400 BAD REQUEST'
 
-    def circle_put_partner_no_login(self, client, circle_id, partner_id):
+    def circle_put_partner_no_login(self, client, circle_id, id_partner):
         """
         Test if the put request without a valid token returns a 400 status
         code.
 
         """
-        assert client.put('/circles/' + circle_id + '/members/' + partner_id,
+        assert client.put('/circles/' + circle_id + '/members/' + id_partner,
                           headers={},
                           data={'firstname': 'Manuel', 'lastname':
                                 'Neuer', 'email': 'm.neuer@mail.com'}).status\
             == '400 BAD REQUEST'
 
-    def circle_delete_partner_no_login(self, client, circle_id, partner_id):
+    def circle_delete_partner_no_login(self, client, circle_id, id_partner):
         """
         Test if the delete request without a valid token returns a 400 status
         code.
 
         """
         assert client.delete('/circles/' + circle_id + '/members/' +
-                             partner_id,
+                             id_partner,
                              headers={}
                              ).status == '400 BAD REQUEST'
