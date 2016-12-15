@@ -9,6 +9,7 @@ from swarm_intelligence_app.tests.organization_tests import test_organization
 from swarm_intelligence_app.tests.partner_tests import test_partners
 from swarm_intelligence_app.tests.user_tests import test_me
 
+
 class TestPartnerException:
     """
     Test API for exceptions.
@@ -48,7 +49,7 @@ class TestPartnerException:
         self.add_user_to_organization(client, self.jwtToken2,
                                       organization_id)
 
-        member_id = self.partner_helper.\
+        member_id = self.partner_helper. \
             get_organization_members_id(test_partners, client, self.jwtToken,
                                         organization_id)
 
@@ -91,7 +92,7 @@ class TestPartnerException:
         assert client.put('/partners/' + id, headers={},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-            '400 BAD REQUEST'
+               '400 BAD REQUEST'
 
     def partner_put_no_param(self, client, token, id):
         """
@@ -114,7 +115,7 @@ class TestPartnerException:
                           data={'google_id': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-            '400 BAD REQUEST'
+               '400 BAD REQUEST'
 
     def partner_get_no_login(self, client, id):
         """
@@ -212,7 +213,7 @@ class TestPartnerException:
                           data={'firstname': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-            '400 BAD REQUEST'
+               '400 BAD REQUEST'
 
     def partner_del_no_login(self, client, id):
         """
@@ -253,4 +254,4 @@ class TestPartnerException:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-            '200 OK'
+               '200 OK'
