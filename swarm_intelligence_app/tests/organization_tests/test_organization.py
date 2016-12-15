@@ -19,7 +19,7 @@ class TestOrganization:
 
     def test_organization(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -46,8 +46,8 @@ class TestOrganization:
     def get_organization_id(self, client, token):
         """
         Helper Method for getting an organization ID for further tests.
+        :return Organization-ID as String.
 
-        :return Organization-ID as String
         """
 
         data = client.get('/me/organizations', headers={
@@ -83,9 +83,9 @@ class TestOrganization:
 
     def get_organization_members(self, client, token, id):
         """
-        Gets all organization members for further testing.
-
+        Get all organization members for further testing.
         :return JSON object with all members.
+
         """
 
         response = client.get('/organizations/' + id + '/members', headers={
@@ -96,8 +96,8 @@ class TestOrganization:
     def get_organization_admins(self, client, token, id):
         """
         Test if the get request for Admins of an organization gets executed.
-
         :return JSON Object with all admins of an Organization.
+
         """
 
         assert client.get('/organizations/' + id + '/admins', headers={
@@ -117,7 +117,7 @@ class TestOrganization:
 
     def post_organization_invitation(self, client, token, id):
         """
-        Posts a Mock Invitation to an Organization.
+        Post a Mock Invitation to an Organization.
 
         """
         return client.post('/organizations/' + id + '/invitations', headers={

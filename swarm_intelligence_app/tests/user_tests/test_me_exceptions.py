@@ -19,7 +19,7 @@ class TestUserExceptions:
 
     def test_me_exceptions(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """

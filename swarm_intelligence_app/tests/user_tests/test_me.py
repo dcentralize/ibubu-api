@@ -17,7 +17,7 @@ class TestUser:
 
     def test_me(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -76,7 +76,7 @@ class TestUser:
 
     def me_organizations_post(self, client, token):
         """
-        Test if the me-organizations-page returns the expected http status-code.
+        Test if the me-organizations-page returns the expected http status-code
         when posting.
         """
         assert client.post('/me/organizations', headers={
@@ -87,7 +87,7 @@ class TestUser:
 
     def me_organizations_get(self, client, token):
         """
-        Test if the me-organizations-page returns the expected http status-code.
+        Test if the me-organizations-page returns the expected http status-code
         when getting.
         """
         assert client.get('/me/organizations', headers={

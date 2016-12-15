@@ -1,5 +1,6 @@
 """
 Test user api-functionality.
+
 """
 
 from swarm_intelligence_app.common import authentication
@@ -11,6 +12,7 @@ from swarm_intelligence_app.tests.user_tests import test_me
 class TestCircle:
     """
     Class for testing user api-functionality.
+
     """
     user = test_me.TestUser
     helper = test_helper.TestHelper
@@ -18,6 +20,10 @@ class TestCircle:
     tokens = authentication.get_mock_user()
 
     def test_organization(self, client):
+        """
+        Test the exceptions for /organizations.
+
+        """
         self.helper.set_up(test_helper, client)
 
         for token in self.tokens:

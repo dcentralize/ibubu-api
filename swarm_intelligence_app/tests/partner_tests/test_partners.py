@@ -26,7 +26,7 @@ class TestPartners:
 
     def test_partners(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
@@ -89,7 +89,6 @@ class TestPartners:
         """
         Test if put request to API gets executed.
 
-
         """
         assert client.put('/partners/' + id, headers={
             'Authorization': 'Bearer ' + token},
@@ -101,7 +100,6 @@ class TestPartners:
     def delete_partner(self, client, token, id):
         """
         Test if delete request gets executed.
-
 
         """
         assert client.delete('/partners/' + id, headers={
@@ -121,7 +119,6 @@ class TestPartners:
     def get_partner_metrics(self, client, token, id):
         """
         Test if the get request gets executed.
-
 
         """
         # #TODO Implement Metrics
@@ -170,6 +167,7 @@ class TestPartners:
         """
         Helper Method for adding a user to an organization in order to make
         test the /admins api functionality.
+
         """
         invitation_response = self.organization.post_organization_invitation(
             test_organization, client, self.jwtToken, id_organization)
@@ -178,4 +176,4 @@ class TestPartners:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-               '200 OK'
+            '200 OK'

@@ -18,6 +18,10 @@ class TestCircle:
     tokens = authentication.get_mock_user()
 
     def test_organization(self, client):
+        """
+        Test the endpoint /organization.
+
+        """
         self.helper.set_up(test_helper, client)
 
         for token in self.tokens:

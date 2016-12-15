@@ -26,7 +26,7 @@ class TestPartnerException:
 
     def test_organization_exceptions(self, client):
         """
-        Sets up the Database and checks the functionality for a given set of
+        Set up the Database and checks the functionality for a given set of
         mock users.
 
         """
