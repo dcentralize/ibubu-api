@@ -192,7 +192,7 @@ class TestCircle:
         assert client.put('/circles/' + circle_id + '/members/' + partner_id,
                           headers={},
                           data={'firstname': 'Manuel', 'lastname':
-                              'Neuer', 'email': 'm.neuer@mail.com'}).status \
+                                'Neuer', 'email': 'm.neuer@mail.com'}).status \
             == '400 BAD REQUEST'
 
     def circle_delete_partner_no_login(self, client, circle_id, partner_id):
@@ -200,6 +200,7 @@ class TestCircle:
         Test if the delete request without a valid token returns a 400 status
         code.
         """
-        assert client.delete('/circles/' + circle_id + '/members/' + partner_id,
+        assert client.delete('/circles/' + circle_id + '/members/' +
+                             partner_id,
                              headers={}
                              ).status == '400 BAD REQUEST'
