@@ -17,7 +17,9 @@ class TestUser:
 
     def test_me(self, client):
         """
-        Test the endpoints /me and /me/organizations
+        Sets up the Database and checks the functionality for a given set of
+        mock users.
+
         """
         self.helper.set_up(test_helper, client)
         for token in self.tokens:
@@ -41,21 +43,21 @@ class TestUser:
 
     def me_post(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when posting.
+        Test if the me-page returns the expected http status-code when posting.
         """
         assert client.post('/register', headers={
             'Authorization': 'Token ' + token}).status == '201 CREATED'
 
     def me_get(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when getting.
+        Test if the me-page returns the expected http status-code when getting.
         """
         assert client.get('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '200 OK'
 
     def me_put(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when putting.
+        Test if the me-page returns the expected http status-code when putting.
         """
         assert client.put('/me', headers={
             'Authorization': 'Bearer ' + token},
@@ -66,26 +68,27 @@ class TestUser:
 
     def me_del(self, client, token):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the me-page returns the expected http status-code when
+        deleting.
         """
         assert client.delete('/me', headers={
             'Authorization': 'Bearer ' + token}).status == '204 NO CONTENT'
 
     def me_organizations_post(self, client, token):
         """
-        Test if the me-organizations-page returns a valid http status-code.
+        Test if the me-organizations-page returns the expected http status-code.
         when posting.
         """
         assert client.post('/me/organizations', headers={
             'Authorization': 'Bearer ' + token},
                            data={'name': str(uuid.uuid4()) + 'Dagoberts ' +
-                                                 'Empire'}).status == \
+                                         'Empire'}).status == \
                '201 CREATED'
 
     def me_organizations_get(self, client, token):
         """
-        Test if the me-organizations-page returns a valid http status-code.
-        when posting.
+        Test if the me-organizations-page returns the expected http status-code.
+        when getting.
         """
         assert client.get('/me/organizations', headers={
             'Authorization': 'Bearer ' + token}, ).status == \

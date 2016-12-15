@@ -20,7 +20,8 @@ class TestOrganizationException:
 
     def test_organization_exceptions(self, client):
         """
-        Test with multiple token.
+        Sets up the Database and checks the functionality for a given set of
+        mock users.
 
         """
         self.helper.set_up(test_helper, client)
@@ -47,7 +48,9 @@ class TestOrganizationException:
 
     def organization_post_not_allowed(self, client, id):
         """
-        Test if the me-page returns a valid http status-code when posting.
+        Test if the organization api returns the expected http status-code
+        when
+        posting.
 
         """
         assert client.post(
@@ -55,14 +58,19 @@ class TestOrganizationException:
 
     def organization_get_no_login(self, client, id):
         """
-        Test if the me-page returns a valid http status-code when getting.
+        Test if the organization api returns the expected http status-code for
+        getting
+        without an authorization token.
 
         """
         assert client.get('/organizations/' + id).status == '400 BAD REQUEST'
 
     def organization_put_no_login(self, client, id):
         """
-            Test if the me-page returns a valid http status-code when putting.
+            Test if the organization api returns the expected http status-code
+            for
+            putting
+        without an authorization token.
 
         """
         assert client.put('/organizations/' + id, headers={},
@@ -70,7 +78,9 @@ class TestOrganizationException:
 
     def organization_put_wrong_params(self, client, token, id):
         """
-        Test if the me-page returns a valid http status-code when putting.
+        Test if the organization api returns the expected http status-code
+        when
+        putting with wrong parameters.
 
         """
         assert client.put('/organizations/' + id,
@@ -82,7 +92,9 @@ class TestOrganizationException:
 
     def organization_put_no_param(self, client, token, id):
         """
-        Test if the me-page returns a valid http status-code when putting.
+        Test if the organization api returns the expected http status-code
+        when
+        putting without parameters.
 
         """
         assert client.put('/organizations/' + id, headers={
@@ -91,7 +103,9 @@ class TestOrganizationException:
 
     def organization_del_no_login(self, client, id):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the organization api returns the expected http status-code for
+        deleting
+        without an authorization token.
 
         """
         assert client.delete('/organizations/' + id, headers={},
@@ -100,7 +114,9 @@ class TestOrganizationException:
 
     def organization_del_no_param(self, client, token, id):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the organization api returns the expected http status-code
+        when
+        deleting without parameters.
 
         """
         assert client.delete('/organizations/' + id, headers={
@@ -109,7 +125,9 @@ class TestOrganizationException:
 
     def organization_get_members_no_login(self, client, id):
         """
-        Test if the me-page returns a valid http status-code when deleting.
+        Test if the organization api returns the expected http status-code for
+        getting
+        without an authorization token.
 
         """
         assert client.get('/organizations/' + id + '/members',
@@ -117,13 +135,20 @@ class TestOrganizationException:
 
     def organization_get_admins_no_login(self, client, id):
         """
-        Test if the me-page returns a valid http status-code when deleting.
-
+        Test if the organization api returns a valid http status-code for
+        getting
+        without an authorization token.
         """
         assert client.get('/organizations/' + id + '/admins',
                           headers={}).status == '400 BAD REQUEST'
 
     def organization_post_invitation_no_login(self, client, id):
+        """
+        Test if the organization api returns a valid http status-code for
+        getting
+        without an authorization token.
+
+        """
         assert client.post('/organizations/' + id + '/invitations', headers={},
                            data={
                                'email': 'donaldo@ducko.com',
@@ -131,5 +156,11 @@ class TestOrganizationException:
                                                                  'REQUEST'
 
     def organization_get_invitation_no_login(self, client, id):
+        """
+        Test if the organization api returns a valid http status-code for
+        getting
+        without an authorization token.
+
+        """
         assert client.get('/organizations/' + id + '/invitations',
                           headers={}).status == '400 BAD REQUEST'
