@@ -58,11 +58,11 @@ Organization
 
 Partner
 -------
-/partners/{partner-id} - GET, PUT, DELETE					Implemented
-/partners/{partner-id}/admin - PUT, DELETE					Implemented
-/partners/{partner-id}/metrics - POST, GET					Implemented
-/partners/{partner-id}/checklists - POST, GET				Implemented
-/partners/{partner-id}/roles - GET							Implemented
+/partners/{partner-id} - GET, PUT, DELETE					Implemented Tested
+/partners/{partner-id}/admin - PUT, DELETE					Implemented Tested
+/partners/{partner-id}/metrics - POST, GET					Implemented Tested
+/partners/{partner-id}/checklists - POST, GET				Implemented Tested
+/partners/{partner-id}/roles - GET							Implemented Tested
 
 Invitation
 ----------
