@@ -1,0 +1,111 @@
+General Usage
+=============
+/{node-name}/{node-id}[/{edge-name}[/{edge-id}]]
+
+
+HTTP Requests
+=============
+GET     Used for retrieving resources or collections
+POST    Used for creating resources
+PUT     Used for replacing resources
+DELETE  Used for deleting resources
+
+
+HTTP Responses
+==============
+
+Success
+-------
+
+200 OK
+201 Created
+204 No Content
+
+{
+    Key: Value
+}
+
+Client Error
+------------
+
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+409 Conflict
+
+{
+    'message': String
+}
+
+Server Error
+------------
+501 Not implemented
+
+{
+    'message': String
+}
+
+
+Endpoints
+=========
+
+User
+----
+/register - POST
+/login - GET
+/me - GET, PUT, DELETE
+/me/organizations - POST, GET
+
+Organization
+------------
+/organizations/{organization-id} - GET, PUT, DELETE
+/organizations/{organization-id}/anchor_circle - GET
+/organizations/{organization-id}/members - GET
+/organizations/{organization-id}/admins - GET
+/organizations/{organization-id}/invitations - POST, GET
+
+Partner
+-------
+/partners/{partner-id} - GET, PUT, DELETE
+/partners/{partner-id}/admin - PUT, DELETE
+/partners/{partner-id}/memberships - GET
+/partners/{partner-id}/metrics - POST, GET
+/partners/{partner-id}/checklists - POST, GET
+
+Invitation
+----------
+/invitations/{invitation-id} - GET
+/invitations/{invitation-code}/accept - GET
+/invitations/{invitation-id}/cancel - PUT
+/invitations/{invitation-id}/resend - PUT
+
+Role
+----
+/roles/{role-id} - GET, PUT, DELETE
+/roles/{role-id}/members - GET
+/roles/{role-id}/members/{partner-id} - PUT, DELETE
+/roles/{role-id}/domains - GET, POST
+/roles/{role-id}/accountabilities - GET, POST
+/roles/{role-id}/circle - PUT, DELETE
+
+Circle
+------
+/circles/{circle-id} - GET, PUT
+/circles/{circle-id}/roles - POST, GET
+/circles/{circle-id}/members - GET
+/circles/{circle-id}/members/{partner-id} - PUT, DELETE
+
+Domain
+------
+/domains/{domain-id} - GET, PUT, DELETE
+/domains/{domain-id}/policies - GET, POST
+
+Policy
+------
+/policies/{policy_id} - GET, PUT, DELETE
+
+Accountability
+--------------
+/accountabilities/{accountability-id} - GET, PUT, DELETE
