@@ -2,7 +2,7 @@
 A flexible holacracy implementation.
 
 ## Table of Contents
-1. [Getting Started on Linux](#linux)
+1. [Getting Started on Ubuntu](#linux)
     1. [Prerequisites](#linuxpre)
     2. [Installing](#linuxinstall)
 2. [Running the tests](#test)
@@ -10,17 +10,17 @@ A flexible holacracy implementation.
 3. [Built with](#tools)
 4. [Authors](#authors)
 
-## Getting Started using Bash <a name="linux"></a>
+## Getting Started using Ubuntu <a name="linux"></a>
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites <a name="linuxpre"></a>
 First you need to checkout the GitHub Repository using:
 ```
-git -clone https://github.com/dcentralize/swarm-intelligence.git
+git clone https://github.com/dcentralize/swarm-intelligence.git
 ```
 It is highly recommended to run everything in an virtualenv. The environment can be set up using:
 ```
-mkvirtualenv si --python=python3.4 -a
+mkvirtualenv --python python3.4 -a . si
 ```
 To create a local database, install Mariadb:
 ```
@@ -28,7 +28,7 @@ apt-get install mariadb-server
 ```
 In order to run or deploy the project, it is necessary to download the dependencies:
 ```
-pip3 install -r .travis.requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ### Installing <a name="linuxinstall"></a>
@@ -42,15 +42,17 @@ Setting up the database:
 ```
 mysql -u root -e 'CREATE DATABASE swarm_intelligence'
 ```
-Adding the directory to PYTHONPATH:
+Adding the directory 'swarm-intelligence' to your PYTHONPATH:
 ```
-export PYTHONPATH=$PYTHONPATH:/path/of/directory/
+export PYTHONPATH=$PYTHONPATH:/path/of/swarm-intelligence
 ```
 You can now navigate to the app.py and run it using:
 ```
-python3 app.py
+cd swarm-intelligence
+python3 swarm_intelligence_app/app.py
 ```
-You can now access your application via your browser at localhost:5432.
+You can now access your application via your browser at localhost:5000.
+Please not that accessing the application via 127.0.0.1:5000 will not work.
 
 ## Running the tests <a name="tests"></a>
 Normally our tests are run using Travis-CI.
