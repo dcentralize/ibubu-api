@@ -51,8 +51,8 @@ You can now navigate to the app.py and run it using:
 cd swarm-intelligence
 python3 swarm_intelligence_app/app.py
 ```
-You can now access your application via your browser at localhost:5000.
-Please not that accessing the application via 127.0.0.1:5000 will not work.
+You can now access the API at localhost:5000.
+Please not that accessing the API via 127.0.0.1:5000 will not work.
 
 ## Running the tests <a name="tests"></a>
 Normally our tests are run using Travis-CI.
@@ -69,14 +69,19 @@ Our coding style is conform to flake8, except for some minor exceptions which ca
 * [Travis-CI](https://travis-ci.org/)
 * [Mariadb](https://mariadb.org/)
 * [Flask](http://flask.pocoo.org/docs/0.11/)
+* [Flask-Cors](https://github.com/corydolphin/flask-cors)
+* [Flask-HTTPAuth](https://flask-httpauth.readthedocs.io/en/latest/)
 * [Flask-RESTful](https://flask-restful-cn.readthedocs.io/en/0.3.5/)
 * [Flask-SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.1/)
-* [SQLAlchemy-Utils](https://github.com/kvesteri/sqlalchemy-utils)
-* [Flask-HTTPAuth](https://flask-httpauth.readthedocs.io/en/latest/)
+* [Jinja2](http://jinja.pocoo.org/)
+* [PyJWT](http://github.com/jpadilla/pyjwt)
 * [PyMySQL](https://media.readthedocs.org/pdf/pymysql/latest/pymysql.pdf)
+* [SQLAlchemy](http://www.sqlalchemy.org)
+* [SQLAlchemy-Utils](https://github.com/kvesteri/sqlalchemy-utils)
+* [Py](https://pypi.python.org/pypi)
 * [Pytest](http://doc.pytest.org/en/latest/)
 * [Pytest-Flask](https://pytest-flask.readthedocs.io/en/latest/)
-* [Py](https://pypi.python.org/pypi)
+* [requests](http://python-requests.org)
 * [Tox](https://tox.readthedocs.io/en/latest/)
 
 ## Authors <a name="authors"></a>
