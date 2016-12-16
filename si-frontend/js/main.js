@@ -100,7 +100,7 @@ function getOrganizations() {
            if(data.data.length != 0) {
            $('#tbodyOrganizations').empty();
               for(i=0; i< data.data.length; i++)  {
-                    $('#tbodyOrganizations').append('<tr><td>'+data.data[i].id+'</td><td id="organizationName'+data.data[i].id+'">'+data.data[i].name+'</td>'+
+                    $('#tbodyOrganizations').append('<tr><td><a href="#" onclick="getOrganizationMember('+data.data[i].id+')">'+data.data[i].id+'</a></td><td id="organizationName'+data.data[i].id+'">'+data.data[i].name+'</td>'+
                                                         '<td class="editTd"><button data-toggle="modal" data-target="#orgModal" onclick="selectOrganization('+data.data[i].id+')" class="editBtn btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></td>'+
                                                         '<td class="removeTd"><button onclick="removeOrganization('+data.data[i].id+')" class="removeBtn btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>'+
                                                     '</tr>');
@@ -120,13 +120,7 @@ inputName =$('#inputNameOrganization').val();
         success: function(data) {
         orgData = data.data;
         getOrganizations();
-/*
-        $('body').load('organization.html', function(data) {
-           $('.orgName').text(orgData.name);
-           $('#orgId').text(orgData.id);
-        });
-        }
-        */
+
         }
     })
     }
@@ -199,6 +193,66 @@ function removeOrganization(id) {
            getOrganizations();
         }
      })
+}
+organizationId =0;
+function getOrganizationMember(id) {
+organizationId = id;
+ $('body').load('organization.html');
+    $.ajax({
+    url:"http://localhost:5432/organizations/"+organizationId+"/members",
+    headers:{'Authorization':'Token ' + token},
+    type: 'GET',
+    dataType:'json',
+    success: function(data){
+       emptyTbodyOrgMember();
+       for(i =0; i < data.data.length;i++) {
+        appendMember(data.data[i]);
+
+       }
+
+       getInvitation(id);
+           }
+    })
+}
+function emptyTbodyOrgMember() {
+    $('#tbodyOrgMember').empty();
+}
+function appendMember(member) {
+    $('#tbodyOrgMember').append('<tr><td>'+ member.id+'</td><td>'+member.firstname+'</td><td>'+member.lastname+'</td><td>'+member.type+'</td></tr>');
+}
+function sendInvitation() {
+    email = $('#emailForInvit').val();
+     $.ajax({
+    url:"http://localhost:5432/organizations/"+organizationId+"/invitations",
+    headers:{'Authorization':'Token ' + token},
+    data:{'email': email},
+    type: 'POST',
+    dataType:'json',
+    success: function(data){
+       alert("Invitation Sent");
+           }
+    })
+}
+
+function getInvitation(id){
+
+     $.ajax({
+    url:"http://localhost:5432/organizations/"+id+"/invitations",
+    headers:{'Authorization':'Token ' + token},
+    type: 'GET',
+    dataType:'json',
+    success: function(data){
+        for(i =0; i< data.data.length;i++) {
+          appendInvitation(data.data[i]);
+        }
+    }
+    })
+}
+function emptyTbodyOrgInvitation() {
+    $('#tbodyOrgInvit').empty();
+}
+function appendInvitation(invitation) {
+     $('#tbodyOrgInvitation').append('<tr><td>'+ invitation.id+'</td><td>'+invitation.email+'</td><td>'+invitation.status+'</td><td></tr>');
 }
 
 
