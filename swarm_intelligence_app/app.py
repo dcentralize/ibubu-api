@@ -7,7 +7,6 @@ import os
 from flask import Flask, render_template
 from flask_cors import CORS
 from flask_restful import Api
-from flask_restful_swagger import swagger
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 from swarm_intelligence_app.config import config

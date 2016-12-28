@@ -3,6 +3,7 @@ Test user api-functionality.
 
 """
 from datetime import datetime, timedelta
+
 import jwt
 
 from swarm_intelligence_app.common import authentication
@@ -94,7 +95,7 @@ class TestCircle:
             self.circle_put_partner_not_found_circle_id(client, token,
                                                         circle_id)
             self.circle_put_partner_not_found_partner_id(client, token,
-                                                        partner_id)
+                                                         partner_id)
 
             self.circle_delete_partner_no_login(client, circle_id, partner_id)
 
@@ -170,8 +171,8 @@ class TestCircle:
             'Authorization': 'Bearer ' + expired_token},
                           data={'name': 'Name2',
                                 'purpose': 'Purpose2',
-                                'strategy': 'Strategy2'}
-                          ).status == '401 UNAUTHORIZED'
+                                'strategy': 'Strategy2'})\
+            .status == '401 UNAUTHORIZED'
 
     def circle_put_not_found(self, client, jwt_token):
         """
@@ -183,8 +184,8 @@ class TestCircle:
             'Authorization': 'Bearer ' + jwt_token},
                           data={'name': 'Name2',
                                 'purpose': 'Purpose2',
-                                'strategy': 'Strategy2'}
-                          ).status == '404 NOT FOUND'
+                                'strategy': 'Strategy2'})\
+            .status == '404 NOT FOUND'
 
     def circle_post_roles_no_login(self, client, circle_id):
         """
@@ -397,7 +398,7 @@ class TestCircle:
             .status == '400 BAD REQUEST'
 
     def circle_put_partner_expired_token(self, client, expired_token,
-                                        circle_id, partner_id):
+                                         circle_id, partner_id):
         """
         Test if the put requests with an expired token returns a 401 status
         code.
@@ -466,6 +467,11 @@ class TestCircle:
 
     def circle_delete_partner_not_found_circle_id(self, client, token,
                                                   circle_id):
+        """
+        Test if the delete request to a non-existing partner returns a 404
+        status code.
+
+        """
         assert client.delete('/circles/' + circle_id + '/members/' + '0',
                              headers={'Authorization': 'Bearer ' +
                                                        token}).status \
@@ -473,6 +479,11 @@ class TestCircle:
 
     def circle_delete_partner_not_found_partner_id(self, client, token,
                                                    partner_id):
+        """
+        Test if the delete request to a non-existing circle returns a 404
+        status code.
+
+        """
         assert client.delete('/circles/' + '0' + '/members/' + partner_id,
                              headers={'Authorization': 'Bearer ' +
                                                        token}).status \
