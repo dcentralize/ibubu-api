@@ -32,7 +32,7 @@ class TestCircle:
             circle_id = self.get_circle_id(client, jwt_token, id)
 
             self.get_circle(client, jwt_token, circle_id)
-            self.put_circle(client, jwt_token, id, circle_id)
+            self.put_circle(client, jwt_token, circle_id)
             self.delete_organization(client, jwt_token, id)
 
             self.user.me_organizations_post(test_me, client, jwt_token)
@@ -86,7 +86,7 @@ class TestCircle:
 
         print('Passed test for getting a Circle.')
 
-    def put_circle(self, client, token, id, circle_id):
+    def put_circle(self, client, token, circle_id):
         """
         Test if put request to API get executed.
 

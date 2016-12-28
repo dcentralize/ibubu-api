@@ -4,7 +4,7 @@ Define the main entry point for the app.
 """
 import os
 
-from flask import Blueprint, Flask, render_template
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_restful import Api
 from flask_restful_swagger import swagger
@@ -32,9 +32,6 @@ def load_config(app):
     app.config.from_object(config[config_name])
 
 
-my_blueprint1 = Blueprint('my_blueprint1', __name__)
-
-
 def create_app():
     """
     Create the main flask app.
@@ -42,14 +39,7 @@ def create_app():
     """
     app = Flask(__name__)
     CORS(app)
-    ###################################
-    api = swagger.docs(Api(my_blueprint1), apiVersion='0.1',
-                       basePath='http://localhost:5000',
-                       resourcePath='/',
-                       produces=['application/json", "text/html'],
-                       api_spec_url='/api',
-                       description='Swarm Intelligence')
-    ###################################
+    api = Api(app)
     load_config(app)
     api.add_resource(user.UserRegistration,
                      '/register')
@@ -152,6 +142,4 @@ def setup():
 
 
 if __name__ == '__main__':
-    application.register_blueprint(my_blueprint1,
-                                   url_prefix='')
     application.run()

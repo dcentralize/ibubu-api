@@ -4,7 +4,6 @@ Define the classes for the circle API.
 """
 from flask import abort
 from flask_restful import reqparse, Resource
-from flask_restful_swagger import swagger
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -18,30 +17,6 @@ class Circle(Resource):
     Define the endpoints for the circle node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string',
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             circle_id):

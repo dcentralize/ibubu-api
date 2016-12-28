@@ -9,7 +9,6 @@ import requests
 
 from flask import abort, current_app, g
 from flask_restful import reqparse, Resource
-from flask_restful_swagger import swagger
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -42,32 +41,6 @@ class UserRegistration(Resource):
     Define the endpoints for the user registration.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[
-            {
-                'name': 'Authorization',
-                'defaultValue': ('Token + <mock_user_001>'),
-                'in': 'header',
-                'description': 'web-token to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-            }
-        ],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ],
-    )
     def post(self):
         """
         Create a user.
@@ -162,30 +135,6 @@ class UserLogin(Resource):
     Define the endpoints for the user login.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     def get(self):
         """
         Login a user.
@@ -256,30 +205,6 @@ class User(Resource):
     Define the endpoints for the user node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self):
         """
@@ -305,39 +230,6 @@ class User(Resource):
         """
         return g.user.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }, {
-                'name': 'body',
-                'defaultValue': ("{'firstname': 'Daisy', 'lastname': "
-                                 "'Ducks', 'email': 'daisy' + token +  "
-                                 "'@tolli.com'}"),
-                'description': 'new user-data',
-                'required': 'true',
-                'type': 'JSON Object',
-                'paramType': 'body'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def put(self):
         """
@@ -379,30 +271,6 @@ class User(Resource):
 
         return g.user.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def delete(self):
         """
@@ -439,39 +307,6 @@ class UserOrganizations(Resource):
 
     """
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }, {
-                'name': 'body',
-                'defaultValue': ("{'name': token + ': Dagoberts ' + "
-                                 "'Empire'}"),
-                'description': 'name of the organization',
-                'required': 'true',
-                'type': 'JSON Object',
-                'paramType': 'body'
-                }
-        ],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def post(self):
         """
@@ -548,30 +383,6 @@ class UserOrganizations(Resource):
 
         return organization.serialize, 201
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self):
         """

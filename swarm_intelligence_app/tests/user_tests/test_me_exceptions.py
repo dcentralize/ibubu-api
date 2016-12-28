@@ -62,7 +62,7 @@ class TestUserExceptions:
                           data={'firstname': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
+            '400 BAD REQUEST'
 
     def me_put_no_param(self, client, token):
         """
