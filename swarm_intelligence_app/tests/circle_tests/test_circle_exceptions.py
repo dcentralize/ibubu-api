@@ -86,15 +86,15 @@ class TestCircle:
             self.circle_get_members_not_found(client, jwt_token)
 
             self.circle_put_partner_no_login(client, circle_id, partner_id)
-            self.circle_put_partner_no_param(client, circle_id, token,
+            self.circle_put_partner_no_param(client, circle_id, jwt_token,
                                              partner_id)
-            self.circle_put_partner_wrong_param(client, circle_id, token,
+            self.circle_put_partner_wrong_param(client, circle_id, jwt_token,
                                                 partner_id)
             self.circle_put_partner_expired_token(client, expired_token,
                                                   circle_id, partner_id)
-            self.circle_put_partner_not_found_circle_id(client, token,
+            self.circle_put_partner_not_found_circle_id(client, jwt_token,
                                                         circle_id)
-            self.circle_put_partner_not_found_partner_id(client, token,
+            self.circle_put_partner_not_found_partner_id(client, jwt_token,
                                                          partner_id)
 
             self.circle_delete_partner_no_login(client, circle_id, partner_id)
@@ -374,17 +374,17 @@ class TestCircle:
                                 'Neuer', 'email': 'm.neuer@mail.com'}).status \
             == '400 BAD REQUEST'
 
-    def circle_put_partner_no_param(self, client, circle_id, token,
+    def circle_put_partner_no_param(self, client, circle_id, jwt_token,
                                     partner_id):
         """
         Test if the put request with a missing body returns a 400 status code.
 
         """
         assert client.put('/circles/' + circle_id + '/members/' + partner_id,
-                          headers={'Authorization': 'Bearer ' + token},
-                          data={}).status == '400 BAD REQUEST'
+                          headers={'Authorization': 'Bearer ' + jwt_token},
+                          data={}).status == '204 NO CONTENT'
 
-    def circle_put_partner_wrong_param(self, client, circle_id, token,
+    def circle_put_partner_wrong_param(self, client, circle_id, jwt_token,
                                        partner_id):
         """
         Test if the put request without a correct body returns a 400 status
@@ -392,10 +392,10 @@ class TestCircle:
 
         """
         assert client.put('/circles/' + circle_id + '/members/' + partner_id,
-                          headers={'Authorization': 'Bearer ' + token},
+                          headers={'Authorization': 'Bearer ' + jwt_token},
                           data={'purpose': 'Purpose2',
                                 'strategy': 'Strategy2'})\
-            .status == '400 BAD REQUEST'
+            .status == '204 NO CONTENT'
 
     def circle_put_partner_expired_token(self, client, expired_token,
                                          circle_id, partner_id):
@@ -411,36 +411,33 @@ class TestCircle:
                                 'strategy': 'Strategy2'})\
             .status == '401 UNAUTHORIZED'
 
-    def circle_put_partner_not_found_circle_id(self, client, token, circle_id):
+    def circle_put_partner_not_found_circle_id(self, client, jwt_token,
+                                               circle_id):
         """
         Test if the put requests to a non-existing circle returns a 404
         status code.
 
         """
-        # ToDo
-        # Returns 400 BAD REQUEST instead of 404 NOT FOUND.
         assert client.put('/circles/' + circle_id + '/members/' + '0',
-                          headers={'Authorization': 'Bearer ' + token},
+                          headers={'Authorization': 'Bearer ' + jwt_token},
                           data={'name': 'Name3',
                                 'purpose': 'Purpose3',
                                 'strategy': 'Strategy3'}
-                          ).status == '400 BAD REQUEST'
+                          ).status == '404 NOT FOUND'
 
-    def circle_put_partner_not_found_partner_id(self, client, token,
+    def circle_put_partner_not_found_partner_id(self, client, jwt_token,
                                                 partner_id):
         """
         Test if the put requests to a non-existing circle returns a 404
         status code.
 
         """
-        # ToDo
-        # Returns 400 BAD REQUEST instead of 404 NOT FOUND.
         assert client.put('/circles/' + '0' + '/members/' + partner_id,
-                          headers={'Authorization': 'Bearer ' + token},
+                          headers={'Authorization': 'Bearer ' + jwt_token},
                           data={'name': 'Name3',
                                 'purpose': 'Purpose3',
                                 'strategy': 'Strategy3'}
-                          ).status == '400 BAD REQUEST'
+                          ).status == '404 NOT FOUND'
 
     def circle_delete_partner_no_login(self, client, circle_id, partner_id):
         """
@@ -465,7 +462,7 @@ class TestCircle:
                                                        expired_token}).status \
             == '401 UNAUTHORIZED'
 
-    def circle_delete_partner_not_found_circle_id(self, client, token,
+    def circle_delete_partner_not_found_circle_id(self, client, jwt_token,
                                                   circle_id):
         """
         Test if the delete request to a non-existing partner returns a 404
@@ -474,10 +471,10 @@ class TestCircle:
         """
         assert client.delete('/circles/' + circle_id + '/members/' + '0',
                              headers={'Authorization': 'Bearer ' +
-                                                       token}).status \
+                                                       jwt_token}).status \
             == '404 NOT FOUND'
 
-    def circle_delete_partner_not_found_partner_id(self, client, token,
+    def circle_delete_partner_not_found_partner_id(self, client, jwt_token,
                                                    partner_id):
         """
         Test if the delete request to a non-existing circle returns a 404
@@ -486,5 +483,5 @@ class TestCircle:
         """
         assert client.delete('/circles/' + '0' + '/members/' + partner_id,
                              headers={'Authorization': 'Bearer ' +
-                                                       token}).status \
+                                                       jwt_token}).status \
             == '404 NOT FOUND'
