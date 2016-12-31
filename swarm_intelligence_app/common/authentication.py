@@ -39,6 +39,7 @@ def verify_token(token):
     Validate a JSON Web Token.
 
     """
+
     try:
         payload = jwt.decode(token, current_app.config['SI_JWT_SECRET'])
     except jwt.ExpiredSignatureError:

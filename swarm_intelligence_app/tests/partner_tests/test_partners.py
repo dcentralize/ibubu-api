@@ -61,12 +61,12 @@ class TestPartners:
 
     def get_organization_members_id(self, client, token, id):
         """
-        Helper Method for getting an organization ID for further tests.
+        Helper Method for getting an organizations member_id for further tests.
 
         """
         response = client.get('/organizations/' + id + '/members', headers={
             'Authorization': 'Bearer ' + token})
-        json_response = response.json[1]['id']
+        json_response = response.json[0]['id']
         return str(json_response)
 
     def get_partner(self, client, token, id):
