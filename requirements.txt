@@ -13,6 +13,7 @@ Py==1.4.31
 PyJWT==1.4.2
 PyMySQL==0.7.9
 PyTest==3.0.4
+PyTest-cov
 PyTest-Flask==0.10.0
 python-dateutil==2.6.0
 pytz==2016.10
