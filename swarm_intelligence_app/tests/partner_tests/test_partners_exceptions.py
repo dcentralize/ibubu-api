@@ -2,6 +2,11 @@
 Define Partners Exception Tests.
 
 """
+from datetime import datetime, timedelta
+
+import jwt
+
+import uuid
 
 from swarm_intelligence_app.common import authentication
 from swarm_intelligence_app.tests import test_helper
@@ -58,102 +63,184 @@ class TestPartnerException:
                                                      self.jwtToken,
                                                      member_id)
 
+        fields = {
+            'exp': datetime.utcnow() - timedelta(
+                seconds=60
+            ),
+            'sub': 'mock_user_001'
+        }
+        encoded = jwt.encode(fields, 'top_secret', algorithm='HS256')
+        expired_token = encoded.decode('utf-8')
+
         self.partner_post_not_allowed(client, partner_id)
+        self.partner_get_no_login(client, partner_id)
+        self.partner_get_expired_token(client, expired_token, partner_id)
+        self.partner_get_not_found(client, self.jwtToken)
+
         self.partner_put_no_login(client, partner_id)
         self.partner_put_no_param(client, self.jwtToken, partner_id)
         self.partner_put_wrong_params(client, self.jwtToken, partner_id)
-        self.partner_get_no_id(client, self.jwtToken)
-        self.partner_get_no_login(client, partner_id)
-        self.partner_get_wrong_id(client, self.jwtToken, '1234567890')
-        self.partner_put_admin_no_id(client, self.jwtToken)
-        self.partner_put_admin_no_login(client, partner_id)
-        self.partner_put_admin_wrong_id(client, self.jwtToken, '1234567890')
-        self.partner_del_admins_no_id(client, self.jwtToken)
-        self.partner_del_admins_no_login(client, partner_id)
-        self.partner_del_admins_wrong_id(client, self.jwtToken, '1234567890')
-        self.partner_del_no_id(client, self.jwtToken)
-        self.partner_del_no_login(client, partner_id)
-        self.partner_del_wrong_id(client, self.jwtToken, '1234567890')
+        self.partner_put_expired_token(client, expired_token, partner_id)
+        self.partner_put_not_found(client, self.jwtToken)
 
-    def partner_post_not_allowed(self, client, id):
+        self.partner_del_no_login(client, partner_id)
+        self.partner_del_expired_token(client, expired_token, partner_id)
+        self.partner_del_not_found(client, self.jwtToken)
+
+        self.partner_put_admin_no_login(client, partner_id)
+        self.partner_put_admin_expired_token(client, expired_token, partner_id)
+        self.partner_put_admin_not_found(client, self.jwtToken)
+
+        self.partner_del_admin_no_login(client, partner_id)
+        self.partner_del_admin_expired_token(client, expired_token, partner_id)
+        self.partner_del_admin_not_found(client, self.jwtToken)
+
+    def partner_post_not_allowed(self, client, partner_id):
         """
         Test if the partner api returns the expected http status-code
         when posting.
 
         """
         assert client.post(
-            '/partners/' + id).status == '405 METHOD NOT ALLOWED'
+            '/partners/' + partner_id).status == '405 METHOD NOT ALLOWED'
 
-    def partner_put_no_login(self, client, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when putting without an authorization token.
-
-        """
-        assert client.put('/partners/' + id, headers={},
-                          data={'firstname': 'Daisy', 'lastname': 'Ducks',
-                                'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
-
-    def partner_put_no_param(self, client, token, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when putting without parameters.
-
-        """
-        assert client.put('/partners/' + id,
-                          headers={'Authorization': 'Bearer ' + token},
-                          data={}).status == '400 BAD REQUEST'
-
-    def partner_put_wrong_params(self, client, token, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when putting with wrong parameters.
-
-        """
-        assert client.put('/partners/' + id,
-                          headers={'Authorization': 'Bearer ' + token},
-                          data={'google_id': 'Daisy',
-                                'lastname': 'Ducks',
-                                'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
-
-    def partner_get_no_login(self, client, id):
+    def partner_get_no_login(self, client, partner_id):
         """
         Test if the partner api returns the expected http status-code
         when getting without an authorization token.
 
         """
-        assert client.get('/partners/' + id, headers={}).status == '400 BAD ' \
-                                                                   'REQUEST'
+        assert client.get('/partners/' + partner_id, headers={}).status == \
+            '400 BAD REQUEST'
 
-    def partner_get_no_id(self, client, token):
+    def partner_get_expired_token(self, client, expired_token, partner_id):
         """
-        Test if the partner api returns the expected http status-code
-        when getting without an ID.
+        Test if the get requests with an expired token returns a 401 status
+        code.
 
         """
-        assert client.get('/partners/', headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
+        assert client.get('/partners/' + partner_id, headers={
+            'Authorization': 'Bearer ' + expired_token}).status == \
+            '401 UNAUTHORIZED'
 
-    def partner_get_wrong_id(self, client, token, id):
+    def partner_get_not_found(self, client, jwt_token):
         """
-        Test if the partner api returns the expected http status-code
-        when getting with a wrong ID.
-        """
-        assert client.get('/partners/' + id, headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
+        Test if the get requests to a non-existing partner returns a 404
+        status code.
 
-    def partner_put_admin_no_login(self, client, id):
+        """
+        assert client.get('/partners/' + '0', headers={
+            'Authorization': 'Bearer ' + jwt_token}).status == '404 NOT FOUND'
+
+    def partner_put_no_login(self, client, partner_id):
         """
         Test if the partner api returns the expected http status-code
         when putting without an authorization token.
 
         """
-        assert client.put('/partners/' + id + '/admin', headers={}).status \
-               == '400 BAD REQUEST'
+        assert client.put('/partners/' + partner_id, headers={},
+                          data={'firstname': 'Daisy', 'lastname': 'Ducks',
+                                'email': 'daisy@tolli.com'}).status == \
+            '400 BAD REQUEST'
 
-    def partner_put_admin_no_id(self, client, token):
+    def partner_put_no_param(self, client, token, partner_id):
+        """
+        Test if the partner api returns the expected http status-code
+        when putting without parameters.
+
+        """
+        assert client.put('/partners/' + partner_id,
+                          headers={'Authorization': 'Bearer ' + token},
+                          data={}).status == '400 BAD REQUEST'
+
+    def partner_put_wrong_params(self, client, token, partner_id):
+        """
+        Test if the partner api returns the expected http status-code
+        when putting with wrong parameters.
+
+        """
+        assert client.put('/partners/' + partner_id,
+                          headers={'Authorization': 'Bearer ' + token},
+                          data={'google_id': 'Daisy',
+                                'lastname': 'Ducks',
+                                'email': 'daisy@tolli.com'}).status == \
+            '400 BAD REQUEST'
+
+    def partner_put_expired_token(self, client, expired_token, partner_id):
+        """
+        Test if the put requests with an expired token returns a 401 status
+        code.
+
+        """
+        assert client.put('/partners/' + partner_id,
+                          headers={'Authorization': 'Bearer ' + expired_token},
+                          data={'firstname': 'Daisy', 'lastname': 'Ducks',
+                                'email': 'daisy' + str(uuid.uuid4())
+                                         + '@tolli.com'}).status == \
+            '401 UNAUTHORIZED'
+
+    def partner_put_not_found(self, client, jwt_token):
+        """
+        Test if the put requests to a non-existing partner returns a 404
+        status code.
+
+        """
+        assert client.put('/partners/' + '0',
+                          headers={'Authorization': 'Bearer ' + jwt_token},
+                          data={'firstname': 'Daisy', 'lastname': 'Ducks',
+                                'email': 'daisy' + str(uuid.uuid4())
+                                         + '@tolli.com'}).status == \
+            '404 NOT FOUND'
+
+    def partner_del_no_login(self, client, partner_id):
+        """
+        Test if the partner api returns the expected http status-code
+        when deleting without an authorization token.
+
+        """
+        assert client.delete('/partners/' + partner_id,
+                             headers={}).status == '400 BAD REQUEST'
+
+    def partner_del_expired_token(self, client, expired_token, partner_id):
+        """
+        Test if the put requests with an expired token returns a 401 status
+        code.
+
+        """
+        assert client.delete('/partners/' + partner_id, headers={
+            'Authorization': 'Bearer ' + expired_token}).status == \
+            '401 UNAUTHORIZED'
+
+    def partner_del_not_found(self, client, token):
+        """
+        Test if the delete requests to a non-existing partner returns a 404
+        status code.
+
+        """
+        assert client.delete('/partners/' + '0', headers={
+            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
+
+    def partner_put_admin_no_login(self, client, partner_id):
+        """
+        Test if the partner api returns the expected http status-code
+        when putting without an authorization token.
+
+        """
+        assert client.put('/partners/' + partner_id + '/admin',
+                          headers={}).status == '400 BAD REQUEST'
+
+    def partner_put_admin_expired_token(self, client, expired_token,
+                                        partner_id):
+        """
+        Test if the put requests with an expired token returns a 401 status
+        code.
+
+        """
+        assert client.put('/partners/' + partner_id + '/admin', headers={
+            'Authorization': 'Bearer ' + expired_token}).status == \
+            '401 UNAUTHORIZED'
+
+    def partner_put_admin_not_found(self, client, token):
         """
         Test if the partner api returns the expected http status-code
         when putting without an ID.
@@ -162,41 +249,33 @@ class TestPartnerException:
         assert client.put('/partners/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
 
-    def partner_put_admin_wrong_id(self, client, token, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when putting with a wrong ID.
-
-        """
-        assert client.put('/partners/' + id + '/admin', headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
-
-    def partner_del_admins_no_login(self, client, id):
+    def partner_del_admin_no_login(self, client, id):
         """
         Test if the partner api returns the expected http status-code
         when deleting without an authorization token.
 
         """
-        assert client.delete('/partners/' + id + '/admin', headers={
+        assert client.delete('/partners/' + id + '/admin',
+                             headers={}).status == '400 BAD REQUEST'
 
-        }).status == '400 BAD REQUEST'
+    def partner_del_admin_expired_token(self, client, expired_token,
+                                        partner_id):
+        """
+        Test if the del requests with an expired token returns a 401 status
+        code.
 
-    def partner_del_admins_no_id(self, client, token):
+        """
+        assert client.delete('/partners/' + partner_id + '/admin', headers={
+            'Authorization': 'Bearer ' + expired_token}).status == \
+            '401 UNAUTHORIZED'
+
+    def partner_del_admin_not_found(self, client, token):
         """
         Test if the partner api returns the expected http status-code
         when deleting without an ID.
 
         """
-        assert client.delete('/partners/admin', headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
-
-    def partner_del_admins_wrong_id(self, client, token, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when deleting with a wrong ID.
-
-        """
-        assert client.delete('/partners/' + id + '/admin', headers={
+        assert client.delete('/partners/' + '0' + '/admin', headers={
             'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
 
     def partner_operation_with_deleted_user(self, client, token, id):
@@ -213,34 +292,7 @@ class TestPartnerException:
                           data={'firstname': 'Daisy',
                                 'lastname': 'Ducks',
                                 'email': 'daisy@tolli.com'}).status == \
-               '400 BAD REQUEST'
-
-    def partner_del_no_login(self, client, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when deleting without an authorization token.
-
-        """
-        assert client.delete('/partners/' + id,
-                             headers={}).status == '400 BAD REQUEST'
-
-    def partner_del_no_id(self, client, token):
-        """
-        Test if the partner api returns the expected http status-code
-        when deleting without an ID.
-
-        """
-        assert client.delete('/partners/', headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
-
-    def partner_del_wrong_id(self, client, token, id):
-        """
-        Test if the partner api returns the expected http status-code
-        when deleting with the wrong id with a wrong ID.
-
-        """
-        assert client.delete('/partners/' + id, headers={
-            'Authorization': 'Bearer ' + token}).status == '404 NOT FOUND'
+            '400 BAD REQUEST'
 
     def add_user_to_organization(self, client, token, id_organization):
         """
@@ -253,4 +305,4 @@ class TestPartnerException:
         assert client.get('/invitations/' + invitation_code + '/accept',
                           headers={
                               'Authorization': 'Bearer ' + token}).status == \
-               '200 OK'
+            '200 OK'
