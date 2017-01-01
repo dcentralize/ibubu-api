@@ -2,11 +2,11 @@
 Define Partners Exception Tests.
 
 """
-from datetime import datetime, timedelta
+import jwt
 
 import uuid
 
-import jwt
+from datetime import datetime, timedelta
 
 from swarm_intelligence_app.common import authentication
 from swarm_intelligence_app.tests import test_helper
