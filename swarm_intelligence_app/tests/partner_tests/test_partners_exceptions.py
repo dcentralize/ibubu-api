@@ -4,9 +4,9 @@ Define Partners Exception Tests.
 """
 from datetime import datetime, timedelta
 
-import jwt
-
 import uuid
+
+import jwt
 
 from swarm_intelligence_app.common import authentication
 from swarm_intelligence_app.tests import test_helper
@@ -175,8 +175,8 @@ class TestPartnerException:
         assert client.put('/partners/' + partner_id,
                           headers={'Authorization': 'Bearer ' + expired_token},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
-                                'email': 'daisy' + str(uuid.uuid4())
-                                         + '@tolli.com'}).status == \
+                                'email': 'daisy' + str(uuid.uuid4()) +
+                                         '@tolli.com'}).status == \
             '401 UNAUTHORIZED'
 
     def partner_put_not_found(self, client, jwt_token):
@@ -188,8 +188,8 @@ class TestPartnerException:
         assert client.put('/partners/' + '0',
                           headers={'Authorization': 'Bearer ' + jwt_token},
                           data={'firstname': 'Daisy', 'lastname': 'Ducks',
-                                'email': 'daisy' + str(uuid.uuid4())
-                                         + '@tolli.com'}).status == \
+                                'email': 'daisy' + str(uuid.uuid4()) +
+                                         '@tolli.com'}).status == \
             '404 NOT FOUND'
 
     def partner_del_no_login(self, client, partner_id):

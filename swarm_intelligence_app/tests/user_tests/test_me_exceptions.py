@@ -151,8 +151,8 @@ class TestUserExceptions:
 
         """
         assert client.post('/me/organizations',
-                           headers={'Authorization': 'Bearer '
-                                    + expired_token},
+                           headers={'Authorization': 'Bearer ' +
+                                    expired_token},
                            data={'name': 'Dagoberts ' + 'Empire'}).status == \
             '401 UNAUTHORIZED'
 
