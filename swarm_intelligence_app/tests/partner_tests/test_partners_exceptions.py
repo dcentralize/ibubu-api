@@ -4,9 +4,9 @@ Define Partners Exception Tests.
 """
 import uuid
 
-import jwt
-
 from datetime import datetime, timedelta
+
+import jwt
 
 from swarm_intelligence_app.common import authentication
 from swarm_intelligence_app.tests import test_helper
