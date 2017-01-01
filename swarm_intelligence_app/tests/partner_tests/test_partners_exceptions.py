@@ -2,9 +2,9 @@
 Define Partners Exception Tests.
 
 """
-import jwt
-
 import uuid
+
+import jwt
 
 from datetime import datetime, timedelta
 
