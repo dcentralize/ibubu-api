@@ -6,32 +6,49 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-5">
-        <div class="table-responsive">
-            <h6>Members</h6>
-            <table class="table table-hover">
-                <thead>
-                <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Type</th>
-                </thead>
-                <tbody id="tbodyOrgMember">
+    <div class="col-md-8">
 
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#member" aria-controls="member" role="tab" data-toggle="tab">Members</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#invitation" aria-controls="invitation" role="tab" data-toggle="tab">Invitations</a>
+            </li>
 
-                </tbody>
-            </table>
-        </div>
+        </ul>
     </div>
-    <div class="col-md-2"></div>
-    <div class="col-md-5">
+
+</div>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="member">
+
+
+            <div class="table-responsive">
+                <h4>Members</h4>
+                <table class="table table-hover">
+                    <thead>
+                    <th>Id</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Type</th>
+                    </thead>
+                    <tbody id="tbodyOrgMember">
+
+
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="invitation">
         <div class="table-responsive">
-            <h6>Invitation</h6>
+            <h4>Invitation</h4>
             <table class="table table-hover">
                 <thead>
                 <th>Id</th>
                 <th>Email</th>
-                <th>status</th>
+                <th>Status</th>
                 </thead>
                 <tbody id="tbodyOrgInvitation">
                 </tbody>
@@ -40,7 +57,6 @@
         <button data-toggle="modal" data-target="#orgInvitModal" class="btn btn-default">Send Invitation</button>
     </div>
 </div>
-
 <!---------------------------------------------------------------modal------------------------------------------------->
 
 <div class="modal fade" id="orgInvitModal" tabindex="-1" role="dialog">

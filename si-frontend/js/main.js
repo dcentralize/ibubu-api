@@ -1,4 +1,5 @@
 var token="";
+var googleToken="";
 
 function onSignIn(googleUser) {
  console.log("On Sign In");
@@ -11,37 +12,71 @@ function onSignIn(googleUser) {
 
 
   var profileAuth = googleUser.getAuthResponse();
-  token = profileAuth.id_token;
-  getUser();
-  $('body').load('userData.html');
 
+  googleToken = profileAuth.id_token;
+  console.log("token= " + googleToken);
 
+  $.ajax({
+        url:"http://localhost:5000/register",
+        type:'POST',
+        headers:{'Authorization':'Token ' + googleToken},
+        dataType:'json',
+        error: function(data) {
+            login();
+        },
+        success: function(data) {
+            login();
+        }
+  })
+  //getUser();
+  //$('body').load('userData.html');
+}
+function getBearer() {
+  console.log("bearerToken =" + token);
+}
+function login() {
+     $.ajax({
+        url:"http://localhost:5000/login",
+        type:'GET',
+        headers:{'Authorization':'Token ' + googleToken},
+        dataType:'json',
+        success: function(data) {
+            token= data.access_token;
+            getUser();
+            $('body').load('userData.html');
+        }
+  })
 }
 function setup() {
  $.ajax({
-        url: "http://localhost:5432/setup",
+        url: "http://localhost:5000/setup",
         type: 'GET',
         success: function(data) {
         $('body').load('#body');
                             }
         });
 }
+testData =null;
+
 function getUser(){
 $('body').load('userData.html');
 $.ajax({
-    url:"http://localhost:5432/me",
-    headers:{'Authorization': 'Token ' + token},
+    url:"http://localhost:5000/me",
+    headers:{'Authorization': 'Bearer ' + token},
     type:'GET',
     dataType: 'json',
     error: function(data) {
     errorMsg = data;
-
+        console.log("errormsg= " + data);
+         /**
          if(data.responseJSON.success == false) {
              $('body').load('userData.html');
           }
+          **/
     },
     success: function(data) {
-    userData = data.data;
+    userData = data;
+
     $('#userTableBody').append('<tr>'+
                     '<td href="#" onclick="getOrganizations()"><a id="userId" href="#"></a></td>'+
 
@@ -71,38 +106,23 @@ $.ajax({
 })
 }
 
-function registerUser() {
-    var userData;
-    $.ajax({
-        url:"http://localhost:5432/me",
-        headers:{'Authorization': 'Token ' + token},
-        type:'POST',
-        dataType: 'json',
-        success: function(data) {
-
-        $('body').load('userData.html', function(data) {
-         getUser();
-        });
-       }
-    })
-}
 function loadCreateOrganization() {
     $('body').load('createOrganization.html');
 }
 function getOrganizations() {
       loadCreateOrganization();
       $.ajax({
-        url:"http://localhost:5432/me/organizations",
-        headers:{'Authorization': 'Token ' + token},
+        url:"http://localhost:5000/me/organizations",
+        headers:{'Authorization': 'Bearer ' + token},
         type:'GET',
         dataType:'json',
         success: function(data) {
-           if(data.data.length != 0) {
+           if(data.length != 0) {
            $('#tbodyOrganizations').empty();
-              for(i=0; i< data.data.length; i++)  {
-                    $('#tbodyOrganizations').append('<tr><td><a href="#" onclick="getOrganizationMember('+data.data[i].id+')">'+data.data[i].id+'</a></td><td id="organizationName'+data.data[i].id+'">'+data.data[i].name+'</td>'+
-                                                        '<td class="editTd"><button data-toggle="modal" data-target="#orgModal" onclick="selectOrganization('+data.data[i].id+')" class="editBtn btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></td>'+
-                                                        '<td class="removeTd"><button onclick="removeOrganization('+data.data[i].id+')" class="removeBtn btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>'+
+              for(i=0; i< data.length; i++)  {
+                    $('#tbodyOrganizations').append('<tr><td><a href="#" onclick="getOrganizationMember('+data[i].id+')">'+data[i].id+'</a></td><td id="organizationName'+data[i].id+'">'+data[i].name+'</td>'+
+                                                        '<td class="editTd"><button data-toggle="modal" data-target="#orgModal" onclick="selectOrganization('+data[i].id+')" class="editBtn btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></td>'+
+                                                        '<td class="removeTd"><button onclick="removeOrganization('+data[i].id+')" class="removeBtn btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>'+
                                                     '</tr>');
                 }
             }
@@ -112,13 +132,13 @@ function getOrganizations() {
 function createOrganization() {
 inputName =$('#inputNameOrganization').val();
     $.ajax({
-        url:"http://localhost:5432/me/organizations",
-        headers:{'Authorization': 'Token ' + token},
+        url:"http://localhost:5000/me/organizations",
+        headers:{'Authorization': 'Bearer ' + token},
         data:{'name' : inputName},
         type:'POST',
         dataType:'json',
         success: function(data) {
-        orgData = data.data;
+        orgData = data;
         getOrganizations();
 
         }
@@ -126,8 +146,8 @@ inputName =$('#inputNameOrganization').val();
     }
 function deleteUser() {
      $.ajax({
-        url:"http://localhost:5432/me",
-        headers:{'Authorization': 'Token ' + token},
+        url:"http://localhost:5000/me",
+        headers:{'Authorization': 'Bearer ' + token},
         type:'DELETE',
         dataType:'json',
         success: function(data) {
@@ -143,19 +163,20 @@ function editUserModal(){
 
 function submitUserChanges() {
     $.ajax({
-    url:"http://localhost:5432/me",
-    headers:{'Authorization':'Token ' + token},
+    url:"http://localhost:5000/me",
+    headers:{'Authorization':'Bearer ' + token},
     data:{'firstname': $('#modalInputUserFirstname').val(),
           'lastname':  $('#modalInputUserLastname').val(),
           'email': $('#modalInputUserEmail').val() },
     type:'PUT',
     dataType:'json',
     success: function(data){
-        getUser();
 
+        getUser();
     }
 
     })
+//$('.alert-success').fadeIn().delay(1000).fadeOut();
 }
 
 function goToHome() {
@@ -164,8 +185,8 @@ function goToHome() {
 function submitOrganizationChanges() {
 
     $.ajax({
-        url:"http://localhost:5432/organizations/"+selectedOrgId,
-        headers:{'Authorization': 'Token ' + token},
+        url:"http://localhost:5000/organizations/"+selectedOrgId,
+        headers:{'Authorization': 'Bearer ' + token},
         data:{'name': $('#nameEditOrganization').val()},
         type:'PUT',
         dataType:'json',
@@ -185,8 +206,8 @@ function selectOrganization(id) {
 
 function removeOrganization(id) {
      $.ajax({
-        url:"http://localhost:5432/organizations/"+id,
-        headers:{'Authorization': 'Token ' + token},
+        url:"http://localhost:5000/organizations/"+id,
+        headers:{'Authorization': 'Bearer ' + token},
         type:'DELETE',
         dataType:'json',
         success: function(data) {
@@ -199,14 +220,14 @@ function getOrganizationMember(id) {
 organizationId = id;
  $('body').load('organization.html');
     $.ajax({
-    url:"http://localhost:5432/organizations/"+organizationId+"/members",
-    headers:{'Authorization':'Token ' + token},
+    url:"http://localhost:5000/organizations/"+organizationId+"/members",
+    headers:{'Authorization':'Bearer ' + token},
     type: 'GET',
     dataType:'json',
     success: function(data){
        emptyTbodyOrgMember();
-       for(i =0; i < data.data.length;i++) {
-        appendMember(data.data[i]);
+       for(i =0; i < data.length;i++) {
+        appendMember(data[i]);
 
        }
 
@@ -223,36 +244,41 @@ function appendMember(member) {
 function sendInvitation() {
     email = $('#emailForInvit').val();
      $.ajax({
-    url:"http://localhost:5432/organizations/"+organizationId+"/invitations",
-    headers:{'Authorization':'Token ' + token},
+    url:"http://localhost:5000/organizations/"+organizationId+"/invitations",
+    headers:{'Authorization':'Bearer ' + token},
     data:{'email': email},
     type: 'POST',
     dataType:'json',
     success: function(data){
        alert("Invitation Sent");
+       emptyTbodyOrgInvitation();
+       getInvitation(organizationId);
            }
     })
 }
 
 function getInvitation(id){
-
+console.log("getInvit!");
      $.ajax({
-    url:"http://localhost:5432/organizations/"+id+"/invitations",
-    headers:{'Authorization':'Token ' + token},
+    url:"http://localhost:5000/organizations/"+id+"/invitations",
+    headers:{'Authorization':'Bearer ' + token},
     type: 'GET',
     dataType:'json',
     success: function(data){
-        for(i =0; i< data.data.length;i++) {
-          appendInvitation(data.data[i]);
+        console.log(data);
+        for(i =0; i< data.length;i++) {
+          appendInvitation(data[i]);
         }
     }
     })
 }
 function emptyTbodyOrgInvitation() {
-    $('#tbodyOrgInvit').empty();
+    $('#tbodyOrgInvitation').empty();
 }
 function appendInvitation(invitation) {
      $('#tbodyOrgInvitation').append('<tr><td>'+ invitation.id+'</td><td>'+invitation.email+'</td><td>'+invitation.status+'</td><td></tr>');
 }
 
-
+$('#member a[href="#member"]').tab('show') ;
+$('#invitation a[href="#invitation"]').tab('show');
+$('#circle a[href="#circle"]').tab('show');

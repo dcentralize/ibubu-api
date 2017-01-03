@@ -4,11 +4,15 @@
 
 }
 
-h1{
+h1,h4{
 text-align:center;
 }
-
+.alert{
+display:none;
+}
 .editTd{
     width 3px;
 }
+
+
 
