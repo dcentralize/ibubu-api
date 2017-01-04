@@ -14,7 +14,7 @@ function onSignIn(googleUser) {
   var profileAuth = googleUser.getAuthResponse();
 
   googleToken = profileAuth.id_token;
-  console.log("token= " + googleToken);
+  console.log("token= " + token);
 
   $.ajax({
         url:"http://localhost:5000/register",
@@ -226,12 +226,13 @@ organizationId = id;
     dataType:'json',
     success: function(data){
        emptyTbodyOrgMember();
+
        for(i =0; i < data.length;i++) {
         appendMember(data[i]);
-
        }
 
        getInvitation(id);
+       getAnchorCircle();
            }
     })
 }
@@ -282,3 +283,31 @@ function appendInvitation(invitation) {
 $('#member a[href="#member"]').tab('show') ;
 $('#invitation a[href="#invitation"]').tab('show');
 $('#circle a[href="#circle"]').tab('show');
+
+function getAnchorCircle() {
+    $.ajax({
+        url: "http://localhost:5000/organizations/"+ organizationId +"/anchor_circle",
+        headers:{'Authorization': 'Bearer ' + token},
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            appendCircle(data);
+
+        }
+    })
+}
+function appendCircle(circle) {
+    $('#tbodyOrgCircle').append('<tr><td>' + circle.id +'</td><td>'+circle.name + '</td><td>' + circle.parent_circle_id + '</td></tr>');
+}
+
+function putCircle(id) {
+    $.ajax({
+        url: "http://localhost:5000/circles/" + id,
+        headers: {'Authorization': 'Bearer ' + token},
+        type: 'PUT',
+        dataType: 'json',
+        success: function(data) {
+        console.log(data);
+        }
+    });
+}
