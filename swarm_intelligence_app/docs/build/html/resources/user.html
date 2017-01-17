@@ -98,12 +98,12 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>User</td>
-<td><a class="reference external" href="#delete--me">DELETE /me</a></td>
-<td>Delete the authenticated user.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--me">GET /me</a></td>
 <td>Retrieve the authenticated user.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#delete--me">DELETE /me</a></td>
+<td>Delete the authenticated user.</td>
 </tr>
 <tr class="row-even"><td>&nbsp;</td>
 <td><a class="reference external" href="#put--me">PUT /me</a></td>
@@ -114,46 +114,6 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="delete">
-<dt id="delete--me">
-<code class="descname">DELETE </code><code class="descname">/me</code><a class="headerlink" href="#delete--me" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete the authenticated user.</p>
-<p>This endpoint sets the authenticated user&#8217;s account and partnerships
-with organizations to &#8216;inactive&#8217;. By signin-up again with the same
-google account, the user&#8217;s account is reactivated. To rejoin an
-organization, a new invitation is needed.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/me</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; User is deleted</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="get">
 <dt id="get--me">
 <code class="descname">GET </code><code class="descname">/me</code><a class="headerlink" href="#get--me" title="Permalink to this definition">¶</a></dt>
@@ -207,6 +167,46 @@ Content-Type: application/json
 </tr>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; User is retrieved</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--me">
+<code class="descname">DELETE </code><code class="descname">/me</code><a class="headerlink" href="#delete--me" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the authenticated user.</p>
+<p>This endpoint sets the authenticated user&#8217;s account and partnerships
+with organizations to &#8216;inactive&#8217;. By signin-up again with the same
+google account, the user&#8217;s account is reactivated. To rejoin an
+organization, a new invitation is needed.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/me</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; User is deleted</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
@@ -315,18 +315,77 @@ application/x-www-form-urlencoded</li>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>User Organizations</td>
-<td><a class="reference external" href="#post--me-organizations">POST /me/organizations</a></td>
-<td>Create an organization.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--me-organizations">GET /me/organizations</a></td>
 <td>List the user&#8217;s organizations.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#post--me-organizations">POST /me/organizations</a></td>
+<td>Create an organization.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="get">
+<dt id="get--me-organizations">
+<code class="descname">GET </code><code class="descname">/me/organizations</code><a class="headerlink" href="#get--me-organizations" title="Permalink to this definition">¶</a></dt>
+<dd><p>List organizations for the authenticated user.</p>
+<p>This endpoint only lists organizations that the authenticated user is
+allowed to operate on as a member or an admin.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/me/organizations</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        &#39;id&#39;: 1,
+        &#39;name&#39;: &#39;My Organization&#39;
+    }
+]
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>int</em>) &#8211; the organization&#8217;s id</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; the organization&#8217;s name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Organizations are listed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="post">
 <dt id="post--me-organizations">
 <code class="descname">POST </code><code class="descname">/me/organizations</code><a class="headerlink" href="#post--me-organizations" title="Permalink to this definition">¶</a></dt>
@@ -392,65 +451,6 @@ application/x-www-form-urlencoded</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Organization cannot be created</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="get">
-<dt id="get--me-organizations">
-<code class="descname">GET </code><code class="descname">/me/organizations</code><a class="headerlink" href="#get--me-organizations" title="Permalink to this definition">¶</a></dt>
-<dd><p>List organizations for the authenticated user.</p>
-<p>This endpoint only lists organizations that the authenticated user is
-allowed to operate on as a member or an admin.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/me/organizations</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-    {
-        &#39;id&#39;: 1,
-        &#39;name&#39;: &#39;My Organization&#39;
-    }
-]
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Response Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>int</em>) &#8211; the organization&#8217;s id</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; the organization&#8217;s name</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Organizations are listed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
 </ul>
 </td>
 </tr>

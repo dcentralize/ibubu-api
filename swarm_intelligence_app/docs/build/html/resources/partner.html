@@ -98,12 +98,12 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Partner</td>
-<td><a class="reference external" href="#delete--partners-(partner_id)">DELETE /partners/(partner_id)</a></td>
-<td>Delete a partner.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--partners-(partner_id)">GET /partners/(partner_id)</a></td>
 <td>Retrieve a partner.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#delete--partners-(partner_id)">DELETE /partners/(partner_id)</a></td>
+<td>Delete a partner.</td>
 </tr>
 <tr class="row-even"><td>&nbsp;</td>
 <td><a class="reference external" href="#put--partners-(partner_id)">PUT /partners/(partner_id)</a></td>
@@ -114,52 +114,6 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="delete">
-<dt id="delete--partners-(partner_id)">
-<code class="descname">DELETE </code><code class="descname">/partners/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--partners-(partner_id)" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a partner.</p>
-<p>In order to delete a partner, the authenticated user must be a partner
-with admin access of the organization that the partner is associated
-with.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/partners/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>partner_id</strong> (<em>int</em>) &#8211; the partner to delete</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Partner is deleted</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Partner is the only admin of an organization</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="get">
 <dt id="get--partners-(partner_id)">
 <code class="descname">GET </code><code class="descname">/partners/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--partners-(partner_id)" title="Permalink to this definition">¶</a></dt>
@@ -230,6 +184,52 @@ Content-Type: application/json
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--partners-(partner_id)">
+<code class="descname">DELETE </code><code class="descname">/partners/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--partners-(partner_id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a partner.</p>
+<p>In order to delete a partner, the authenticated user must be a partner
+with admin access of the organization that the partner is associated
+with.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/partners/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partner_id</strong> (<em>int</em>) &#8211; the partner to delete</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Partner is deleted</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Partner is the only admin of an organization</li>
 </ul>
 </td>
 </tr>

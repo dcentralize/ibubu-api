@@ -98,12 +98,12 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Domain</td>
-<td><a class="reference external" href="#delete--domains-(domain_id)">DELETE /domains/(domain_id)</a></td>
-<td>Delete a domain.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--domains-(domain_id)">GET /domains/(domain_id)</a></td>
 <td>Retrieve a domain.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#delete--domains-(domain_id)">DELETE /domains/(domain_id)</a></td>
+<td>Delete a domain.</td>
 </tr>
 <tr class="row-even"><td>Role</td>
 <td><a class="reference external" href="#put--domains-(domain_id)">PUT /domains/(domain_id)</a></td>
@@ -114,48 +114,6 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="delete">
-<dt id="delete--domains-(domain_id)">
-<code class="descname">DELETE </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--domains-(domain_id)" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a domain.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/domain/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain to delete</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Domain is deleted</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Domain is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="get">
 <dt id="get--domains-(domain_id)">
 <code class="descname">GET </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><a class="headerlink" href="#get--domains-(domain_id)" title="Permalink to this definition">¶</a></dt>
@@ -208,6 +166,48 @@ Content-Type: application/json
 </tr>
 <tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Domain is retrieved</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Domain is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--domains-(domain_id)">
+<code class="descname">DELETE </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--domains-(domain_id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a domain.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/domain/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain to delete</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Domain is deleted</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
@@ -313,18 +313,83 @@ application/x-www-form-urlencoded</li>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Domain Policies</td>
-<td><a class="reference external" href="#post--domains-(domain_id)-policies">POST /domains/(domain_id)/policies</a></td>
-<td>Add a policy to a domain.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--domains-(domain_id)-policies">GET /domains/(domain_id)/policies</a></td>
 <td>List policies of a domain.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#post--domains-(domain_id)-policies">POST /domains/(domain_id)/policies</a></td>
+<td>Add a policy to a domain.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="get">
+<dt id="get--domains-(domain_id)-policies">
+<code class="descname">GET </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><code class="descname">/policies</code><a class="headerlink" href="#get--domains-(domain_id)-policies" title="Permalink to this definition">¶</a></dt>
+<dd><p>List policies of a domain.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/domains/1/policies</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        &#39;id&#39;: 1,
+        &#39;title&#39;: &#39;Policy&#39;s title&#39;,
+        &#39;domain_id&#39;: 1
+    }
+]
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain the policies are listed for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>int</em>) &#8211; the policy&#8217;s unique id</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; the policy&#8217;s title</li>
+<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain the policy is related to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Policies are listed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Domain is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="post">
 <dt id="post--domains-(domain_id)-policies">
 <code class="descname">POST </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><code class="descname">/policies</code><a class="headerlink" href="#post--domains-(domain_id)-policies" title="Permalink to this definition">¶</a></dt>
@@ -391,71 +456,6 @@ application/x-www-form-urlencoded</li>
 <tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> &#8211; Policy is added to domain</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Parameters are missing</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Domain is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="get">
-<dt id="get--domains-(domain_id)-policies">
-<code class="descname">GET </code><code class="descname">/domains/</code><span class="sig-paren">(</span><em>domain_id</em><span class="sig-paren">)</span><code class="descname">/policies</code><a class="headerlink" href="#get--domains-(domain_id)-policies" title="Permalink to this definition">¶</a></dt>
-<dd><p>List policies of a domain.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/domains/1/policies</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-    {
-        &#39;id&#39;: 1,
-        &#39;title&#39;: &#39;Policy&#39;s title&#39;,
-        &#39;domain_id&#39;: 1
-    }
-]
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain the policies are listed for</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>int</em>) &#8211; the policy&#8217;s unique id</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; the policy&#8217;s title</li>
-<li><strong>domain_id</strong> (<em>int</em>) &#8211; the domain the policy is related to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Policies are listed</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
