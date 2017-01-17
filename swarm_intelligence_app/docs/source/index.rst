@@ -6,6 +6,7 @@ Table of Contents
 -----------------
 
 .. toctree::
+    :glob:
 
     overview
     installation
