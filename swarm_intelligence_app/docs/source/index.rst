@@ -6,10 +6,9 @@ Table of Contents
 -----------------
 
 .. toctree::
-	:maxdepth: 2
 
-	overview
-	installation
-	usage
-	developers
-	resources/index
+    overview
+    installation
+    usage
+    developers
+    resources/index
