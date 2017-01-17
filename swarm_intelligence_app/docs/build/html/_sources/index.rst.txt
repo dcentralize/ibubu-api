@@ -11,5 +11,5 @@ Table of Contents
 	overview
 	installation
 	usage
-	resources/index
 	developers
+	resources/index
