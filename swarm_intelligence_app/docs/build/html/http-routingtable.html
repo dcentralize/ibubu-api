@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP Routing Table &#8212; Swarm Intelligence 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+    <script type="text/javascript">
+      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
+    </script>
+
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+
+   <h1>HTTP Routing Table</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-/accountabilities"><strong>/accountabilities</strong></a> | 
+   <a href="#cap-/circles"><strong>/circles</strong></a> | 
+   <a href="#cap-/domains"><strong>/domains</strong></a> | 
+   <a href="#cap-/invitations"><strong>/invitations</strong></a> | 
+   <a href="#cap-/me"><strong>/me</strong></a> | 
+   <a href="#cap-/organizations"><strong>/organizations</strong></a> | 
+   <a href="#cap-/partners"><strong>/partners</strong></a> | 
+   <a href="#cap-/policies"><strong>/policies</strong></a> | 
+   <a href="#cap-/roles"><strong>/roles</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/accountabilities"><td></td><td>
+       <strong>/accountabilities</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/accountability.html#get--accountabilities-(accountability_id)"><code class="xref">GET /accountabilities/(accountability_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/accountability.html#put--accountabilities-(accountability_id)"><code class="xref">PUT /accountabilities/(accountability_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/accountability.html#delete--accountabilities-(accountability_id)"><code class="xref">DELETE /accountabilities/(accountability_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/circles"><td></td><td>
+       <strong>/circles</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#get--circles-(circle_id)"><code class="xref">GET /circles/(circle_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#get--circles-(circle_id)-members"><code class="xref">GET /circles/(circle_id)/members</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#get--circles-(circle_id)-roles"><code class="xref">GET /circles/(circle_id)/roles</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#post--circles-(circle_id)-roles"><code class="xref">POST /circles/(circle_id)/roles</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#put--circles-(circle_id)"><code class="xref">PUT /circles/(circle_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#put--circles-(circle_id)-members-(partner_id)"><code class="xref">PUT /circles/(circle_id)/members/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/circle.html#delete--circles-(circle_id)-members-(partner_id)"><code class="xref">DELETE /circles/(circle_id)/members/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/domains"><td></td><td>
+       <strong>/domains</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/domain.html#get--domains-(domain_id)"><code class="xref">GET /domains/(domain_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/domain.html#get--domains-(domain_id)-policies"><code class="xref">GET /domains/(domain_id)/policies</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/domain.html#post--domains-(domain_id)-policies"><code class="xref">POST /domains/(domain_id)/policies</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/domain.html#put--domains-(domain_id)"><code class="xref">PUT /domains/(domain_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/domain.html#delete--domains-(domain_id)"><code class="xref">DELETE /domains/(domain_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/invitations"><td></td><td>
+       <strong>/invitations</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/invitation.html#get--invitations-(code)-accept"><code class="xref">GET /invitations/(code)/accept</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/invitation.html#get--invitations-(invitation_id)"><code class="xref">GET /invitations/(invitation_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/invitation.html#put--invitations-(invitation_id)-cancel"><code class="xref">PUT /invitations/(invitation_id)/cancel</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/me"><td></td><td>
+       <strong>/me</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/user.html#get--me"><code class="xref">GET /me</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/user.html#get--me-organizations"><code class="xref">GET /me/organizations</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/user.html#post--me-organizations"><code class="xref">POST /me/organizations</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/user.html#put--me"><code class="xref">PUT /me</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/user.html#delete--me"><code class="xref">DELETE /me</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/organizations"><td></td><td>
+       <strong>/organizations</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#get--organizations-(organization_id)"><code class="xref">GET /organizations/(organization_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#get--organizations-(organization_id)-anchor_circle"><code class="xref">GET /organizations/(organization_id)/anchor_circle</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#get--organizations-(organization_id)-invitations"><code class="xref">GET /organizations/(organization_id)/invitations</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#get--organizations-(organization_id)-members"><code class="xref">GET /organizations/(organization_id)/members</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#post--organizations-(organization_id)-invitations"><code class="xref">POST /organizations/(organization_id)/invitations</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#put--organizations-(organization_id)"><code class="xref">PUT /organizations/(organization_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/organization.html#delete--organizations-(organization_id)"><code class="xref">DELETE /organizations/(organization_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/partners"><td></td><td>
+       <strong>/partners</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/partner.html#get--partners-(partner_id)"><code class="xref">GET /partners/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/partner.html#get--partners-(partner_id)-memberships"><code class="xref">GET /partners/(partner_id)/memberships</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/partner.html#put--partners-(partner_id)"><code class="xref">PUT /partners/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/partner.html#delete--partners-(partner_id)"><code class="xref">DELETE /partners/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/policies"><td></td><td>
+       <strong>/policies</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/policy.html#get--policies-(policy_id)"><code class="xref">GET /policies/(policy_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/policy.html#put--policies-(policy_id)"><code class="xref">PUT /policies/(policy_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/policy.html#delete--policies-(policy_id)"><code class="xref">DELETE /policies/(policy_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/roles"><td></td><td>
+       <strong>/roles</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#get--roles-(role_id)"><code class="xref">GET /roles/(role_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#get--roles-(role_id)-accountabilities"><code class="xref">GET /roles/(role_id)/accountabilities</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#get--roles-(role_id)-domains"><code class="xref">GET /roles/(role_id)/domains</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#get--roles-(role_id)-members"><code class="xref">GET /roles/(role_id)/members</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#post--roles-(role_id)-accountabilities"><code class="xref">POST /roles/(role_id)/accountabilities</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#post--roles-(role_id)-domains"><code class="xref">POST /roles/(role_id)/domains</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#put--roles-(role_id)"><code class="xref">PUT /roles/(role_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#put--roles-(role_id)-circle"><code class="xref">PUT /roles/(role_id)/circle</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#put--roles-(role_id)-members-(partner_id)"><code class="xref">PUT /roles/(role_id)/members/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#delete--roles-(role_id)"><code class="xref">DELETE /roles/(role_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#delete--roles-(role_id)-circle"><code class="xref">DELETE /roles/(role_id)/circle</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="resources/role.html#delete--roles-(role_id)-members-(partner_id)"><code class="xref">DELETE /roles/(role_id)/members/(partner_id)</code></a></td><td>
+       <em></em></td></tr>
+   </table>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Felix Borst, Andreas Fischer, Moha Messri, Marvin Rüsenberg, Tobias Wählen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -18,22 +18,46 @@ class Accountability(Resource):
     @auth.login_required
     def get(self, accountability_id):
         """
+        .. :quickref: Accountability; Retrieve an accountability.
+
         Retrieve an accountability.
 
-        Request:
-            GET /accountabilities/{accountability_id}
+        **Example request**:
 
-        Response:
-            200 OK - If accountability is retrieved
-                {
-                    'id': 1,
-                    'title': 'Accountability\'s title'
-                    'role_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If accountability is not found
+        .. sourcecode:: http
+
+            GET /accountabilities/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Accountability\'s title',
+                'role_id': 1
+            }
+
+        :param int accountability_id: the accountability to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the accountability's unique id
+        :>json string title: the accountability's title
+        :>json int role_id: the role the accountability is related to
+
+        :status 200: Accountability is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)
@@ -46,25 +70,56 @@ class Accountability(Resource):
     @auth.login_required
     def put(self, accountability_id):
         """
+        .. :quickref: Accountability; Update an accountability.
+
         Update an accountability.
 
-        Request:
-            PUT /accountabilities/{accountability_id}
+        **Example request**:
 
-            Parameters:
-                title (string): The new title of the accountability
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If accountability is updated
-                {
-                    'id': 1,
-                    'title': 'Accountability\'s title',
-                    'role_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If accountability is not found
+            PUT /accountabilities/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Accountability\'s new title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Accountability\'s new title',
+                'role_id': 1
+            }
+
+        :param int accountability_id: the accountability to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the accountability's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the accountability's unique id
+        :>json string title: the accountability's title
+        :>json int role_id: the role the accountability is related to
+
+        :status 200: Accountability is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)
@@ -84,17 +139,33 @@ class Accountability(Resource):
     @auth.login_required
     def delete(self, accountability_id):
         """
+        .. :quickref: Accountability; Delete an accountability.
+
         Delete an accountability.
 
-        Request:
-            DELETE /accountabilities/{accountability_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If the accountability was deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If accountability is not found
+        .. sourcecode:: http
+
+            DELETE /accountabilities/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int accountability_id: the accountability to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Accountability is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Accountability is not found
 
         """
         accountability = AccountabilityModel.query.get(accountability_id)

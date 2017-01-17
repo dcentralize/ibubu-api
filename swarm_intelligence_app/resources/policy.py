@@ -18,22 +18,46 @@ class Policy(Resource):
     @auth.login_required
     def get(self, policy_id):
         """
+        .. :quickref: Policy; Retrieve a policy.
+
         Retrieve a policy.
 
-        Request:
-            GET /policies/{policy_id}
+        **Example request**:
 
-        Response:
-            200 OK - If policy is retrieved
-                {
-                    'id': 1,
-                    'title': 'Policy\'s title'
-                    'domain_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If policy is not found
+        .. sourcecode:: http
+
+            GET /policies/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Policy\'s title',
+                'domain_id': 1
+            }
+
+        :param int policy_id: the policy to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the policy's unique id
+        :>json string title: the policy's title
+        :>json int domain_id: the domain the policy is related to
+
+        :status 200: Policy is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)
@@ -46,25 +70,56 @@ class Policy(Resource):
     @auth.login_required
     def put(self, policy_id):
         """
+        .. :quickref: Policy; Update a policy.
+
         Update a policy.
 
-        Request:
-            PUT /policies/{policy_id}
+        **Example request**:
 
-            Parameters:
-                title (string): The new title of the policy
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If policy is updated
-                {
-                    'id': 1,
-                    'title': 'Policy\'s title',
-                    'domain_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If policy is not found
+            PUT /policies/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Policy\'s new title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Policy\'s new title',
+                'domain_id': 1
+            }
+
+        :param int policy_id: the policy to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the policy's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the policy's unique id
+        :>json string title: the policy's title
+        :>json int domain_id: the domain the policy is related to
+
+        :status 200: Policy is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)
@@ -86,17 +141,33 @@ class Policy(Resource):
     @auth.login_required
     def delete(self, policy_id):
         """
+        .. :quickref: Policy; Delete a policy.
+
         Delete a policy.
 
-        Request:
-            DELETE /policies/{policy_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If policy is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If policy is not found
+        .. sourcecode:: http
+
+            DELETE /policies/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int policy_id: the policy to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Policy is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Policy is not found
 
         """
         policy = PolicyModel.query.get(policy_id)

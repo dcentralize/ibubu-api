@@ -4,7 +4,6 @@ Define the classes for the organization API.
 """
 from flask import abort
 from flask_restful import reqparse, Resource
-from flask_restful_swagger import swagger
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -23,52 +22,51 @@ class Organization(Resource):
     Define the endpoints for the organization node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string',
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             organization_id):
         """
+        .. :quickref: Organization; Retrieve an Organization.
+
         Retrieve an organization.
 
         In order to retrieve an organization, the authenticated user must be a
         member or an admin of the organization.
 
-        Request:
-            GET /organizations/{organization_id}
+        **Example request**:
 
-        Response:
-            200 OK - If organization is retrieved
-                {
-                    'id': 1,
-                    'name': 'My Company'
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+        .. sourcecode:: http
+
+            GET /organizations/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'name': 'My Organization'
+            }
+
+        :param int organization_id: the organization to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the organization's unique id
+        :>json string name: the organization's name
+
+        :status 200: Organization is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -78,63 +76,61 @@ class Organization(Resource):
 
         return organization.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }, {
-            'name': 'body',
-            'defaultValue': "({'is_deleted': 'False', 'name': 'Tolli Empire',"
-                            "'id': '1'})",
-            'description': 'new organization-data',
-            'required': 'true',
-            'type': 'JSON Object',
-            'paramType': 'body'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def put(self,
             organization_id):
         """
+        .. :quickref: Organization; Update an organization.
+
         Update an organization.
 
-        In order to edit an organization, the authenticated user must be an
+        In order to update an organization, the authenticated user must be an
         admin of the organization.
 
-        Request:
-            PUT /organizations/{organization_id}
+        **Example request**:
 
-            Parameters:
-                name (string): The name of the organization
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If organization is updated
-                {
-                    'id': 1,
-                    'name': 'My Company'
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+            PUT /organizations/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'name': 'My Organization'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'name': 'My Organization'
+            }
+
+        :param int organization_id: the organization to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the organization's name
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the organization's unique id
+        :>json string name: the organization's name
+
+        :status 200: Organization is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -151,50 +147,40 @@ class Organization(Resource):
 
         return organization.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def delete(self,
                organization_id):
         """
+        .. :quickref: Organization; Delete an organization.
+
         Delete an organization.
 
-        This endpoint sets the organization's state to 'deleted', so that it
-        cannot be accessed by its members or admins in any way. In order to
-        delete an organization, the authenticated user must be an admin of the
-        organization.
+        In order to delete an organization, the authenticated user must be an
+        admin of the organization.
 
-        Request:
-            DELETE /organizations/{organization_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If organization is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not found - If organization is not found
+        .. sourcecode:: http
+
+            DELETE /organizations/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int organization_id: the organization to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Organization is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -213,34 +199,12 @@ class OrganizationAnchorCircle(Resource):
     Define the endpoints for the anchor circle edge of the organization node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             organization_id):
         """
+        .. :quickref: Organization Anchor Circle; Retrieve the anchor circle.
+
         Retrieve the anchor circle of an organization.
 
         This endpoint retrieves the anchor circle of an organization. Each
@@ -248,24 +212,52 @@ class OrganizationAnchorCircle(Resource):
         retrieve the anchor circle of an organization, the authenticated user
         must be a member or an admin of the organization.
 
-        Request:
-            GET /organizations/{organization_id}/anchor_circle
+        **Example request**:
 
-        Response:
-            200 OK - If organization's anchor circle is retrieved
-                {
-                    'id': 1,
-                    'type': 'circle',
-                    'name': 'My Company',
-                    'pupose': 'My Company\'s purpose',
-                    'strategy': 'My Company\'s strategy',
-                    'parent_circle_id': null,
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+        .. sourcecode:: http
+
+            GET /organizations/1/anchor_circle HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'type': 'circle',
+                'name': 'My Organization',
+                'pupose': 'My Organization\'s purpose',
+                'strategy': 'My Organizations\'s strategy',
+                'parent_circle_id': null,
+                'organization_id': 1
+            }
+
+        :param int organization_id: the organization to retrieve the anchor
+                                    circle of
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the anchor circle's unique id
+        :>json string type: the anchor circle's type
+        :>json string name: the anchor circle's name
+        :>json string purpose: the anchor circle's purpose
+        :>json string strategy: the anchor circle's strategy
+        :>json int parent_role_id: the role the anchor circle is a child of
+        :>json int organization_id: the organization the anchor circle is
+                                    related to
+
+        :status 200: Anchor circle is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -295,63 +287,71 @@ class OrganizationMembers(Resource):
     Define the endpoints for the members edge of the organization node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             organization_id):
         """
-        List members of an organization.
+        .. :quickref: Organization Members; List members of an organization.
 
-        This endpoint lists all partners with access through membership or with
-        admin access to the organization, whether their state is 'active' or
-        not. In order to list the members of an organization, the
-        authenticated user must be a member or an admin of the organization.
+        List partners of an organization.
 
-        Request:
-            GET /organizations/{organization_id}/members
+        This endpoint lists all members of an organization, whether their
+        status is 'active' or not. In order to list the members of an
+        organization, the authenticated user must be a members of the
+        organization.
 
-        Response:
-            200 OK - If members of organization are listed
-                [
-                    {
-                        'id': 1,
-                        'type': 'member|admin',
-                        'firstname': 'John',
-                        'lastname': 'Doe',
-                        'email': 'john@example.org',
-                        'is_active': True|False,
-                        'user_id': 1,
-                        'organization_id': 1,
-                        'invitation_id': null|1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /organizations/1/members HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'type': 'member',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True,
+                    'user_id': 1,
+                    'organization_id': 1,
+                    'invitation_id': null
+                }
+            ]
+
+        :param int organization_id: the organization the members are listed
+                                    for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the member's unique id
+        :>jsonarr string type: the member's type
+        :>jsonarr string firstname: the member's firstname
+        :>jsonarr string lastname: the member's lastname
+        :>jsonarr string email: the member's email address
+        :>jsonarr boolean is_active: the member's status
+        :>jsonarr int user_id: the user account the member is related to
+        :>jsonarr int organization_id: the organization the member is
+                                       related to
+        :>jsonarr int invitation_id: the invitation the member is related to
+
+        :status 200: Members are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -369,63 +369,71 @@ class OrganizationAdmins(Resource):
     Define the endpoints for the admins edge of the organization node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             organization_id):
         """
-        List admins of an organization.
+        .. :quickref: Organization Admins; List admins of an organization.
 
-        This endpoint lists all partners of an organization with admin access
-        to the organization, whether their state is 'active' or not. In order
-        to list the admins of an organization, the authenticated user must be
-        a member or an admin of the organization.
+        List partners with admin access of an organization.
 
-        Request:
-            GET /organizations/{organization_id}/admins
+        This endpoint lists all partners with admin access of an organization,
+        whether their status is 'active' or not. In order to list the partners
+        with admin access of an organization, the authenticated user must be a
+        partner of the organization.
 
-        Response:
-            200 OK - If admins of organization are listed
-                [
-                    {
-                        'id': 1,
-                        'type': 'admin',
-                        'firstname': 'John',
-                        'lastname': 'Doe',
-                        'email': 'john@example.org',
-                        'is_active': True|False,
-                        'user_id': 1,
-                        'organization_id': 1,
-                        'invitation_id': null|1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /organizations/1/admins HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'type': 'admin',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True,
+                    'user_id': 1,
+                    'organization_id': 1,
+                    'invitation_id': null
+                }
+            ]
+
+        :param int organization_id: the organization the partners with admin
+                                    access are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the partner's unique id
+        :>jsonarr string type: the partner's type
+        :>jsonarr string firstname: the partner's firstname
+        :>jsonarr string lastname: the partner's lastname
+        :>jsonarr string email: the partner's email address
+        :>jsonarr boolean is_active: the partner's status
+        :>jsonarr int user_id: the user account the partner is related to
+        :>jsonarr int organization_id: the organization the partner is
+                                       related to
+        :>jsonarr int invitation_id: the invitation the partner is related to
+
+        :status 200: Partners with admin access are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -446,43 +454,13 @@ class OrganizationInvitations(Resource):
     Define the endpoints for the invitations edge of the organization node.
 
     """
-
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }, {
-            'name': 'body',
-            'defaultValue': "({'email': 'donaldo@ducko.com',"
-                            "'organization_id': id})",
-            'description': 'new user-data',
-            'required': 'true',
-            'type': 'JSON Object',
-            'paramType': 'body'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def post(self,
              organization_id):
         """
+        .. :quickref: Organization Invitations; Invite a user to an
+                      organization.
+
         Invite a user to an organization.
 
         This endpoint will send an invitation to a given email address. The
@@ -492,25 +470,58 @@ class OrganizationInvitations(Resource):
         the organization. In order to invite a user to an organization, the
         authenticated user must be an admin of the organization.
 
-        Request:
-            POST /organizations/{organization_id}/invitations
+        **Example request**:
 
-            Parameters:
-                email (string): The email address the invitation is sent to
+        .. sourcecode:: http
 
-        Response:
-            201 Created - If invitation is created
-                {
-                    'id': 1,
-                    'code': '12345678-1234-1234-1234-123456789012',
-                    'email': 'john@example.org',
-                    'status': 'pending|accepted|cancelled',
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+            POST /organizations/1/invitations HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'email': 'john@example.org'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'code': '12345678-1234-1234-1234-123456789012',
+                'email': 'john@example.org',
+                'status': 'pending',
+                'organization_id': 1
+            }
+
+        :param int organization_id: the organization the invitation is created
+                                    for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string email: the email address the invitation is sent to
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the invitation's unique id
+        :>json string code: the invitation's unique code
+        :>json string email: the email address the invitation is sent to
+        :>json string status: the invitation's status
+        :>json int organization_id: the organization the invitation is related
+                                    to
+
+        :status 201: Invitation is created
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)
@@ -533,34 +544,13 @@ class OrganizationInvitations(Resource):
 
         return invitation.serialize, 201
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-            'name': 'Authorization',
-            'defaultValue': ('Bearer + <mock_user_001>'),
-            'in': 'header',
-            'description': 'JWT to be passed as a header',
-            'required': 'true',
-            'paramType': 'header',
-            'type': 'string'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self,
             organization_id):
         """
+        .. :quickref: Organization Invitations; List invitations to an
+                      organization.
+
         List invitations to an organization.
 
         This endpoint lists all 'pending', 'accepted' and 'cancelled'
@@ -568,24 +558,50 @@ class OrganizationInvitations(Resource):
         organization, the authenticated user must be a member or an admin of
         the organization.
 
-        Request:
-            GET /organizations/{organization_id}/invitations
+        **Example request**:
 
-        Response:
-            200 OK - If invitations to organization are listed
-                [
-                    {
-                        'id': 1,
-                        'code': '12345678-1234-1234-1234-123456789012',
-                        'email': 'john@example.org',
-                        'status': 'pending|accepted|cancelled',
-                        'organization_id': 1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If organization is not found
+        .. sourcecode:: http
+
+            GET /organizations/1/invitations HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'code': '12345678-1234-1234-1234-123456789012',
+                    'email': 'john@example.org',
+                    'status': 'pending',
+                    'organization_id': 1
+                }
+            ]
+
+        :param int organization_id: the organization the invitations are
+                                    listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the invitation's unique id
+        :>jsonarr string code: the invitation's unique code
+        :>jsonarr string email: the email address the invitation is sent to
+        :>jsonarr string status: the invitation's status
+        :>jsonarr int organization_id: the organization the invitation is
+                                       related to
+
+        :status 200: Invitations are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Organization is not found
 
         """
         organization = OrganizationModel.query.get(organization_id)

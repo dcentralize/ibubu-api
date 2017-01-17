@@ -4,10 +4,9 @@ Define the main entry point for the app.
 """
 import os
 
-from flask import Blueprint, Flask, render_template
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_restful import Api
-from flask_restful_swagger import swagger
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 from swarm_intelligence_app.config import config
@@ -32,9 +31,6 @@ def load_config(app):
     app.config.from_object(config[config_name])
 
 
-my_blueprint1 = Blueprint('my_blueprint1', __name__)
-
-
 def create_app():
     """
     Create the main flask app.
@@ -42,14 +38,7 @@ def create_app():
     """
     app = Flask(__name__)
     CORS(app)
-    ###################################
-    api = swagger.docs(Api(my_blueprint1), apiVersion='0.1',
-                       basePath='http://localhost:5000',
-                       resourcePath='/',
-                       produces=['application/json", "text/html'],
-                       api_spec_url='/api',
-                       description='Swarm Intelligence')
-    ###################################
+    api = Api(app)
     load_config(app)
     api.add_resource(user.UserRegistration,
                      '/register')
@@ -75,18 +64,18 @@ def create_app():
                      '/partners/<partner_id>/admin')
     api.add_resource(partner.PartnerMemberships,
                      '/partners/<partner_id>/memberships')
-    api.add_resource(partner.PartnerMetrics,
-                     '/partners/<partner_id>/metrics')
-    api.add_resource(partner.PartnerChecklists,
-                     '/partners/<partner_id>/checklists')
+    #api.add_resource(partner.PartnerMetrics,
+    #                 '/partners/<partner_id>/metrics')
+    #api.add_resource(partner.PartnerChecklists,
+    #                 '/partners/<partner_id>/checklists')
     api.add_resource(invitation.Invitation,
                      '/invitations/<invitation_id>')
     api.add_resource(invitation.InvitationAccept,
                      '/invitations/<code>/accept')
     api.add_resource(invitation.InvitationCancel,
                      '/invitations/<invitation_id>/cancel')
-    api.add_resource(invitation.InvitationResend,
-                     '/invitations/<invitation_id>/resend')
+    #api.add_resource(invitation.InvitationResend,
+    #                 '/invitations/<invitation_id>/resend')
     api.add_resource(role.Role,
                      '/roles/<role_id>')
     api.add_resource(role.RoleMembers,
@@ -152,6 +141,4 @@ def setup():
 
 
 if __name__ == '__main__':
-    application.register_blueprint(my_blueprint1,
-                                   url_prefix='')
     application.run()

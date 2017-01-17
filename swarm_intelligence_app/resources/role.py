@@ -23,25 +23,52 @@ class Role(Resource):
     @auth.login_required
     def get(self, role_id):
         """
+        .. :quickref: Role; Retrieve a role.
+
         Retrieve a role.
 
-        Request:
-            GET /roles/{role_id}
+        **Example request**:
 
-        Response:
-            200 OK - If role is retrieved
-                {
-                    'id': 1,
-                    'type': 'circle|lead_link|secretary|facilitator|custom',
-                    'name': 'Role\'s name,
-                    'purpose': 'Role\'s purpose,
-                    'parent_circle_id': null|1,
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+        .. sourcecode:: http
+
+            GET /roles/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 5,
+                'type': 'custom',
+                'name': 'My Role\'s name',
+                'purpose': 'My Role\'s purpose',
+                'parent_role_id': 1,
+                'organization_id': 1
+            }
+
+        :param int role_id: the role to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the role's unique id
+        :>json string type: the role's type
+        :>json string name: the role's name
+        :>json string purpose: the role's purpose
+        :>json int parent_role_id: the parent role the role is related to
+        :>json int organization_id: the organization the role is related to
+
+        :status 200: Role is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -54,29 +81,64 @@ class Role(Resource):
     @auth.login_required
     def put(self, role_id):
         """
+        .. :quickref: Role; Update a role.
+
         Update a role.
 
-        Request:
-            PUT /roles/{role_id}
+        **Example request**:
 
-            Parameters:
-                name (string): The name of the role
-                purpose (string): The purpose of the role
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If role is updated
-                {
-                    'id': 1,
-                    'type': 'circle|lead_link|secretary|facilitator|custom',
-                    'name': 'Role\'s name,
-                    'purpose': 'Role\'s purpose,
-                    'parent_circle_id': null|1,
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+            PUT /roles/5 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'name': 'My Role\'s new name',
+                'purpose': 'My Role\'s new purpose'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 5,
+                'type': 'custom',
+                'name': 'My Role\'s new name',
+                'purpose': 'My Role\'s new purpose',
+                'parent_role_id': 1,
+                'organization_id': 1
+            }
+
+        :param int role_id: the role to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the role's name
+        :<json string purpose: the role's purpose
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the role's unique id
+        :>json string type: the role's type
+        :>json string name: the role's name
+        :>json string purpose: the role's purpose
+        :>json int parent_role_id: the parent role the role is related to
+        :>json int organization_id: the organization the role is related to
+
+        :status 200: Role is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -98,22 +160,35 @@ class Role(Resource):
     @auth.login_required
     def delete(self, role_id):
         """
+        .. :quickref: Role; Delete a role.
+
         Delete a role.
 
-        In order to delete a partner, the authenticated user must be an admin
-        of the organization that the partner is associated with.
+        **Example request**:
 
-        Request:
-            DELETE /roles/{role_id}
+        .. sourcecode:: http
 
-        Response:
-            204 No Content - If role is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not found - If role is not found
-            409 Conflict - If type of role is other than custom
-            409 Conflict - If role is an anchor circle of an organization
+            DELETE /roles/5 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int role_id: the role to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Role is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
+        :status 409: Role type is other than custom
+        :status 409: Role is an anchor circle of an organization
 
         """
         role = RoleModel.query.get(role_id)
@@ -142,30 +217,61 @@ class RoleMembers(Resource):
     def get(self,
             role_id):
         """
+        .. :quickref: Role Members; List members of a role.
+
         List members of a role.
 
-        Request:
-            GET /roles/{role_id}/members
+        **Example request**:
 
-        Response:
-            200 OK - If members of role are listed
-                [
-                    {
-                        'id': 1,
-                        'type': 'member|admin',
-                        'firstname': 'John',
-                        'lastname': 'Doe',
-                        'email': 'john@example.org',
-                        'is_active': True|False,
-                        'user_id': 1,
-                        'organization_id': 1,
-                        'invitation_id': null|1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+        .. sourcecode:: http
+
+            GET /roles/1/members HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'type': 'admin',
+                    'firstname': 'John',
+                    'lastname': 'Doe',
+                    'email': 'john@example.org',
+                    'is_active': True,
+                    'user_id': 1,
+                    'organization_id': 1,
+                    'invitation_id': null
+                }
+            ]
+
+        :param int role_id: the role the members are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the partner's unique id
+        :>jsonarr string type: the partner's type
+        :>jsonarr string firstname: the partner's firstname
+        :>jsonarr string lastname: the partner's lastname
+        :>jsonarr string email: the partner's email address
+        :>jsonarr boolean is_active: the partner's status
+        :>jsonarr int user_id: the user account the partner is related to
+        :>jsonarr int organization_id: the organization the partner is
+                                       related to
+        :>jsonarr int invitation_id: the invitation the partner is related to
+
+        :status 200: Members are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -187,20 +293,36 @@ class RoleMembersAssociation(Resource):
             role_id,
             partner_id):
         """
+        .. :quickref: Role Members; Assign a partner to a role.
+
         Assign a partner to a role.
 
-        Request:
-            PUT /roles/{role_id}/members/{partner_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If partner is assigned to role
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
-            404 Not Found - If partner is not found
-            409 Conflict - If role is not associated with partner's
-                organization
+        .. sourcecode:: http
+
+            PUT /roles/5/members/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int role_id: the role the partner is assigned to
+        :param int partner_id: the partner who is assigned to the role
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Partner is assigned to role
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
+        :status 404: Partner is not found
+        :status 409: Role is not associated with partner's organization
 
         """
         role = RoleModel.query.get(role_id)
@@ -226,18 +348,35 @@ class RoleMembersAssociation(Resource):
                role_id,
                partner_id):
         """
+        .. :quickref: Role Members; Unassign a partner from a role.
+
         Unassign a partner from a role.
 
-        Request:
-            DELETE /roles/{role_id}/members/{partner_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If partner is unassigned from role
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
-            404 Not Found - If partner is not found
+        .. sourcecode:: http
+
+            DELETE /roles/5/members/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int role_id: the role the partner is unassigned from
+        :param int partner_id: the partner who is unassigned from the role
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Partner is unassigned from role
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
+        :status 404: Partner is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -264,24 +403,48 @@ class RoleDomains(Resource):
     @auth.login_required
     def get(self, role_id):
         """
-        List all domains of a role.
+        .. :quickref: Role Domains; List domains of a role.
 
-        Request:
-            GET /roles/{role_id}/domains
+        List domains of a role.
 
-        Response:
-            200 OK - If domains of role are listed
-                [
-                    {
-                        'id': 1,
-                        'title': 'Role\'s name',
-                        'role_id': 1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /roles/1/domains HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'title': 'Domain\'s title',
+                    'role_id': 1
+                }
+            ]
+
+        :param int role_id: the role the domains are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the domain's unique id
+        :>jsonarr string title: the domain's title
+        :>jsonarr int role_id: the role the domain is related to
+
+        :status 200: Domains are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -296,25 +459,56 @@ class RoleDomains(Resource):
     @auth.login_required
     def post(self, role_id):
         """
+        .. :quickref: Role Domains; Add a domain to a role.
+
         Add a domain to a role.
 
-        Request:
-            POST /roles/role_id/domains
+        **Example request**:
 
-            Parameters:
-                title (string): The title of the domain
+        .. sourcecode:: http
 
-        Response:
-            201 Created - If domain is added
-                {
-                    'id': 1,
-                    'title': 'Role\'s name',
-                    'role_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Conflict - If role is not found
+            POST /roles/1/domains HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Domain\'s title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Domain\'s title',
+                'role_id': 1
+            }
+
+        :param int role_id: the role the domain is added to
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string title: the domain's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the domain's unique id
+        :>json string title: the domain's title
+        :>json int role_id: the role the domain is related to
+
+        :status 201: Domain is added
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -342,24 +536,48 @@ class RoleAccountabilities(Resource):
     @auth.login_required
     def get(self, role_id):
         """
-        List all accountabilities of a role.
+        .. :quickref: Role Accountabilities; List accountabilities of a role.
 
-        Request:
-            GET /roles/{role_id}/accountabilities
+        List accountabilities of a role.
 
-        Response:
-            200 OK - If accountabilities of role are listed
-                [
-                    {
-                        'id': 1,
-                        'title': 'Accountabilities\' title',
-                        'role_id': 1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /roles/1/accountabilities HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'title': 'Accountability\'s title',
+                    'role_id': 1
+                }
+            ]
+
+        :param int role_id: the role the accountabilities are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the accountability's unique id
+        :>jsonarr string title: the accountability's title
+        :>jsonarr int role_id: the role the accountability is related to
+
+        :status 200: Accountabilities are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -374,25 +592,56 @@ class RoleAccountabilities(Resource):
     @auth.login_required
     def post(self, role_id):
         """
-        Add a accountability to a role.
+        .. :quickref: Role Accountabilities; Add an accountability to a role.
 
-        Request:
-            POST /roles/{role_id}/accountabilities
+        Add an accountability to a role.
 
-            Parameters:
-                title (string): The title of the accountability
+        **Example request**:
 
-        Response:
-            201 Created - If accountability is added
-                {
-                    'id': 1,
-                    'title': 'Accountabilities\' title',
-                    'role_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
+        .. sourcecode:: http
+
+            POST /roles/1/accountabilities HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Accountability\'s title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Accountability\'s title',
+                'role_id': 1
+            }
+
+        :param int role_id: the role the accountability is added to
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string title: the accountability's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the accountability's unique id
+        :>json string title: the accountability's title
+        :>json int role_id: the role the accountability is related to
+
+        :status 201: Accountability is added
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
 
         """
         role = RoleModel.query.get(role_id)
@@ -421,18 +670,34 @@ class RoleCircle(Resource):
     def put(self,
             role_id):
         """
+        .. :quickref: Role Circle; Add circle properties to a role.
+
         Add circle properties to a role.
 
-        Request:
-            PUT /roles/{role_id}/circle
+        **Example request**:
 
-        Response:
-            204 No Content - If circle properties are added to role
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
-            409 Conflict - If type of role is other than custom
+        .. sourcecode:: http
+
+            PUT /roles/5/circle HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int role_id: the role to add circle properties to
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Circle properties are added to role
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
+        :status 409: Role type is other than custom
 
         """
         role = RoleModel.query.get(role_id)
@@ -479,19 +744,35 @@ class RoleCircle(Resource):
     def delete(self,
                role_id):
         """
+        .. :quickref: Role Circle; Remove circle properties from a role.
+
         Remove circle properties from a role.
 
-        Request:
-            DELETE /roles/{role_id}/circle
+        **Example request**:
 
-        Response:
-            204 No Content - If circle properties are removed from role
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If role is not found
-            409 Conflict - If type of role is other than custom
-            409 Conflict - If role is an anchor circle of an organization
+        .. sourcecode:: http
+
+            DELETE /roles/5/circle HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int role_id: the role to remove circle properties from
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Circle properties are removed from role
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Role is not found
+        :status 409: Role is other than circle
+        :status 409: Role is an anchor circle of an organization
 
         """
         role = RoleModel.query.get(role_id)

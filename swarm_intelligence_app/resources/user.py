@@ -9,7 +9,6 @@ import requests
 
 from flask import abort, current_app, g
 from flask_restful import reqparse, Resource
-from flask_restful_swagger import swagger
 from swarm_intelligence_app.common.authentication import auth
 from swarm_intelligence_app.models import db
 from swarm_intelligence_app.models.circle import Circle as CircleModel
@@ -42,58 +41,47 @@ class UserRegistration(Resource):
     Define the endpoints for the user registration.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[
-            {
-                'name': 'Authorization',
-                'defaultValue': ('Token + <mock_user_001>'),
-                'in': 'header',
-                'description': 'web-token to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-            }
-        ],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ],
-    )
     def post(self):
         """
-        Create a user.
+        .. :quickref: User; Register a user.
+
+        Register a user.
 
         To create a user the data provided by google is taken into
-        consideration. If a user with the provided google id does not exist,
-        the user is created. If a user exists and is deactivated, the user is
-        activated. If a user does not exist, the user is created with the data
+        consideration. If a user with the provided google id does not exist, 
+        the user is created. If a user exists and is deactivated, the user is 
+        activated. If a user does not exist, the user is created with the data 
         provided by google.
 
-        Request:
-            POST /register
+        **Example request**:
 
-        Response:
-            201 Created - If user is created
-                {
-                    'id': 1,
-                    'google_id': '123456789',
-                    'firstname': 'John',
-                    'lastname': 'Doe',
-                    'email': 'john@example.org',
-                    'is_active': True
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token is not authorized by google
-            409 Conflict - If user already exists
+        .. sourcecode:: http
+
+            POST /register HTTP/1.1
+            Host: example.com
+            Authorization: Token <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'access_token': <token>
+            }
+
+        :reqheader Authorization: Google ID token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json string access_token: A JSON Web Token
+
+        :status 201: User is created
+        :status 400: Token is not well-formed
+        :status 401: Token is not authorized by google
+        :status 409: User already exists
 
         """
         parser = reqparse.RequestParser()
@@ -162,44 +150,41 @@ class UserLogin(Resource):
     Define the endpoints for the user login.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     def get(self):
         """
+        .. :quickref: User; Login a user.
+
         Login a user.
 
-        Request:
-            GET /login
+        **Example request**:
 
-        Response:
-            200 OK - If user is logged in
-                {
-                    'access_token': JSON Web Token
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token is not authorized by google
+        .. sourcecode:: http
+
+            GET /login HTTP/1.1
+            Host: example.com
+            Authorization: Token <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'access_token': <token>
+            }
+
+        :reqheader Authorization: Google ID token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json string access_token: A JSON Web Token
+
+        :status 200: User is logged in
+        :status 400: Token is not well-formed
+        :status 401: Token is not authorized by google
+        :status 401: User is not authorized
 
         """
         parser = reqparse.RequestParser()
@@ -256,114 +241,116 @@ class User(Resource):
     Define the endpoints for the user node.
 
     """
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self):
         """
+        .. :quickref: User; Retrieve the authenticated user.
+
         Retrieve the authenticated user.
 
-        Request:
-            GET /me
+        **Example request**:
 
-        Response:
-            200 OK - If user is retrieved
-                {
-                    'id': 1,
-                    'google_id': '123456789',
-                    'firstname': 'John',
-                    'lastname': 'Doe',
-                    'email': 'john@example.org',
-                    'is_active': True
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
+        .. sourcecode:: http
+
+            GET /me HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'google_id': '123456789',
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org',
+                'is_active': True
+            }
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the user's id
+        :>json string google_id: the user's google id
+        :>json string firstname: the user's firstname
+        :>json string lastname: the user's lastname
+        :>json string email: the user's email
+        :>json boolean is_active: the user's status
+
+        :status 200: User is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
 
         """
         return g.user.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }, {
-                'name': 'body',
-                'defaultValue': ("{'firstname': 'Daisy', 'lastname': "
-                                 "'Ducks', 'email': 'daisy' + token +  "
-                                 "'@tolli.com'}"),
-                'description': 'new user-data',
-                'required': 'true',
-                'type': 'JSON Object',
-                'paramType': 'body'
-        }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def put(self):
         """
+        .. :quickref: User; Update the authenticated user.
+
         Update the authenticated user.
 
-        Request:
-            PUT /me
+        **Example request**:
 
-            Parameters:
-                firstname (string): The firstname of the authenticated user
-                lastname (string): The lastname of the authenticated user
-                email (string): The email address of the authenticated user
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If user is updated
-                {
-                    'id': 1,
-                    'google_id': '123456789',
-                    'firstname': 'John',
-                    'lastname': 'Doe',
-                    'email': 'john@example.org',
-                    'is_active': True
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
+            PUT /me HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'google_id': '123456789',
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org',
+                'is_active': True
+            }
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string firstname: the user's firstname
+        :<json string lastname: the user's lastname
+        :<json string email: the user's email
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the user's id
+        :>json string google_id: the user's google id
+        :>json string firstname: the user's firstname
+        :>json string lastname: the user's lastname
+        :>json string email: the user's email
+        :>json boolean is_active: the user's status
+
+        :status 200: User is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
 
         """
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -379,48 +366,38 @@ class User(Resource):
 
         return g.user.serialize, 200
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def delete(self):
         """
+        .. :quickref: User; Delete the authenticated user.
+
         Delete the authenticated user.
 
-        This endpoint sets the authenticated user's account to 'closed' and
-        the user's partnerships with organizations to 'inactive'. By signin-up
-        again with the same google account, the user's account is reopened. To
-        rejoin an organization, a new invitation is needed.
+        This endpoint sets the authenticated user's account and partnerships
+        with organizations to 'inactive'. By signin-up again with the same
+        google account, the user's account is reactivated. To rejoin an
+        organization, a new invitation is needed.
 
-        Request:
-            DELETE /me
+        **Example request**:
 
-        Response:
-            204 No Content - If user is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
+        .. sourcecode:: http
+
+            DELETE /me HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: User is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
 
         """
         g.user.is_active = False
@@ -439,63 +416,58 @@ class UserOrganizations(Resource):
 
     """
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }, {
-                'name': 'body',
-                'defaultValue': ("{'name': token + ': Dagoberts ' + "
-                                 "'Empire'}"),
-                'description': 'name of the organization',
-                'required': 'true',
-                'type': 'JSON Object',
-                'paramType': 'body'
-                }
-        ],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def post(self):
         """
+        .. :quickref: User Organizations; Create an organization.
+
         Create an organization.
 
         This endpoint creates a new organization with an anchor circle and
         adds the authenticated user as an admin to the organization.
 
-        Request:
-            POST /me/organizations
+        **Example request**:
 
-            Parameters:
-                name (string): The name of the organization
+        .. sourcecode:: http
 
-        Response:
-            201 Created - If organization is created
-                {
-                    'id': 1,
-                    'name': 'My Company'
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            409 Conflict - If organization cannot be created
+            POST /me/organizations HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'name': 'My Organization'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'name': 'My Organization'
+            }
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the organization's name
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the organization's id
+        :>json string name: the organization's name
+
+        :status 201: Organization is created
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 409: Organization cannot be created
 
         """
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -548,52 +520,49 @@ class UserOrganizations(Resource):
 
         return organization.serialize, 201
 
-    @swagger.operation(
-        # Parameters can be automatically extracted from URLs (e.g.
-        # <string:id>)
-        # but you could also override them here, or add other parameters.
-        parameters=[{
-                'name': 'Authorization',
-                'defaultValue': ('Bearer + <mock_user_001>'),
-                'in': 'header',
-                'description': 'JWT to be passed as a header',
-                'required': 'true',
-                'paramType': 'header',
-                'type': 'string'
-                    }],
-        responseMessages=[
-            {
-                'code': 400,
-                'message': 'BAD REQUEST'
-            },
-            {
-                'code': 401,
-                'message': 'UNAUTHORIZED'
-            }
-        ]
-    )
     @auth.login_required
     def get(self):
         """
+        .. :quickref: User Organizations; List the user's organizations.
+
         List organizations for the authenticated user.
 
         This endpoint only lists organizations that the authenticated user is
         allowed to operate on as a member or an admin.
 
-        Request:
-            GET /me/organizations
+        **Example request**:
 
-        Response:
-            200 OK - If organizations of user are listed
-                [
-                    {
-                        'id': 1,
-                        'name': 'My Company'
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
+        .. sourcecode:: http
+
+            GET /me/organizations HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'name': 'My Organization'
+                }
+            ]
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the organization's id
+        :>jsonarr string name: the organization's name
+
+        :status 200: Organizations are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
 
         """
         organizations = db.session.query(OrganizationModel).filter(

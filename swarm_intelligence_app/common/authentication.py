@@ -52,7 +52,7 @@ def verify_token(token):
         google_id=payload['sub'], is_active=True).first()
 
     if user is None:
-        print('The user is not found or is deleted.')
+        print('The user is not authorized.')
         abort(401)
 
     g.user = user

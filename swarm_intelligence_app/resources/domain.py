@@ -19,22 +19,46 @@ class Domain(Resource):
     @auth.login_required
     def get(self, domain_id):
         """
+        .. :quickref: Domain; Retrieve a domain.
+
         Retrieve a domain.
 
-        Request:
-            GET /domains/{domain_id}
+        **Example request**:
 
-        Response:
-            200 OK - If domain is retrieved
-                {
-                    'id': 1,
-                    'title': 'Domain\'s title'
-                    'role_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If domain is not found
+        .. sourcecode:: http
+
+            GET /domains/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Domain\'s title',
+                'role_id': 1
+            }
+
+        :param int domain_id: the domain to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the domain's unique id
+        :>json string title: the domain's title
+        :>json int role_id: the role the domain is related to
+
+        :status 200: Domain is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Domain is not found
 
         """
         domain = DomainModel.query.get(domain_id)
@@ -47,25 +71,56 @@ class Domain(Resource):
     @auth.login_required
     def put(self, domain_id):
         """
+        .. :quickref: Role; Update a domain.
+
         Update a domain.
 
-        Request:
-            PUT /domains/{domain_id}
+        **Example request**:
 
-            Parameters:
-                title (string): The new title of the domain
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If domain is updated
-                {
-                    'id': 1,
-                    'title': 'Domain\'s title',
-                    'role_id': 99
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If domain is not found
+            PUT /domains/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Domain\'s new title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Domain\'s new title',
+                'role_id': 1
+            }
+
+        :param int domain_id: the domain to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string name: the domain's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the domain's unique id
+        :>json string title: the domain's title
+        :>json int role_id: the domain the role is related to
+
+        :status 200: Domain is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Domain is not found
 
         """
         domain = DomainModel.query.get(domain_id)
@@ -85,17 +140,33 @@ class Domain(Resource):
     @auth.login_required
     def delete(self, domain_id):
         """
+        .. :quickref: Domain; Delete a domain.
+
         Delete a domain.
 
-        Request:
-            DELETE /domains/{domain_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If the domain is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If domain is not found
+        .. sourcecode:: http
+
+            DELETE /domain/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int domain_id: the domain to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Domain is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Domain is not found
 
         """
         domain = DomainModel.query.get(domain_id)
@@ -117,25 +188,48 @@ class DomainPolicies(Resource):
     @auth.login_required
     def get(self, domain_id):
         """
-        List of all policies of a domain.
+        .. :quickref: Domain Policies; List policies of a domain.
 
-        Request:
-            GET /domains/{domain_id}/policies
+        List policies of a domain.
 
-        Response:
-            200 OK - If policies of domain are listed
-                [
-                    {
-                        'id': 1,
-                        'title': 'Policy\'s name',
-                        'description': 'Policy\'s description',
-                        'domain_id': 1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If domain is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /domains/1/policies HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'title': 'Policy\'s title',
+                    'domain_id': 1
+                }
+            ]
+
+        :param int domain_id: the domain the policies are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the policy's unique id
+        :>jsonarr string title: the policy's title
+        :>jsonarr int domain_id: the domain the policy is related to
+
+        :status 200: Policies are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Domain is not found
 
         """
         domain = DomainModel.query.get(domain_id)
@@ -150,27 +244,56 @@ class DomainPolicies(Resource):
     @auth.login_required
     def post(self, domain_id):
         """
+        .. :quickref: Domain Policies; Add a policy to a domain.
+
         Add a policy to a domain.
 
-        Request:
-            POST /domains/{domain_id}/policies
+        **Example request**:
 
-            Parameters:
-                title (string): The title of the policy
-                description (string): The description of the policy
+        .. sourcecode:: http
 
-        Response:
-            201 Created - If policy is added
-                {
-                    'id': 1,
-                    'title': 'Policy\'s title',
-                    'description': 'Policy\'s description',
-                    'domain_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If domain is not found
+            POST /domains/1/policies HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'title': 'Policy\'s title'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'title': 'Policy\'s title',
+                'domain_id': 1
+            }
+
+        :param int organization_id: the domain the policy is added to
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string title: the policy's title
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the policy's unique id
+        :>json string title: the policy's title
+        :>json int domain_id: the domain the policy is related to
+
+        :status 201: Policy is added to domain
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Domain is not found
 
         """
         domain = DomainModel.query.get(domain_id)

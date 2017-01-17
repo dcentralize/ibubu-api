@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Extending the API &#8212; Swarm Intelligence 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="User" href="resources/user.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Extending the API</a><ul>
+<li><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li><a class="reference internal" href="#adding-a-resource">Adding a Resource</a></li>
+<li><a class="reference internal" href="#adding-a-model">Adding a Model</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="resources/user.html" title="previous chapter">User</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/developers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="extending-the-api">
+<h1>Extending the API<a class="headerlink" href="#extending-the-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline">¶</a></h2>
+<p>The main building blocks of the Swarm Intelligence App are resources and models. The following project structure shows the separation of different modules. Any resources are located in the <em>resources/</em> folder; any models in the <em>models/</em> folder. Helpers used accross the application are located in the <em>common/</em> folder. The app is configured in <em>config.py</em> and initialized in <em>app.py</em>, which is the main entry point of the application.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">swarm_intelligence_app</span><span class="o">/</span>         <span class="c1"># application root directory</span>
+    <span class="n">common</span><span class="o">/</span>                     <span class="c1"># any helpers and utils</span>
+        <span class="n">__init</span><span class="o">.</span><span class="n">py__</span>
+        <span class="n">authentication</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">docs</span><span class="o">/</span>                       <span class="c1"># any documentation source files</span>
+    <span class="n">models</span><span class="o">/</span>                     <span class="c1"># any models</span>
+        <span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">accountability</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">circle</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">domain</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">invitation</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">organization</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">partner</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">policy</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">role</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">role_member</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">resources</span><span class="o">/</span>                  <span class="c1"># any resources</span>
+        <span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">accountability</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">circle</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">domain</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">invitation</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">organization</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">partner</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">policy</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">role</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">tests</span><span class="o">/</span>                      <span class="c1"># any tests</span>
+    <span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">py</span>                      <span class="c1"># application entry point</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">py</span>                   <span class="c1"># application configuration</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-a-resource">
+<h2>Adding a Resource<a class="headerlink" href="#adding-a-resource" title="Permalink to this headline">¶</a></h2>
+<p>Resources are implemented with <a class="reference external" href="http://flask-restful-cn.readthedocs.io/en/0.3.5/">Flask-RESTful</a>, an extension for <a class="reference external" href="http://flask.pocoo.org">Flask</a> that adds support for building RESTful APIs. A basic CRUD resource can be defined in <em>resources/myresource.py</em> and looks like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask_restful</span> <span class="k">import</span> <span class="n">Resource</span>
+
+<span class="k">class</span> <span class="nc">MyResource</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>             <span class="c1"># create a new resource</span>
+        <span class="o">...</span>                     <span class="c1"># insert data</span>
+        <span class="k">return</span> <span class="mi">201</span><span class="p">,</span> <span class="p">{}</span>          <span class="c1"># return status 201 and JSON data</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>          <span class="c1"># read a resource</span>
+        <span class="o">...</span>                     <span class="c1"># query data</span>
+        <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{}</span>          <span class="c1"># return status 200 and JSON data</span>
+
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>          <span class="c1"># update a resource</span>
+        <span class="o">...</span>                     <span class="c1"># update data</span>
+        <span class="k">return</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{}</span>          <span class="c1"># return status 200 and JSON data</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>       <span class="c1"># delete a resource</span>
+        <span class="o">...</span>                     <span class="c1"># delete data</span>
+        <span class="k">return</span> <span class="mi">204</span><span class="p">,</span> <span class="kc">None</span>        <span class="c1"># return status 204</span>
+</pre></div>
+</div>
+<p>In <em>app.py</em> import your resource class</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swarm_intelligence_app.resources.myresource</span> <span class="k">import</span> <span class="n">MyResource</span>
+</pre></div>
+</div>
+<p>and add it to the API object</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_app</span><span class="p">():</span>
+    <span class="o">...</span>
+    <span class="n">api</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="n">MyResource</span><span class="p">,</span> <span class="s1">&#39;/myresource&#39;</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-a-model">
+<h2>Adding a Model<a class="headerlink" href="#adding-a-model" title="Permalink to this headline">¶</a></h2>
+<p>The Swarm Intelligence App uses <a class="reference external" href="http://flask-sqlalchemy.pocoo.org/2.1/">Flask-SQLAlchemy</a>, an extension that provides support for <a class="reference external" href="http://www.sqlalchemy.org/">SQLAlchemy</a>. SQLAlchemy is an SQL toolkit and Object Relational Mapper for Python. A simple model can be defined in <em>models/mymodel.py</em> and looks like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swarm_intelligence_app.models</span> <span class="k">import</span> <span class="n">db</span>
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">firstname</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">lastname</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">firstname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">firstname</span> <span class="o">=</span> <span class="n">firstname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastname</span> <span class="o">=</span> <span class="n">lastname</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;MyModel </span><span class="si">%r</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;firstname&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">firstname</span><span class="p">,</span>
+            <span class="s1">&#39;lastname&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastname</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>Import the SQLAlchemy object and your model class and use your model as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swarm_intelligence_app.models</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">swarm_intelligence_app.models.mymodel</span> <span class="k">import</span> <span class="n">MyModel</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># insert data</span>
+    <span class="n">mymodel</span> <span class="o">=</span> <span class="n">MyModel</span><span class="p">(</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Doe&#39;</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mymodel</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="c1"># query data</span>
+    <span class="n">mymodel</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mymodel</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="c1"># update data</span>
+    <span class="n">mymodel</span><span class="o">.</span><span class="n">lastname</span> <span class="o">=</span> <span class="s1">&#39;Smith&#39;</span>
+
+    <span class="c1"># delete data</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">mymodel</span><span class="p">)</span>
+
+    <span class="c1"># persist data</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Felix Borst, Andreas Fischer, Moha Messri, Marvin Rüsenberg, Tobias Wählen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/developers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

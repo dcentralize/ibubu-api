@@ -22,28 +22,54 @@ class Invitation(Resource):
     def get(self,
             invitation_id):
         """
+        .. :quickref: Invitation; Retrieve an invitation.
+
         Retrieve an invitation.
 
         In order to retrieve an invitation, the authenticated user must be a
-        member or an admin of the organization that the invitation is
-        associated with.
+        partner of the organization that the invitation is associated with.
 
-        Request:
-            GET /invitations/{invitation_id}
+        **Example request**:
 
-        Response:
-            200 OK - If invitation is retrieved
-                {
-                    'id': 1,
-                    'code': '12345678-1234-1234-1234-123456789012',
-                    'email': 'john@example.org',
-                    'status': 'pending|accepted|cancelled',
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If invitation is not found
+        .. sourcecode:: http
+
+            GET /invitations/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'code': '12345678-1234-1234-1234-123456789012',
+                'email': 'john@example.org',
+                'status': 'pending',
+                'organization_id': 1
+            }
+
+        :param int invitation_id: the invitation to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the invitation's unique id
+        :>json string code: the invitation's unique code
+        :>json string email: the email address the invitation is sent to
+        :>json string status: the invitation's status
+        :>json int organization_id: the organization the invitation is related
+                                    to
+
+        :status 200: Invitation is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Invitation is not found
 
         """
         invitation = InvitationModel.query.get(invitation_id)
@@ -63,6 +89,8 @@ class InvitationAccept(Resource):
     def get(self,
             code):
         """
+        .. :quickref: Invitation; Accept an invitation.
+
         Accept an invitation.
 
         If an invitation's state is 'pending', this endpoint will set the
@@ -72,23 +100,49 @@ class InvitationAccept(Resource):
         accepted again or accepted at all. In order to accept an invitation,
         the user must be an authenticated user.
 
-        Request:
-            GET /invitations/{code}/accept
+        **Example request**:
 
-        Response:
-            200 OK - If invitation is accepted
-                {
-                    'id': 1,
-                    'code': '12345678-1234-1234-1234-123456789012',
-                    'email': 'john@example.org',
-                    'status': 'accepted',
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If invitation is not found
-            409 Conflict - If status of invitation is cancelled
+        .. sourcecode:: http
+
+            GET /invitations/12345678-1234-1234-1234-123456789012/accept
+            HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'code': '12345678-1234-1234-1234-123456789012',
+                'email': 'john@example.org',
+                'status': 'accepted',
+                'organization_id': 1
+            }
+
+        :param int invitation_id: the invitation to accept
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the invitation's unique id
+        :>json string code: the invitation's unique code
+        :>json string email: the email address the invitation is sent to
+        :>json string status: the invitation's status
+        :>json int organization_id: the organization the invitation is related
+                                    to
+
+        :status 200: Invitation is accepted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Invitation is not found
+        :status 409: Invitation status is cancelled
 
         """
         invitation = InvitationModel.query.filter_by(code=code).first()
@@ -118,6 +172,8 @@ class InvitationCancel(Resource):
     def put(self,
             invitation_id):
         """
+        .. :quickref: Invitation; Cancel an invitation.
+
         Cancel an invitation.
 
         If an invitation's state is 'pending', this endpoint will set the
@@ -127,23 +183,48 @@ class InvitationCancel(Resource):
         user must be an admin of the organization that the invitation is
         associated with.
 
-        Request:
-            PUT /invitations/{invitation_id}/cancelled
+        **Example request**:
 
-        Response:
-            200 OK - If invitation is cancelled
-                {
-                    'id': 1,
-                    'code': '12345678-1234-1234-1234-123456789012',
-                    'email': 'john@example.org',
-                    'status': 'cancelled',
-                    'organization_id': 1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If invitation is not found
-            409 Conflict - If status of invitation is accepted
+        .. sourcecode:: http
+
+            GET /invitations/1/cancel HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'code': '12345678-1234-1234-1234-123456789012',
+                'email': 'john@example.org',
+                'status': 'cancelled',
+                'organization_id': 1
+            }
+
+        :param int invitation_id: the invitation to cancel
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the invitation's unique id
+        :>json string code: the invitation's unique code
+        :>json string email: the email address the invitation is sent to
+        :>json string status: the invitation's status
+        :>json int organization_id: the organization the invitation is related
+                                    to
+
+        :status 200: Invitation is cancelled
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Invitation is not found
+        :status 409: Invitation status is accepted
 
         """
         invitation = InvitationModel.query.get(invitation_id)
@@ -170,6 +251,8 @@ class InvitationResend(Resource):
     def get(self,
             invitation_id):
         """
+        .. :quickref: Invitation; Resend an invitation.
+
         Resend an invitation.
 
         If an invitation's state is 'pending', this endpoint will resend the

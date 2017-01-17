@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &#8212; Swarm Intelligence 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using the API" href="usage.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#getting-started-using-ubuntu">Getting Started using Ubuntu</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#id1">Installation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-the-tests">Running the tests</a><ul>
+<li><a class="reference internal" href="#coding-style-tests">Coding style tests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-with">Built With</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Overview</a></li>
+      <li>Next: <a href="usage.html" title="next chapter">Using the API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/installation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-started-using-ubuntu">
+<h2>Getting Started using Ubuntu<a class="headerlink" href="#getting-started-using-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.</p>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<p>First you need to checkout the GitHub Repository using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">dcentralize</span><span class="o">/</span><span class="n">swarm</span><span class="o">-</span><span class="n">intelligence</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>It is highly recommended to run everything in an virtualenv. The environment can be set up using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkvirtualenv</span> <span class="o">--</span><span class="n">python</span> <span class="n">python3</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">a</span> <span class="o">.</span> <span class="n">si</span>
+</pre></div>
+</div>
+<p>To create a local database, install Mariadb:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mariadb</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>In order to run or deploy the project, it is necessary to download the dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>A step by step series of examples that tell you how to get a development env running.</p>
+<p>Starting mariadb:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="n">mariadb</span> <span class="n">start</span>
+</pre></div>
+</div>
+<p>Setting up the database:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="o">-</span><span class="n">e</span> <span class="s1">&#39;CREATE DATABASE swarm_intelligence&#39;</span>
+</pre></div>
+</div>
+<p>Adding the directory &#8216;swarm-intelligence&#8217; to your PYTHONPATH:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export PYTHONPATH=$PYTHONPATH:/path/of/swarm-intelligence
+</pre></div>
+</div>
+<p>You can now navigate to the app.py and run it using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">swarm</span><span class="o">-</span><span class="n">intelligence</span>
+<span class="n">python3</span> <span class="n">swarm_intelligence_app</span><span class="o">/</span><span class="n">app</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>You can now access the API at localhost:5000. Please not that accessing the API via 127.0.0.1:5000 will not work.</p>
+</div>
+</div>
+<div class="section" id="running-the-tests">
+<h2>Running the tests<a class="headerlink" href="#running-the-tests" title="Permalink to this headline">¶</a></h2>
+<p>Normally our tests are run using Travis-CI. In order to run the tests locally, navigate to the /tests directory and run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span>
+</pre></div>
+</div>
+<div class="section" id="coding-style-tests">
+<h3>Coding style tests<a class="headerlink" href="#coding-style-tests" title="Permalink to this headline">¶</a></h3>
+<p>Our coding style is conform to flake8, except for some minor exceptions which can be found in the tox.ini.</p>
+</div>
+</div>
+<div class="section" id="built-with">
+<h2>Built With<a class="headerlink" href="#built-with" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>[PyCharm](<a class="reference external" href="https://www.jetbrains.com/pycharm/">https://www.jetbrains.com/pycharm/</a>)</li>
+<li>[Travis-CI](<a class="reference external" href="https://travis-ci.org/">https://travis-ci.org/</a>)</li>
+<li>[Mariadb](<a class="reference external" href="https://mariadb.org/">https://mariadb.org/</a>)</li>
+<li>[Flask](<a class="reference external" href="http://flask.pocoo.org/docs/0.11/">http://flask.pocoo.org/docs/0.11/</a>)</li>
+<li>[Flask-Cors](<a class="reference external" href="https://github.com/corydolphin/flask-cors">https://github.com/corydolphin/flask-cors</a>)</li>
+<li>[Flask-HTTPAuth](<a class="reference external" href="https://flask-httpauth.readthedocs.io/en/latest/">https://flask-httpauth.readthedocs.io/en/latest/</a>)</li>
+<li>[Flask-RESTful](<a class="reference external" href="https://flask-restful-cn.readthedocs.io/en/0.3.5/">https://flask-restful-cn.readthedocs.io/en/0.3.5/</a>)</li>
+<li>[Flask-SQLAlchemy](<a class="reference external" href="http://flask-sqlalchemy.pocoo.org/2.1/">http://flask-sqlalchemy.pocoo.org/2.1/</a>)</li>
+<li>[Jinja2](<a class="reference external" href="http://jinja.pocoo.org/">http://jinja.pocoo.org/</a>)</li>
+<li>[PyJWT](<a class="reference external" href="http://github.com/jpadilla/pyjwt">http://github.com/jpadilla/pyjwt</a>)</li>
+<li>[PyMySQL](<a class="reference external" href="https://media.readthedocs.org/pdf/pymysql/latest/pymysql.pdf">https://media.readthedocs.org/pdf/pymysql/latest/pymysql.pdf</a>)</li>
+<li>[SQLAlchemy](<a class="reference external" href="http://www.sqlalchemy.org">http://www.sqlalchemy.org</a>)</li>
+<li>[SQLAlchemy-Utils](<a class="reference external" href="https://github.com/kvesteri/sqlalchemy-utils">https://github.com/kvesteri/sqlalchemy-utils</a>)</li>
+<li>[Py](<a class="reference external" href="https://pypi.python.org/pypi">https://pypi.python.org/pypi</a>)</li>
+<li>[Pytest](<a class="reference external" href="http://doc.pytest.org/en/latest/">http://doc.pytest.org/en/latest/</a>)</li>
+<li>[Pytest-Flask](<a class="reference external" href="https://pytest-flask.readthedocs.io/en/latest/">https://pytest-flask.readthedocs.io/en/latest/</a>)</li>
+<li>[requests](<a class="reference external" href="http://python-requests.org">http://python-requests.org</a>)</li>
+<li>[Tox](<a class="reference external" href="https://tox.readthedocs.io/en/latest/">https://tox.readthedocs.io/en/latest/</a>)</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Felix Borst, Andreas Fischer, Moha Messri, Marvin Rüsenberg, Tobias Wählen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/installation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

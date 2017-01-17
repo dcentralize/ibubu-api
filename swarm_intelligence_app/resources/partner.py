@@ -19,32 +19,61 @@ class Partner(Resource):
     def get(self,
             partner_id):
         """
+        .. :quickref: Partner; Retrieve a partner.
+
         Retrieve a partner.
 
         In order to retrieve a partner, the authenticated user must be a
-        member or an admin of the organization that the partner is
-        associated with.
+        partner of the organization that the partner is associated with.
 
-        Request:
-            GET /partners/{partner_id}
+        **Example request**:
 
-        Response:
-            200 OK - If partner is retrieved
-                {
-                    'id': 1,
-                    'type': 'member|admin',
-                    'firstname': 'John',
-                    'lastname': 'Doe',
-                    'email': 'john@example.org',
-                    'is_active': True|False,
-                    'user_id': 1,
-                    'organization_id': 1,
-                    'invitation_id': null|1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If partner is not found
+        .. sourcecode:: http
+
+            GET /partners/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'type': 'member',
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org',
+                'is_active': True,
+                'user_id': 1,
+                'organization_id': 1,
+                'invitation_id': null
+            }
+
+        :param int partner_id: the partner to retrieve
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the partner's unique id
+        :>json string type: the partner's type
+        :>json string firstname: the partner's firstname
+        :>json string lastname: the partner's lastname
+        :>json string email: the partner's email address
+        :>json boolean is_active: the partner's status
+        :>json int user_id: the user account the partner is related to
+        :>json int organization_id: the organization the partner is related to
+        :>json int invitation_id: the invitation the partner is related to
+
+        :status 200: Partner is retrieved
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -58,36 +87,76 @@ class Partner(Resource):
     def put(self,
             partner_id):
         """
+        .. :quickref: Partner; Update a partner.
+
         Update a partner.
 
-        In order to edit a partner, the authenticated user must be an admin of
-        the organization that the partner is associated with.
+        In order to update a partner, the authenticated user must be a partner
+        with admin access of the organization that the partner is associated
+        with.
 
-        Request:
-            PUT /partners/{partner_id}
+        **Example request**:
 
-            Parameters:
-                firstname (string): The firstname of the partner
-                lastname (string): The lastname of the partner
-                email (string): The email address of the partner
+        .. sourcecode:: http
 
-        Response:
-            200 OK - If partner is updated
-                {
-                    'id': 1,
-                    'type': 'member|admin',
-                    'firstname': 'John',
-                    'lastname': 'Doe',
-                    'email': 'john@example.org',
-                    'is_active': True|False,
-                    'user_id': 1,
-                    'organization_id': 1,
-                    'invitation_id': null|1
-                }
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If partner is not found
+            PUT /partners/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+            Content-Type: application/json
+
+            {
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org'
+            }
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+                'id': 1,
+                'type': 'member',
+                'firstname': 'John',
+                'lastname': 'Doe',
+                'email': 'john@example.org',
+                'is_active': True,
+                'user_id': 1,
+                'organization_id': 1,
+                'invitation_id': null
+            }
+
+        :param int partner_id: the partner to update
+
+        :reqheader Authorization: JSON Web Token to authenticate
+        :reqheader Content-Type: data is sent as application/json or
+                                 application/x-www-form-urlencoded
+
+        :<json string firstname: the partner's firstname
+        :<json string lastname: the partner's lastname
+        :<json string email: the partner's email address
+
+        :resheader Content-Type: data is received as application/json
+
+        :>json int id: the partner's unique id
+        :>json string type: the partner's type
+        :>json string firstname: the partner's firstname
+        :>json string lastname: the partner's lastname
+        :>json string email: the partner's email address
+        :>json boolean is_active: the partner's status
+        :>json int user_id: the user account the partner is related to
+        :>json int organization_id: the organization the partner is related to
+        :>json int invitation_id: the invitation the partner is related to
+
+        :status 200: Partner is updated
+        :status 400: Parameters are missing
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -112,21 +181,38 @@ class Partner(Resource):
     def delete(self,
                partner_id):
         """
+        .. :quickref: Partner; Delete a partner.
+
         Delete a partner.
 
-        In order to delete a partner, the authenticated user must be an admin
-        of the organization that the partner is associated with.
+        In order to delete a partner, the authenticated user must be a partner
+        with admin access of the organization that the partner is associated
+        with.
 
-        Request:
-            DELETE /partners/{partner_id}
+        **Example request**:
 
-        Response:
-            204 No Content - If partner is deleted
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not found - If partner is not found
-            409 Conflict - If partner is the only admin of an organization
+        .. sourcecode:: http
+
+            DELETE /partners/1 HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int partner_id: the partner to delete
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Partner is deleted
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
+        :status 409: Partner is the only admin of an organization
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -159,21 +245,37 @@ class PartnerAdmin(Resource):
     def put(self,
             partner_id):
         """
-        Grant admin access to a partner to an organization.
+        .. :quickref: Partner Admin; Grant admin access.
 
-        In order to grant admin access to a partner to an organization,
-        the authenticated user must be an admin of the organization that
-        the partner is associated with.
+        Grant admin access to a partner.
 
-        Request:
-            PUT /partners/{partner_id}/admin
+        In order to grant admin access to an organization to a partner, the
+        authenticated user must be an admin of the organization that the
+        partner is associated with.
 
-        Response:
-            204 No Content - If admin access is grant to partner
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If partner is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            PUT /partners/1/admin HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int partner_id: the partner to grant access to an organization
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Admin access is grant
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -190,22 +292,38 @@ class PartnerAdmin(Resource):
     def delete(self,
                partner_id):
         """
-        Revoke admin access from a partner to an organization.
+        .. :quickref: Partner Admin; Revoke admin access.
 
-        In order to revoke admin access from a partner to an organization,
+        Revoke admin access to an organization from a partner.
+
+        In order to revoke admin access to an organization from a partner,
         the authenticated user must be an admin of the organization that
         the partner is associated with.
 
-        Request:
-            DELETE /partners/{partner_id}/admin
+        **Example request**:
 
-        Response:
-            204 No Content - If admin access is revoked from partner
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If partner is not found
-            409 Conflict - If partner is the only admin of an organization
+        .. sourcecode:: http
+
+            DELETE /partners/1/admin HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 204 No Content
+
+        :param int partner_id: the partner to revoke access to an organization
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :status 204: Admin access is revoked
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
+        :status 409: Partner is the only admin of an organization
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -237,33 +355,98 @@ class PartnerMemberships(Resource):
     def get(self,
             partner_id):
         """
-        List circles of a partner.
+        .. :quickref: Partner Memberships; List memberships of a partner.
 
-        In order to list the circles of a partner, the authenticated user
-        must be a member or an admin of the organization that the partner is
-        associated with.
+        List memberships of a partner.
 
-        Request:
-            GET /partners/{partner_id}/memberships
+        In order to list the memberships of a partner, the authenticated user
+        must be a partner of the organization that the partner is associated
+        with.
 
-        Response:
-            200 OK - If memberships of partner are listed
-                [
-                    {
-                        'id': 1,
-                        'type': 'circle|lead_link|secretary|facilitator|
-                         custom',
-                        'name': 'Role\'s name',
-                        'purpose': 'Role\'s purpose',
-                        'strategy': 'null|Role\'s strategy',
-                        'parent_circle_id': 1,
-                        'organization_id': 1
-                    }
-                ]
-            400 Bad Request - If token is not well-formed
-            401 Unauthorized - If token has expired
-            401 Unauthorized - If user is not authorized
-            404 Not Found - If partner is not found
+        **Example request**:
+
+        .. sourcecode:: http
+
+            GET /partners/1/memberships HTTP/1.1
+            Host: example.com
+            Authorization: Bearer <token>
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            [
+                {
+                    'id': 1,
+                    'type': 'circle',
+                    'name': 'My Organization',
+                    'pupose': 'My Organization\'s purpose',
+                    'parent_role_id': null,
+                    'organization_id': 1
+                },
+                {
+                    'id': 2,
+                    'type': 'lead_link',
+                    'name': 'Lead Link\'s name',
+                    'purpose': 'Lead Link\'s purpose',
+                    'parent_role_id': 1,
+                    'organization_id': 1
+                },
+                {
+                    'id': 3,
+                    'type': 'secretary',
+                    'name': 'Secretary\'s name',
+                    'purpose': 'Secretary\'s purpose',
+                    'parent_role_id': 1,
+                    'organization_id': 1
+                },
+                {
+                    'id': 4,
+                    'type': 'facilitator',
+                    'name': 'Facilitator\'s name',
+                    'purpose': 'Facilitator\'s purpose',
+                    'parent_role_id': 1,
+                    'organization_id': 1
+                },
+                {
+                    'id': 5,
+                    'type': 'custom',
+                    'name': 'My Role\'s name',
+                    'purpose': 'My Role\'s purpose',
+                    'parent_role_id': 1,
+                    'organization_id': 1
+                },
+                {
+                    'id': 6,
+                    'type': 'circle',
+                    'name': 'My Circle\'s name',
+                    'purpose': 'My Circle\'s purpose',
+                    'parent_role_id': 1,
+                    'organization_id': 1
+                }
+            ]
+
+        :param int partner_id: the partner the memberships are listed for
+
+        :reqheader Authorization: JSON Web Token to authenticate
+
+        :resheader Content-Type: data is received as application/json
+
+        :>jsonarr int id: the role's unique id
+        :>jsonarr string type: the role's type
+        :>jsonarr string name: the role's name
+        :>jsonarr string purpose: the role's purpose
+        :>jsonarr int parent_role_id: the parent role the role is related to
+        :>jsonarr int organization_id: the organization the role is related to
+
+        :status 200: Memberships are listed
+        :status 400: Token is not well-formed
+        :status 401: Token has expired
+        :status 401: User is not authorized
+        :status 404: Partner is not found
 
         """
         partner = PartnerModel.query.get(partner_id)
@@ -284,7 +467,8 @@ class PartnerMetrics(Resource):
     def post(self,
              partner_id):
         """
-        Add a metric to a partner.
+        .. :quickref: Partner Metrics; Add a metric to a partner.
+          :noindex:
 
         """
         abort(501)
@@ -292,7 +476,8 @@ class PartnerMetrics(Resource):
     def get(self,
             partner_id):
         """
-        List metrics of a partner.
+        .. :quickref: Partner Metrics; List metrics of a partner.
+          :noindex:
 
         """
         abort(501)
@@ -306,7 +491,8 @@ class PartnerChecklists(Resource):
     def post(self,
              partner_id):
         """
-        Add a checklist to a partner.
+        .. :quickref: Partner Checklists; Add a checklist to a partner.
+          :noindex:
 
         """
         abort(501)
@@ -314,7 +500,8 @@ class PartnerChecklists(Resource):
     def get(self,
             partner_id):
         """
-        List checklists of a partner.
+        .. :quickref: Partner Checklists; List checklists of a partner.
+          :noindex:
 
         """
         abort(501)
