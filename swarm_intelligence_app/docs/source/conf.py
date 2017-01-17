@@ -127,7 +127,7 @@ htmlhelp_basename = 'SwarmIntelligencedoc'
 # regardless of the global pdf_compressed setting.
 
 pdf_documents = [
-    ('index', u'MyProject', u'My Project', u'Author Name'),
+    ('index', u'SwarmIntelligencePlatform', u'Swarm Intelligence Platform', u'F. Borst\\A. Fischer\\M. Messri\\M. Ruesenberg\\T. Waehlen'),
 ]
 
 # A comma-separated list of custom stylesheets. Example:

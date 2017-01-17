@@ -56,7 +56,7 @@
 
 
 \chapter{Overview}
-\label{\detokenize{overview::doc}}\label{\detokenize{overview:swarm-intelligence-platform}}\label{\detokenize{overview:overview}}
+\label{\detokenize{overview:overview}}\label{\detokenize{overview::doc}}\label{\detokenize{overview:swarm-intelligence-platform}}
 The aim of this project is to develop an open-source platform that fits well to the Holacracy® constitution (\url{http://www.holacracy.org/constitution}).
 
 The stack of choice is Flask, a flexible Python micro framework to develop robust web applications.  Different libraries, mentionable Flask-RESTful and Flask-SQLAlchemy, add further functionality to the stack. Data persistence is handled by a MySQL database.
@@ -205,7 +205,7 @@ Our coding style is conform to flake8, except for some minor exceptions which ca
 
 
 \chapter{Using the API}
-\label{\detokenize{usage::doc}}\label{\detokenize{usage:using-the-api}}
+\label{\detokenize{usage:using-the-api}}\label{\detokenize{usage::doc}}
 
 \section{HTTP Methods}
 \label{\detokenize{usage:http-methods}}
@@ -361,7 +361,7 @@ The API supports Cross Origin Resource Sharing (CORS) for AJAX requests from any
 
 
 \chapter{Extending the API}
-\label{\detokenize{developers::doc}}\label{\detokenize{developers:extending-the-api}}
+\label{\detokenize{developers:extending-the-api}}\label{\detokenize{developers::doc}}
 
 \section{Project Structure}
 \label{\detokenize{developers:project-structure}}
@@ -500,10 +500,10 @@ Import the SQLAlchemy object and your model class and use your model as follows:
 
 
 \chapter{API Reference}
-\label{\detokenize{resources/index::doc}}\label{\detokenize{resources/index:api-reference}}
+\label{\detokenize{resources/index:api-reference}}\label{\detokenize{resources/index::doc}}
 
 \section{Accountability}
-\label{\detokenize{resources/accountability::doc}}\label{\detokenize{resources/accountability:id1}}\label{\detokenize{resources/accountability:accountability}}
+\label{\detokenize{resources/accountability:accountability}}\label{\detokenize{resources/accountability::doc}}\label{\detokenize{resources/accountability:id1}}
 Represents an accountability.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -771,7 +771,7 @@ Content\PYGZhy{}Type: application/json
 
 
 \section{Circle}
-\label{\detokenize{resources/circle::doc}}\label{\detokenize{resources/circle:id1}}\label{\detokenize{resources/circle:circle}}
+\label{\detokenize{resources/circle:circle}}\label{\detokenize{resources/circle::doc}}\label{\detokenize{resources/circle:id1}}
 Represents a circle. A circle is a {\hyperref[\detokenize{resources/role:role}]{\sphinxcrossref{\DUrole{std,std-ref}{Role}}}} that is broken down into sub roles. Every circle has core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles. A {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} can be assigned to a circle as a core member.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -1574,7 +1574,7 @@ Content\PYGZhy{}Type: application/json
 
 
 \section{Domain}
-\label{\detokenize{resources/domain::doc}}\label{\detokenize{resources/domain:id1}}\label{\detokenize{resources/domain:domain}}
+\label{\detokenize{resources/domain:domain}}\label{\detokenize{resources/domain::doc}}\label{\detokenize{resources/domain:id1}}
 Represents a domain.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -2055,7 +2055,7 @@ Content\PYGZhy{}Type: application/json
 
 
 \section{Invitation}
-\label{\detokenize{resources/invitation::doc}}\label{\detokenize{resources/invitation:invitation}}\label{\detokenize{resources/invitation:id1}}
+\label{\detokenize{resources/invitation:invitation}}\label{\detokenize{resources/invitation::doc}}\label{\detokenize{resources/invitation:id1}}
 Represents an invitation.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -2381,7 +2381,7 @@ to
 
 
 \section{Organization}
-\label{\detokenize{resources/organization::doc}}\label{\detokenize{resources/organization:organization}}\label{\detokenize{resources/organization:id1}}
+\label{\detokenize{resources/organization:organization}}\label{\detokenize{resources/organization::doc}}\label{\detokenize{resources/organization:id1}}
 Represents an organization.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -3163,7 +3163,7 @@ related to
 
 
 \section{Partner}
-\label{\detokenize{resources/partner::doc}}\label{\detokenize{resources/partner:partner}}\label{\detokenize{resources/partner:id1}}
+\label{\detokenize{resources/partner::doc}}\label{\detokenize{resources/partner:id1}}\label{\detokenize{resources/partner:partner}}
 Represents the relationship of a {\hyperref[\detokenize{resources/user:user}]{\sphinxcrossref{\DUrole{std,std-ref}{User}}}} with an {\hyperref[\detokenize{resources/organization:organization}]{\sphinxcrossref{\DUrole{std,std-ref}{Organization}}}}.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -3666,7 +3666,7 @@ Content\PYGZhy{}Type: application/json
 
 
 \section{Policy}
-\label{\detokenize{resources/policy::doc}}\label{\detokenize{resources/policy:policy}}\label{\detokenize{resources/policy:id1}}
+\label{\detokenize{resources/policy::doc}}\label{\detokenize{resources/policy:id1}}\label{\detokenize{resources/policy:policy}}
 Represents a policy.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -3934,7 +3934,7 @@ Content\PYGZhy{}Type: application/json
 
 
 \section{Role}
-\label{\detokenize{resources/role::doc}}\label{\detokenize{resources/role:id1}}\label{\detokenize{resources/role:role}}
+\label{\detokenize{resources/role:role}}\label{\detokenize{resources/role::doc}}\label{\detokenize{resources/role:id1}}
 Represents a role. A role defines domains to control and accountabilities to perform. A {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} can be assigned to core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
@@ -5075,7 +5075,7 @@ Unassign a partner from a role.
 
 
 \section{User}
-\label{\detokenize{resources/user::doc}}\label{\detokenize{resources/user:user}}\label{\detokenize{resources/user:id1}}
+\label{\detokenize{resources/user:user}}\label{\detokenize{resources/user::doc}}\label{\detokenize{resources/user:id1}}
 Represents a user. A user is related to an {\hyperref[\detokenize{resources/organization:organization}]{\sphinxcrossref{\DUrole{std,std-ref}{Organization}}}} through a {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}}.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
