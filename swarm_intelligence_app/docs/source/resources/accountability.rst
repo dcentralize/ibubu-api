@@ -1,8 +1,7 @@
 .. _accountability:
 
-**************
 Accountability
-**************
+==============
 
 Represents an accountability.
 

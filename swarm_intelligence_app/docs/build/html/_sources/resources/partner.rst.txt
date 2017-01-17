@@ -1,8 +1,7 @@
 .. _partner:
 
-*******
 Partner
-*******
+=======
 
 Represents the relationship of a :ref:`user` with an :ref:`organization`.
 

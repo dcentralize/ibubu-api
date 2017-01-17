@@ -2,11 +2,8 @@
 Swarm Intelligence Platform
 ###########################
 
-Table of Contents
------------------
-
 .. toctree::
-    :glob:
+    :maxdepth: 2
 
     overview
     installation

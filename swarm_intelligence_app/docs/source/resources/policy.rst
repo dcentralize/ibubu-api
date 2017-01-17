@@ -1,8 +1,7 @@
 .. _policy:
 
-******
 Policy
-******
+======
 
 Represents a policy.
 

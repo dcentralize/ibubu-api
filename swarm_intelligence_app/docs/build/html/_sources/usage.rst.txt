@@ -1,8 +1,9 @@
+*************
 Using the API
-=============
+*************
 
 HTTP Methods
-------------
+============
 
 The API is implemented as RESTful web service and uses HTTP to access and manipulate resources. The following table shows which HTTP methods are supported:
 
@@ -19,7 +20,7 @@ The API is implemented as RESTful web service and uses HTTP to access and manipu
 +----------+--------------------------------+
 
 HTTP Status Codes
------------------
+=================
 
 There are three different HTTP status codes for successful requests and five HTTP status codes to indicate client errors. The status codes are used as follows:
 
@@ -52,14 +53,14 @@ There are three different HTTP status codes for successful requests and five HTT
 +----------+----------------------------------------------------------+
 
 Authentication
---------------
+==============
 
 Authentication is implemented by using `JSON Web Tokens <https://jwt.io/>`_ (JWT). To authenticate through the Swarm Intelligence Platform API sent an Authorization header with each request like this: ::
 
     Authorization: Bearer <JSON Web Token>
 
 JSON Encoded Data
------------------
+=================
 
 All reponses contain JSON encoded data. A single resource is represented by a JSON object; A collection of resources is represented by a JSON array.
 
@@ -90,6 +91,6 @@ All reponses contain JSON encoded data. A single resource is represented by a JS
     ]
 
 Cross Origin Resource Sharing
------------------------------
+=============================
 
 The API supports Cross Origin Resource Sharing (CORS) for AJAX requests from any origin. You can find further information in the `CORS W3C Recommendation <https://www.w3.org/TR/cors/>`_.

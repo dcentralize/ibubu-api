@@ -1,8 +1,7 @@
 .. _user:
 
-****
 User
-****
+====
 
 Represents a user. A user is related to an :ref:`organization` through a :ref:`partner`.
 

@@ -1,8 +1,7 @@
 .. _domain:
 
-******
 Domain
-******
+======
 
 Represents a domain.
 

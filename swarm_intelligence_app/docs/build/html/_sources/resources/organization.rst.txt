@@ -1,8 +1,7 @@
 .. _organization:
 
-************
 Organization
-************
+============
 
 Represents an organization.
 

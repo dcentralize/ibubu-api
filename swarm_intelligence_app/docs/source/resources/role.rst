@@ -1,8 +1,7 @@
 .. _role:
 
-****
 Role
-****
+====
 
 Represents a role. A role defines domains to control and accountabilities to perform. A :ref:`partner` can be assigned to core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles.
 

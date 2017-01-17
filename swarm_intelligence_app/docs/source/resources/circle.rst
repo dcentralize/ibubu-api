@@ -1,8 +1,7 @@
 .. _circle:
 
-******
 Circle
-******
+======
 
 Represents a circle. A circle is a :ref:`role` that is broken down into sub roles. Every circle has core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles. A :ref:`partner` can be assigned to a circle as a core member.
 

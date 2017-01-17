@@ -1,8 +1,9 @@
+*****************
 Extending the API
-=================
+*****************
 
 Project Structure
------------------
+=================
 
 The main building blocks of the Swarm Intelligence App are resources and models. The following project structure shows the separation of different modules. Any resources are located in the *resources/* folder; any models in the *models/* folder. Helpers used accross the application are located in the *common/* folder. The app is configured in *config.py* and initialized in *app.py*, which is the main entry point of the application. ::
 
@@ -40,7 +41,7 @@ The main building blocks of the Swarm Intelligence App are resources and models.
         config.py                   # application configuration
 
 Adding a Resource
------------------
+=================
 
 Resources are implemented with `Flask-RESTful <http://flask-restful-cn.readthedocs.io/en/0.3.5/>`_, an extension for `Flask <http://flask.pocoo.org>`_ that adds support for building RESTful APIs. A basic CRUD resource can be defined in *resources/myresource.py* and looks like this: ::
 
@@ -75,7 +76,7 @@ and add it to the API object ::
         ...
 
 Adding a Model
---------------
+==============
 
 The Swarm Intelligence App uses `Flask-SQLAlchemy <http://flask-sqlalchemy.pocoo.org/2.1/>`_, an extension that provides support for `SQLAlchemy <http://www.sqlalchemy.org/>`_. SQLAlchemy is an SQL toolkit and Object Relational Mapper for Python. A simple model can be defined in *models/mymodel.py* and looks like this: ::
 

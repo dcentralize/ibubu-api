@@ -39,10 +39,10 @@
 
 
 
-\title{Swarm Intelligence Documentation}
-\date{Jan 09, 2017}
-\release{1.0}
-\author{Felix Borst, Andreas Fischer, Moha Messri, Marvin Rüsenberg, Tobias Wählen}
+\title{Swarm Intelligence}
+\date{Jan 17, 2017}
+\release{0.1}
+\author{}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
 \makeindex
@@ -55,11 +55,8 @@
 
 
 
-\chapter{Table of Contents}
-\label{\detokenize{index:table-of-contents}}\label{\detokenize{index:swarm-intelligence-platform}}
-
-\section{Overview}
-\label{\detokenize{overview::doc}}\label{\detokenize{overview:overview}}
+\chapter{Overview}
+\label{\detokenize{overview::doc}}\label{\detokenize{overview:swarm-intelligence-platform}}\label{\detokenize{overview:overview}}
 The aim of this project is to develop an open-source platform that fits well to the Holacracy® constitution (\url{http://www.holacracy.org/constitution}).
 
 The stack of choice is Flask, a flexible Python micro framework to develop robust web applications.  Different libraries, mentionable Flask-RESTful and Flask-SQLAlchemy, add further functionality to the stack. Data persistence is handled by a MySQL database.
@@ -67,15 +64,15 @@ The stack of choice is Flask, a flexible Python micro framework to develop robus
 To foster a fast, flexible and collaborative development process the project is hosted and maintained on GitHub (\url{https://github.com/dcentralize/swarm-intelligence}). Travis CI, a continuous integration service, makes it easy to test and to coordinate the commits and increases the quality of the product.
 
 
-\section{Installation}
+\chapter{Installation}
 \label{\detokenize{installation::doc}}\label{\detokenize{installation:installation}}
 
-\subsection{Getting Started using Ubuntu}
+\section{Getting Started using Ubuntu}
 \label{\detokenize{installation:getting-started-using-ubuntu}}
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 
-\subsubsection{Prerequisites}
+\subsection{Prerequisites}
 \label{\detokenize{installation:prerequisites}}
 First you need to checkout the GitHub Repository using:
 
@@ -102,7 +99,7 @@ In order to run or deploy the project, it is necessary to download the dependenc
 \end{sphinxVerbatim}
 
 
-\subsubsection{Installation}
+\subsection{Installation}
 \label{\detokenize{installation:id1}}
 A step by step series of examples that tell you how to get a development env running.
 
@@ -134,7 +131,7 @@ You can now navigate to the app.py and run it using:
 You can now access the API at localhost:5000. Please not that accessing the API via 127.0.0.1:5000 will not work.
 
 
-\subsection{Running the tests}
+\section{Running the tests}
 \label{\detokenize{installation:running-the-tests}}
 Normally our tests are run using Travis-CI. In order to run the tests locally, navigate to the /tests directory and run:
 
@@ -143,12 +140,12 @@ Normally our tests are run using Travis-CI. In order to run the tests locally, n
 \end{sphinxVerbatim}
 
 
-\subsubsection{Coding style tests}
+\subsection{Coding style tests}
 \label{\detokenize{installation:coding-style-tests}}
 Our coding style is conform to flake8, except for some minor exceptions which can be found in the tox.ini.
 
 
-\subsection{Built With}
+\section{Built With}
 \label{\detokenize{installation:built-with}}\begin{itemize}
 \item {} 
 {[}PyCharm{]}(\url{https://www.jetbrains.com/pycharm/})
@@ -207,10 +204,10 @@ Our coding style is conform to flake8, except for some minor exceptions which ca
 \end{itemize}
 
 
-\section{Using the API}
+\chapter{Using the API}
 \label{\detokenize{usage::doc}}\label{\detokenize{usage:using-the-api}}
 
-\subsection{HTTP Methods}
+\section{HTTP Methods}
 \label{\detokenize{usage:http-methods}}
 The API is implemented as RESTful web service and uses HTTP to access and manipulate resources. The following table shows which HTTP methods are supported:
 
@@ -245,7 +242,7 @@ Used for deleting resources.
 
 
 
-\subsection{HTTP Status Codes}
+\section{HTTP Status Codes}
 \label{\detokenize{usage:http-status-codes}}
 There are three different HTTP status codes for successful requests and five HTTP status codes to indicate client errors. The status codes are used as follows:
 
@@ -314,7 +311,7 @@ The request failed due to a conflict with the resource.
 
 
 
-\subsection{Authentication}
+\section{Authentication}
 \label{\detokenize{usage:authentication}}
 Authentication is implemented by using \href{https://jwt.io/}{JSON Web Tokens} (JWT). To authenticate through the Swarm Intelligence Platform API sent an Authorization header with each request like this:
 
@@ -323,7 +320,7 @@ Authentication is implemented by using \href{https://jwt.io/}{JSON Web Tokens} (
 \end{sphinxVerbatim}
 
 
-\subsection{JSON Encoded Data}
+\section{JSON Encoded Data}
 \label{\detokenize{usage:json-encoded-data}}
 All reponses contain JSON encoded data. A single resource is represented by a JSON object; A collection of resources is represented by a JSON array.
 
@@ -358,17 +355,156 @@ All reponses contain JSON encoded data. A single resource is represented by a JS
 \end{sphinxVerbatim}
 
 
-\subsection{Cross Origin Resource Sharing}
+\section{Cross Origin Resource Sharing}
 \label{\detokenize{usage:cross-origin-resource-sharing}}
 The API supports Cross Origin Resource Sharing (CORS) for AJAX requests from any origin. You can find further information in the \href{https://www.w3.org/TR/cors/}{CORS W3C Recommendation}.
 
 
-\section{API Reference}
+\chapter{Extending the API}
+\label{\detokenize{developers::doc}}\label{\detokenize{developers:extending-the-api}}
+
+\section{Project Structure}
+\label{\detokenize{developers:project-structure}}
+The main building blocks of the Swarm Intelligence App are resources and models. The following project structure shows the separation of different modules. Any resources are located in the \sphinxstyleemphasis{resources/} folder; any models in the \sphinxstyleemphasis{models/} folder. Helpers used accross the application are located in the \sphinxstyleemphasis{common/} folder. The app is configured in \sphinxstyleemphasis{config.py} and initialized in \sphinxstyleemphasis{app.py}, which is the main entry point of the application.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{o}{/}         \PYG{c+c1}{\PYGZsh{} application root directory}
+    \PYG{n}{common}\PYG{o}{/}                     \PYG{c+c1}{\PYGZsh{} any helpers and utils}
+        \PYG{n}{\PYGZus{}\PYGZus{}init}\PYG{o}{.}\PYG{n}{py\PYGZus{}\PYGZus{}}
+        \PYG{n}{authentication}\PYG{o}{.}\PYG{n}{py}
+    \PYG{n}{docs}\PYG{o}{/}                       \PYG{c+c1}{\PYGZsh{} any documentation source files}
+    \PYG{n}{models}\PYG{o}{/}                     \PYG{c+c1}{\PYGZsh{} any models}
+        \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{accountability}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{circle}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{domain}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{invitation}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{organization}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{partner}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{policy}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{role}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{role\PYGZus{}member}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{user}\PYG{o}{.}\PYG{n}{py}
+    \PYG{n}{resources}\PYG{o}{/}                  \PYG{c+c1}{\PYGZsh{} any resources}
+        \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{accountability}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{circle}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{domain}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{invitation}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{organization}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{partner}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{policy}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{role}\PYG{o}{.}\PYG{n}{py}
+        \PYG{n}{user}\PYG{o}{.}\PYG{n}{py}
+    \PYG{n}{tests}\PYG{o}{/}                      \PYG{c+c1}{\PYGZsh{} any tests}
+    \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
+    \PYG{n}{app}\PYG{o}{.}\PYG{n}{py}                      \PYG{c+c1}{\PYGZsh{} application entry point}
+    \PYG{n}{config}\PYG{o}{.}\PYG{n}{py}                   \PYG{c+c1}{\PYGZsh{} application configuration}
+\end{sphinxVerbatim}
+
+
+\section{Adding a Resource}
+\label{\detokenize{developers:adding-a-resource}}
+Resources are implemented with \href{http://flask-restful-cn.readthedocs.io/en/0.3.5/}{Flask-RESTful}, an extension for \href{http://flask.pocoo.org}{Flask} that adds support for building RESTful APIs. A basic CRUD resource can be defined in \sphinxstyleemphasis{resources/myresource.py} and looks like this:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{flask\PYGZus{}restful} \PYG{k}{import} \PYG{n}{Resource}
+
+\PYG{k}{class} \PYG{n+nc}{MyResource}\PYG{p}{(}\PYG{n}{Resource}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf}{post}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}             \PYG{c+c1}{\PYGZsh{} create a new resource}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} insert data}
+        \PYG{k}{return} \PYG{l+m+mi}{201}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 201 and JSON data}
+
+    \PYG{k}{def} \PYG{n+nf}{get}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}          \PYG{c+c1}{\PYGZsh{} read a resource}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} query data}
+        \PYG{k}{return} \PYG{l+m+mi}{200}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 200 and JSON data}
+
+    \PYG{k}{def} \PYG{n+nf}{put}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}          \PYG{c+c1}{\PYGZsh{} update a resource}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} update data}
+        \PYG{k}{return} \PYG{l+m+mi}{200}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 200 and JSON data}
+
+    \PYG{k}{def} \PYG{n+nf}{delete}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}       \PYG{c+c1}{\PYGZsh{} delete a resource}
+        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} delete data}
+        \PYG{k}{return} \PYG{l+m+mi}{204}\PYG{p}{,} \PYG{k+kc}{None}        \PYG{c+c1}{\PYGZsh{} return status 204}
+\end{sphinxVerbatim}
+
+In \sphinxstyleemphasis{app.py} import your resource class
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{resources}\PYG{n+nn}{.}\PYG{n+nn}{myresource} \PYG{k}{import} \PYG{n}{MyResource}
+\end{sphinxVerbatim}
+
+and add it to the API object
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{create\PYGZus{}app}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{n}{api}\PYG{o}{.}\PYG{n}{add\PYGZus{}resource}\PYG{p}{(}\PYG{n}{MyResource}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/myresource}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{sphinxVerbatim}
+
+
+\section{Adding a Model}
+\label{\detokenize{developers:adding-a-model}}
+The Swarm Intelligence App uses \href{http://flask-sqlalchemy.pocoo.org/2.1/}{Flask-SQLAlchemy}, an extension that provides support for \href{http://www.sqlalchemy.org/}{SQLAlchemy}. SQLAlchemy is an SQL toolkit and Object Relational Mapper for Python. A simple model can be defined in \sphinxstyleemphasis{models/mymodel.py} and looks like this:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models} \PYG{k}{import} \PYG{n}{db}
+
+\PYG{k}{class} \PYG{n+nc}{MyModel}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nb}{id} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{Integer}\PYG{p}{,} \PYG{n}{primary\PYGZus{}key}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{n}{firstname} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{String}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{p}{,} \PYG{n}{nullable}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+    \PYG{n}{lastname} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{String}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{p}{,} \PYG{n}{nullable}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{firstname}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{firstname} \PYG{o}{=} \PYG{n}{firstname}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lastname} \PYG{o}{=} \PYG{n}{lastname}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZlt{}MyModel }\PYG{l+s+si}{\PYGZpc{}r}\PYG{l+s+s1}{\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{id}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{serialize}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{return} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{firstname}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{firstname}\PYG{p}{,}
+            \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{lastname}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lastname}
+        \PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
+
+Import the SQLAlchemy object and your model class and use your model as follows:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models} \PYG{k}{import} \PYG{n}{db}
+\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models}\PYG{n+nn}{.}\PYG{n+nn}{mymodel} \PYG{k}{import} \PYG{n}{MyModel}
+
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} insert data}
+    \PYG{n}{mymodel} \PYG{o}{=} \PYG{n}{MyModel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{John}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Doe}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{mymodel}\PYG{p}{)}
+    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{flush}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} query data}
+    \PYG{n}{mymodel} \PYG{o}{=} \PYG{n}{MyModel}\PYG{o}{.}\PYG{n}{query}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{mymodel}\PYG{o}{.}\PYG{n}{id}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} update data}
+    \PYG{n}{mymodel}\PYG{o}{.}\PYG{n}{lastname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Smith}\PYG{l+s+s1}{\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{} delete data}
+    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{delete}\PYG{p}{(}\PYG{n}{mymodel}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} persist data}
+    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{commit}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{rollback}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+
+\chapter{API Reference}
 \label{\detokenize{resources/index::doc}}\label{\detokenize{resources/index:api-reference}}
 
-\subsection{Accountability}
-\label{\detokenize{resources/accountability::doc}}\label{\detokenize{resources/accountability:accountability}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Accountability}
+\label{\detokenize{resources/accountability::doc}}\label{\detokenize{resources/accountability:id1}}\label{\detokenize{resources/accountability:accountability}}
+Represents an accountability.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -387,14 +523,14 @@ Accountability
 Update an accountability.
 \\
 \hline&
-{\hyperref[\detokenize{resources/accountability:get--accountabilities-(accountability_id)}]{\emph{GET /accountabilities/(accountability\_id)}}}
-&
-Retrieve an accountability.
-\\
-\hline&
 {\hyperref[\detokenize{resources/accountability:delete--accountabilities-(accountability_id)}]{\emph{DELETE /accountabilities/(accountability\_id)}}}
 &
 Delete an accountability.
+\\
+\hline&
+{\hyperref[\detokenize{resources/accountability:get--accountabilities-(accountability_id)}]{\emph{GET /accountabilities/(accountability\_id)}}}
+&
+Retrieve an accountability.
 \\
 \hline\end{tabulary}
 
@@ -502,6 +638,60 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/accountability:delete--accountabilities-(accountability_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/accountabilities/}}{\emph{accountability\_id}}{}~
+Delete an accountability.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/accountabilities/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{accountability\_id} (\sphinxstyleliteralemphasis{int}) -- the accountability to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Accountability is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Accountability is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/accountability:get--accountabilities-(accountability_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/accountabilities/}}{\emph{accountability\_id}}{}~
 Retrieve an accountability.
 
@@ -580,63 +770,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/accountability:delete--accountabilities-(accountability_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/accountabilities/}}{\emph{accountability\_id}}{}~
-Delete an accountability.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/accountabilities/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{accountability\_id} (\sphinxstyleliteralemphasis{int}) -- the accountability to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Accountability is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Accountability is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsection{Circle}
-\label{\detokenize{resources/circle::doc}}\label{\detokenize{resources/circle:circle}}\label{\detokenize{resources/circle:id1}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Circle}
+\label{\detokenize{resources/circle::doc}}\label{\detokenize{resources/circle:id1}}\label{\detokenize{resources/circle:circle}}
+Represents a circle. A circle is a {\hyperref[\detokenize{resources/role:role}]{\sphinxcrossref{\DUrole{std,std-ref}{Role}}}} that is broken down into sub roles. Every circle has core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles. A {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} can be assigned to a circle as a core member.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -650,14 +786,14 @@ Description
 \hline
 Circle
 &
-{\hyperref[\detokenize{resources/circle:get--circles-(circle_id)}]{\emph{GET /circles/(circle\_id)}}}
-&
-Retrieve a circle.
-\\
-\hline&
 {\hyperref[\detokenize{resources/circle:put--circles-(circle_id)}]{\emph{PUT /circles/(circle\_id)}}}
 &
 Update a circle.
+\\
+\hline&
+{\hyperref[\detokenize{resources/circle:get--circles-(circle_id)}]{\emph{GET /circles/(circle\_id)}}}
+&
+Retrieve a circle.
 \\
 \hline\end{tabulary}
 
@@ -665,104 +801,6 @@ Update a circle.
 \begin{DUlineblock}{0em}
 \item[] 
 \end{DUlineblock}
-
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/circle:get--circles-(circle_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/circles/}}{\emph{circle\_id}}{}~
-Retrieve a circle.
-
-In order to retrieve a circle, the authenticated user must be a
-partner of the organization that the circle is associated with.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/circles/6} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-HTTP/1.1 200 OK
-Content\PYGZhy{}Type: application/json
-
-\PYGZob{}
-    \PYGZsq{}id\PYGZsq{}: 6,
-    \PYGZsq{}type\PYGZsq{}: \PYGZsq{}circle\PYGZsq{},
-    \PYGZsq{}name\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s name\PYGZsq{},
-    \PYGZsq{}purpose\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s purpose\PYGZsq{},
-    \PYGZsq{}strategy\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s strategy\PYGZsq{},
-    \PYGZsq{}parent\PYGZus{}role\PYGZus{}id\PYGZsq{}: 1,
-    \PYGZsq{}organization\PYGZus{}id\PYGZsq{}: 1
-\PYGZcb{}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{circle\_id} (\sphinxstyleliteralemphasis{int}) -- the circle to retrieve
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
-
-\end{itemize}
-
-\item[{Response JSON Object}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the circle's unique id
-
-\item {} 
-\sphinxstyleliteralstrong{type} (\sphinxstyleliteralemphasis{string}) -- the circle's type
-
-\item {} 
-\sphinxstyleliteralstrong{name} (\sphinxstyleliteralemphasis{string}) -- the circle's name
-
-\item {} 
-\sphinxstyleliteralstrong{purpose} (\sphinxstyleliteralemphasis{string}) -- the circle's purpose
-
-\item {} 
-\sphinxstyleliteralstrong{strategy} (\sphinxstyleliteralemphasis{string}) -- the circle's optional strategy
-
-\item {} 
-\sphinxstyleliteralstrong{parent\_role\_id} (\sphinxstyleliteralemphasis{int}) -- the parent role the circle is related to
-
-\item {} 
-\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the circle is related to
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Circle is retrieved
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Circle is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 
 \begin{fulllineitems}
@@ -889,9 +927,107 @@ application/x-www-form-urlencoded
 
 
 
-\subsubsection{Members}
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/circle:get--circles-(circle_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/circles/}}{\emph{circle\_id}}{}~
+Retrieve a circle.
+
+In order to retrieve a circle, the authenticated user must be a
+partner of the organization that the circle is associated with.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{GET} \PYG{n+nn}{/circles/6} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+HTTP/1.1 200 OK
+Content\PYGZhy{}Type: application/json
+
+\PYGZob{}
+    \PYGZsq{}id\PYGZsq{}: 6,
+    \PYGZsq{}type\PYGZsq{}: \PYGZsq{}circle\PYGZsq{},
+    \PYGZsq{}name\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s name\PYGZsq{},
+    \PYGZsq{}purpose\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s purpose\PYGZsq{},
+    \PYGZsq{}strategy\PYGZsq{}: \PYGZsq{}Circle\PYGZsq{}s strategy\PYGZsq{},
+    \PYGZsq{}parent\PYGZus{}role\PYGZus{}id\PYGZsq{}: 1,
+    \PYGZsq{}organization\PYGZus{}id\PYGZsq{}: 1
+\PYGZcb{}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{circle\_id} (\sphinxstyleliteralemphasis{int}) -- the circle to retrieve
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Response Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
+
+\end{itemize}
+
+\item[{Response JSON Object}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the circle's unique id
+
+\item {} 
+\sphinxstyleliteralstrong{type} (\sphinxstyleliteralemphasis{string}) -- the circle's type
+
+\item {} 
+\sphinxstyleliteralstrong{name} (\sphinxstyleliteralemphasis{string}) -- the circle's name
+
+\item {} 
+\sphinxstyleliteralstrong{purpose} (\sphinxstyleliteralemphasis{string}) -- the circle's purpose
+
+\item {} 
+\sphinxstyleliteralstrong{strategy} (\sphinxstyleliteralemphasis{string}) -- the circle's optional strategy
+
+\item {} 
+\sphinxstyleliteralstrong{parent\_role\_id} (\sphinxstyleliteralemphasis{int}) -- the parent role the circle is related to
+
+\item {} 
+\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the circle is related to
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Circle is retrieved
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Circle is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\subsection{Members}
 \label{\detokenize{resources/circle:members}}
-Represents the members of a circle.
+Represents the members of a circle. See {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} for a description of a single member.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -1166,7 +1302,7 @@ with.
 
 
 
-\subsubsection{Roles}
+\subsection{Roles}
 \label{\detokenize{resources/circle:roles}}
 Represents the roles of a circle. See {\hyperref[\detokenize{resources/role:role}]{\sphinxcrossref{\DUrole{std,std-ref}{Role}}}} for a description of a single role.
 
@@ -1437,9 +1573,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\subsection{Domain}
-\label{\detokenize{resources/domain:domain}}\label{\detokenize{resources/domain::doc}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Domain}
+\label{\detokenize{resources/domain::doc}}\label{\detokenize{resources/domain:id1}}\label{\detokenize{resources/domain:domain}}
+Represents a domain.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -1453,14 +1589,14 @@ Description
 \hline
 Domain
 &
-{\hyperref[\detokenize{resources/domain:get--domains-(domain_id)}]{\emph{GET /domains/(domain\_id)}}}
-&
-Retrieve a domain.
-\\
-\hline&
 {\hyperref[\detokenize{resources/domain:delete--domains-(domain_id)}]{\emph{DELETE /domains/(domain\_id)}}}
 &
 Delete a domain.
+\\
+\hline&
+{\hyperref[\detokenize{resources/domain:get--domains-(domain_id)}]{\emph{GET /domains/(domain\_id)}}}
+&
+Retrieve a domain.
 \\
 \hline
 Role
@@ -1575,6 +1711,60 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/domain:delete--domains-(domain_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/domains/}}{\emph{domain\_id}}{}~
+Delete a domain.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/domain/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{domain\_id} (\sphinxstyleliteralemphasis{int}) -- the domain to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Domain is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Domain is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/domain:get--domains-(domain_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/domains/}}{\emph{domain\_id}}{}~
 Retrieve a domain.
 
@@ -1653,63 +1843,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/domain:delete--domains-(domain_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/domains/}}{\emph{domain\_id}}{}~
-Delete a domain.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/domain/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{domain\_id} (\sphinxstyleliteralemphasis{int}) -- the domain to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Domain is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Domain is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsubsection{Policies}
+\subsection{Policies}
 \label{\detokenize{resources/domain:policies}}
-Represents the policies of a domain.
+Represents the policies of a domain. See {\hyperref[\detokenize{resources/policy:policy}]{\sphinxcrossref{\DUrole{std,std-ref}{Policy}}}} for a description of a single policy.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -1918,9 +2054,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\subsection{Invitation}
-\label{\detokenize{resources/invitation::doc}}\label{\detokenize{resources/invitation:invitation}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Invitation}
+\label{\detokenize{resources/invitation::doc}}\label{\detokenize{resources/invitation:invitation}}\label{\detokenize{resources/invitation:id1}}
+Represents an invitation.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -2244,9 +2380,9 @@ to
 
 
 
-\subsection{Organization}
-\label{\detokenize{resources/organization:organization}}\label{\detokenize{resources/organization::doc}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Organization}
+\label{\detokenize{resources/organization::doc}}\label{\detokenize{resources/organization:organization}}\label{\detokenize{resources/organization:id1}}
+Represents an organization.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -2265,14 +2401,14 @@ Organization
 Update an organization.
 \\
 \hline&
-{\hyperref[\detokenize{resources/organization:get--organizations-(organization_id)}]{\emph{GET /organizations/(organization\_id)}}}
-&
-Retrieve an Organization.
-\\
-\hline&
 {\hyperref[\detokenize{resources/organization:delete--organizations-(organization_id)}]{\emph{DELETE /organizations/(organization\_id)}}}
 &
 Delete an organization.
+\\
+\hline&
+{\hyperref[\detokenize{resources/organization:get--organizations-(organization_id)}]{\emph{GET /organizations/(organization\_id)}}}
+&
+Retrieve an Organization.
 \\
 \hline\end{tabulary}
 
@@ -2379,6 +2515,63 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/organization:delete--organizations-(organization_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/organizations/}}{\emph{organization\_id}}{}~
+Delete an organization.
+
+In order to delete an organization, the authenticated user must be an
+admin of the organization.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/organizations/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Organization is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Organization is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/organization:get--organizations-(organization_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/organizations/}}{\emph{organization\_id}}{}~
 Retrieve an organization.
 
@@ -2456,66 +2649,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/organization:delete--organizations-(organization_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/organizations/}}{\emph{organization\_id}}{}~
-Delete an organization.
-
-In order to delete an organization, the authenticated user must be an
-admin of the organization.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/organizations/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Organization is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Organization is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsubsection{Anchor Circle}
+\subsection{Anchor Circle}
 \label{\detokenize{resources/organization:anchor-circle}}
-Represents the anchor {\hyperref[\detokenize{resources/circle:circle}]{\sphinxcrossref{\DUrole{std,std-ref}{Circle}}}} of an organization.
+Represents the anchor circle of an organization. See {\hyperref[\detokenize{resources/circle:circle}]{\sphinxcrossref{\DUrole{std,std-ref}{Circle}}}} for a description of a circle.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -2643,9 +2779,9 @@ related to
 
 
 
-\subsubsection{Invitations}
+\subsection{Invitations}
 \label{\detokenize{resources/organization:invitations}}
-Represents the invitations to an organization.
+Represents the invitations to an organization. See {\hyperref[\detokenize{resources/invitation:invitation}]{\sphinxcrossref{\DUrole{std,std-ref}{Invitation}}}} for a description of a single invitation.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -2659,14 +2795,14 @@ Description
 \hline
 Organization Invitations
 &
-{\hyperref[\detokenize{resources/organization:get--organizations-(organization_id)-invitations}]{\emph{GET /organizations/(organization\_id)/invitations}}}
-&
-List invitations to an
-\\
-\hline&
 {\hyperref[\detokenize{resources/organization:post--organizations-(organization_id)-invitations}]{\emph{POST /organizations/(organization\_id)/invitations}}}
 &
 Invite a user to an
+\\
+\hline&
+{\hyperref[\detokenize{resources/organization:get--organizations-(organization_id)-invitations}]{\emph{GET /organizations/(organization\_id)/invitations}}}
+&
+List invitations to an
 \\
 \hline\end{tabulary}
 
@@ -2674,102 +2810,6 @@ Invite a user to an
 \begin{DUlineblock}{0em}
 \item[] 
 \end{DUlineblock}
-
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/organization:get--organizations-(organization_id)-invitations}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/organizations/}}{\emph{organization\_id}}{\sphinxbfcode{/invitations}}~
-List invitations to an organization.
-
-This endpoint lists all `pending', `accepted' and `cancelled'
-invitations to an organization. In order to list invitations to an
-organization, the authenticated user must be a member or an admin of
-the organization.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/organizations/1/invitations} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-HTTP/1.1 200 OK
-Content\PYGZhy{}Type: application/json
-
-[
-    \PYGZob{}
-        \PYGZsq{}id\PYGZsq{}: 1,
-        \PYGZsq{}code\PYGZsq{}: \PYGZsq{}12345678\PYGZhy{}1234\PYGZhy{}1234\PYGZhy{}1234\PYGZhy{}123456789012\PYGZsq{},
-        \PYGZsq{}email\PYGZsq{}: \PYGZsq{}john@example.org\PYGZsq{},
-        \PYGZsq{}status\PYGZsq{}: \PYGZsq{}pending\PYGZsq{},
-        \PYGZsq{}organization\PYGZus{}id\PYGZsq{}: 1
-    \PYGZcb{}
-]
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the invitations are
-listed for
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
-
-\end{itemize}
-
-\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the invitation's unique id
-
-\item {} 
-\sphinxstyleliteralstrong{code} (\sphinxstyleliteralemphasis{string}) -- the invitation's unique code
-
-\item {} 
-\sphinxstyleliteralstrong{email} (\sphinxstyleliteralemphasis{string}) -- the email address the invitation is sent to
-
-\item {} 
-\sphinxstyleliteralstrong{status} (\sphinxstyleliteralemphasis{string}) -- the invitation's status
-
-\item {} 
-\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the invitation is
-related to
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Invitations are listed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Organization is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 
 \begin{fulllineitems}
@@ -2886,9 +2926,105 @@ to
 
 
 
-\subsubsection{Members}
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/organization:get--organizations-(organization_id)-invitations}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/organizations/}}{\emph{organization\_id}}{\sphinxbfcode{/invitations}}~
+List invitations to an organization.
+
+This endpoint lists all `pending', `accepted' and `cancelled'
+invitations to an organization. In order to list invitations to an
+organization, the authenticated user must be a member or an admin of
+the organization.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{GET} \PYG{n+nn}{/organizations/1/invitations} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+HTTP/1.1 200 OK
+Content\PYGZhy{}Type: application/json
+
+[
+    \PYGZob{}
+        \PYGZsq{}id\PYGZsq{}: 1,
+        \PYGZsq{}code\PYGZsq{}: \PYGZsq{}12345678\PYGZhy{}1234\PYGZhy{}1234\PYGZhy{}1234\PYGZhy{}123456789012\PYGZsq{},
+        \PYGZsq{}email\PYGZsq{}: \PYGZsq{}john@example.org\PYGZsq{},
+        \PYGZsq{}status\PYGZsq{}: \PYGZsq{}pending\PYGZsq{},
+        \PYGZsq{}organization\PYGZus{}id\PYGZsq{}: 1
+    \PYGZcb{}
+]
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the invitations are
+listed for
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Response Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
+
+\end{itemize}
+
+\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the invitation's unique id
+
+\item {} 
+\sphinxstyleliteralstrong{code} (\sphinxstyleliteralemphasis{string}) -- the invitation's unique code
+
+\item {} 
+\sphinxstyleliteralstrong{email} (\sphinxstyleliteralemphasis{string}) -- the email address the invitation is sent to
+
+\item {} 
+\sphinxstyleliteralstrong{status} (\sphinxstyleliteralemphasis{string}) -- the invitation's status
+
+\item {} 
+\sphinxstyleliteralstrong{organization\_id} (\sphinxstyleliteralemphasis{int}) -- the organization the invitation is
+related to
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Invitations are listed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Organization is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\subsection{Members}
 \label{\detokenize{resources/organization:members}}
-Represents the members of an organization.
+Represents the members of an organization. See {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} for a description of a single member.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -3026,9 +3162,9 @@ related to
 
 
 
-\subsection{Partner}
-\label{\detokenize{resources/partner::doc}}\label{\detokenize{resources/partner:partner}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Partner}
+\label{\detokenize{resources/partner::doc}}\label{\detokenize{resources/partner:partner}}\label{\detokenize{resources/partner:id1}}
+Represents the relationship of a {\hyperref[\detokenize{resources/user:user}]{\sphinxcrossref{\DUrole{std,std-ref}{User}}}} with an {\hyperref[\detokenize{resources/organization:organization}]{\sphinxcrossref{\DUrole{std,std-ref}{Organization}}}}.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -3047,14 +3183,14 @@ Partner
 Update a partner.
 \\
 \hline&
-{\hyperref[\detokenize{resources/partner:get--partners-(partner_id)}]{\emph{GET /partners/(partner\_id)}}}
-&
-Retrieve a partner.
-\\
-\hline&
 {\hyperref[\detokenize{resources/partner:delete--partners-(partner_id)}]{\emph{DELETE /partners/(partner\_id)}}}
 &
 Delete a partner.
+\\
+\hline&
+{\hyperref[\detokenize{resources/partner:get--partners-(partner_id)}]{\emph{GET /partners/(partner\_id)}}}
+&
+Retrieve a partner.
 \\
 \hline\end{tabulary}
 
@@ -3198,6 +3334,67 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/partner:delete--partners-(partner_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/partners/}}{\emph{partner\_id}}{}~
+Delete a partner.
+
+In order to delete a partner, the authenticated user must be a partner
+with admin access of the organization that the partner is associated
+with.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/partners/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{partner\_id} (\sphinxstyleliteralemphasis{int}) -- the partner to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Partner is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Partner is not found
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Partner is the only admin of an organization
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/partner:get--partners-(partner_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/partners/}}{\emph{partner\_id}}{}~
 Retrieve a partner.
 
@@ -3303,70 +3500,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/partner:delete--partners-(partner_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/partners/}}{\emph{partner\_id}}{}~
-Delete a partner.
-
-In order to delete a partner, the authenticated user must be a partner
-with admin access of the organization that the partner is associated
-with.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/partners/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{partner\_id} (\sphinxstyleliteralemphasis{int}) -- the partner to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Partner is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Partner is not found
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Partner is the only admin of an organization
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsubsection{Memberships}
+\subsection{Memberships}
 \label{\detokenize{resources/partner:memberships}}
-Represents the memberships of a partner.
+Represents the relationships of a partner with roles and circles. See {\hyperref[\detokenize{resources/role:role}]{\sphinxcrossref{\DUrole{std,std-ref}{Role}}}} or {\hyperref[\detokenize{resources/circle:circle}]{\sphinxcrossref{\DUrole{std,std-ref}{Circle}}}} for a description of a single role or a single circle.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -3529,9 +3665,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\subsection{Policy}
-\label{\detokenize{resources/policy::doc}}\label{\detokenize{resources/policy:policy}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{Policy}
+\label{\detokenize{resources/policy::doc}}\label{\detokenize{resources/policy:policy}}\label{\detokenize{resources/policy:id1}}
+Represents a policy.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -3550,14 +3686,14 @@ Policy
 Update a policy.
 \\
 \hline&
-{\hyperref[\detokenize{resources/policy:get--policies-(policy_id)}]{\emph{GET /policies/(policy\_id)}}}
-&
-Retrieve a policy.
-\\
-\hline&
 {\hyperref[\detokenize{resources/policy:delete--policies-(policy_id)}]{\emph{DELETE /policies/(policy\_id)}}}
 &
 Delete a policy.
+\\
+\hline&
+{\hyperref[\detokenize{resources/policy:get--policies-(policy_id)}]{\emph{GET /policies/(policy\_id)}}}
+&
+Retrieve a policy.
 \\
 \hline\end{tabulary}
 
@@ -3665,6 +3801,60 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/policy:delete--policies-(policy_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/policies/}}{\emph{policy\_id}}{}~
+Delete a policy.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/policies/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{policy\_id} (\sphinxstyleliteralemphasis{int}) -- the policy to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Policy is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Policy is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/policy:get--policies-(policy_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/policies/}}{\emph{policy\_id}}{}~
 Retrieve a policy.
 
@@ -3743,63 +3933,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/policy:delete--policies-(policy_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/policies/}}{\emph{policy\_id}}{}~
-Delete a policy.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/policies/1} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{policy\_id} (\sphinxstyleliteralemphasis{int}) -- the policy to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Policy is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Policy is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsection{Role}
+\section{Role}
 \label{\detokenize{resources/role::doc}}\label{\detokenize{resources/role:id1}}\label{\detokenize{resources/role:role}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+Represents a role. A role defines domains to control and accountabilities to perform. A {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} can be assigned to core roles (e.g. facilitator, secretary, lead link, rep link, cross link) as well as custom roles.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -3818,14 +3954,14 @@ Role
 Update a role.
 \\
 \hline&
-{\hyperref[\detokenize{resources/role:get--roles-(role_id)}]{\emph{GET /roles/(role\_id)}}}
-&
-Retrieve a role.
-\\
-\hline&
 {\hyperref[\detokenize{resources/role:delete--roles-(role_id)}]{\emph{DELETE /roles/(role\_id)}}}
 &
 Delete a role.
+\\
+\hline&
+{\hyperref[\detokenize{resources/role:get--roles-(role_id)}]{\emph{GET /roles/(role\_id)}}}
+&
+Retrieve a role.
 \\
 \hline\end{tabulary}
 
@@ -3949,6 +4085,66 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/role:delete--roles-(role_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{}~
+Delete a role.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/roles/5} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role to delete
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Role is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Role type is other than custom
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Role is an anchor circle of an organization
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/role:get--roles-(role_id)}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{}~
 Retrieve a role.
 
@@ -4039,69 +4235,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/role:delete--roles-(role_id)}}\pysiglinewithargsret{\sphinxbfcode{DELETE~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{}~
-Delete a role.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/roles/5} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role to delete
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- Role is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Role type is other than custom
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.10}{409 Conflict} -- Role is an anchor circle of an organization
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsubsection{Accountabilities}
+\subsection{Accountabilities}
 \label{\detokenize{resources/role:accountabilities}}
-Represents the accountabilities of a role.
+Represents the accountabilities of a role. See {\hyperref[\detokenize{resources/accountability:accountability}]{\sphinxcrossref{\DUrole{std,std-ref}{Accountability}}}} for a description of a single accountability.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -4115,14 +4251,14 @@ Description
 \hline
 Role Accountabilities
 &
-{\hyperref[\detokenize{resources/role:get--roles-(role_id)-accountabilities}]{\emph{GET /roles/(role\_id)/accountabilities}}}
-&
-List accountabilities of a role.
-\\
-\hline&
 {\hyperref[\detokenize{resources/role:post--roles-(role_id)-accountabilities}]{\emph{POST /roles/(role\_id)/accountabilities}}}
 &
 Add an accountability to a role.
+\\
+\hline&
+{\hyperref[\detokenize{resources/role:get--roles-(role_id)-accountabilities}]{\emph{GET /roles/(role\_id)/accountabilities}}}
+&
+List accountabilities of a role.
 \\
 \hline\end{tabulary}
 
@@ -4130,87 +4266,6 @@ Add an accountability to a role.
 \begin{DUlineblock}{0em}
 \item[] 
 \end{DUlineblock}
-
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/role:get--roles-(role_id)-accountabilities}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{\sphinxbfcode{/accountabilities}}~
-List accountabilities of a role.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/roles/1/accountabilities} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-HTTP/1.1 200 OK
-Content\PYGZhy{}Type: application/json
-
-[
-    \PYGZob{}
-        \PYGZsq{}id\PYGZsq{}: 1,
-        \PYGZsq{}title\PYGZsq{}: \PYGZsq{}Accountability\PYGZsq{}s title\PYGZsq{},
-        \PYGZsq{}role\PYGZus{}id\PYGZsq{}: 1
-    \PYGZcb{}
-]
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the accountabilities are listed for
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
-
-\end{itemize}
-
-\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the accountability's unique id
-
-\item {} 
-\sphinxstyleliteralstrong{title} (\sphinxstyleliteralemphasis{string}) -- the accountability's title
-
-\item {} 
-\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the accountability is related to
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Accountabilities are listed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 
 \begin{fulllineitems}
@@ -4310,9 +4365,90 @@ application/x-www-form-urlencoded
 
 
 
-\subsubsection{Circle}
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/role:get--roles-(role_id)-accountabilities}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{\sphinxbfcode{/accountabilities}}~
+List accountabilities of a role.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{GET} \PYG{n+nn}{/roles/1/accountabilities} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+HTTP/1.1 200 OK
+Content\PYGZhy{}Type: application/json
+
+[
+    \PYGZob{}
+        \PYGZsq{}id\PYGZsq{}: 1,
+        \PYGZsq{}title\PYGZsq{}: \PYGZsq{}Accountability\PYGZsq{}s title\PYGZsq{},
+        \PYGZsq{}role\PYGZus{}id\PYGZsq{}: 1
+    \PYGZcb{}
+]
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the accountabilities are listed for
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Response Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
+
+\end{itemize}
+
+\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the accountability's unique id
+
+\item {} 
+\sphinxstyleliteralstrong{title} (\sphinxstyleliteralemphasis{string}) -- the accountability's title
+
+\item {} 
+\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the accountability is related to
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Accountabilities are listed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\subsection{Circle}
 \label{\detokenize{resources/role:circle}}
-Converts a role to a circle and vice versa.
+Converts a role to a {\hyperref[\detokenize{resources/circle:circle}]{\sphinxcrossref{\DUrole{std,std-ref}{Circle}}}} and vice versa.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -4460,9 +4596,9 @@ Remove circle properties from a role.
 
 
 
-\subsubsection{Domains}
+\subsection{Domains}
 \label{\detokenize{resources/role:domains}}
-Represents the domains of a role.
+Represents the domains of a role. See {\hyperref[\detokenize{resources/domain:domain}]{\sphinxcrossref{\DUrole{std,std-ref}{Domain}}}} for a description of a single domain.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -4476,14 +4612,14 @@ Description
 \hline
 Role Domains
 &
-{\hyperref[\detokenize{resources/role:get--roles-(role_id)-domains}]{\emph{GET /roles/(role\_id)/domains}}}
-&
-List domains of a role.
-\\
-\hline&
 {\hyperref[\detokenize{resources/role:post--roles-(role_id)-domains}]{\emph{POST /roles/(role\_id)/domains}}}
 &
 Add a domain to a role.
+\\
+\hline&
+{\hyperref[\detokenize{resources/role:get--roles-(role_id)-domains}]{\emph{GET /roles/(role\_id)/domains}}}
+&
+List domains of a role.
 \\
 \hline\end{tabulary}
 
@@ -4491,87 +4627,6 @@ Add a domain to a role.
 \begin{DUlineblock}{0em}
 \item[] 
 \end{DUlineblock}
-
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/role:get--roles-(role_id)-domains}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{\sphinxbfcode{/domains}}~
-List domains of a role.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/roles/1/domains} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-HTTP/1.1 200 OK
-Content\PYGZhy{}Type: application/json
-
-[
-    \PYGZob{}
-        \PYGZsq{}id\PYGZsq{}: 1,
-        \PYGZsq{}title\PYGZsq{}: \PYGZsq{}Domain\PYGZsq{}s title\PYGZsq{},
-        \PYGZsq{}role\PYGZus{}id\PYGZsq{}: 1
-    \PYGZcb{}
-]
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the domains are listed for
-
-\end{itemize}
-
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
-
-\end{itemize}
-
-\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the domain's unique id
-
-\item {} 
-\sphinxstyleliteralstrong{title} (\sphinxstyleliteralemphasis{string}) -- the domain's title
-
-\item {} 
-\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the domain is related to
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Domains are listed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 
 \begin{fulllineitems}
@@ -4671,9 +4726,90 @@ application/x-www-form-urlencoded
 
 
 
-\subsubsection{Members}
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/role:get--roles-(role_id)-domains}}\pysiglinewithargsret{\sphinxbfcode{GET~}\sphinxbfcode{/roles/}}{\emph{role\_id}}{\sphinxbfcode{/domains}}~
+List domains of a role.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{GET} \PYG{n+nn}{/roles/1/domains} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+HTTP/1.1 200 OK
+Content\PYGZhy{}Type: application/json
+
+[
+    \PYGZob{}
+        \PYGZsq{}id\PYGZsq{}: 1,
+        \PYGZsq{}title\PYGZsq{}: \PYGZsq{}Domain\PYGZsq{}s title\PYGZsq{},
+        \PYGZsq{}role\PYGZus{}id\PYGZsq{}: 1
+    \PYGZcb{}
+]
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the domains are listed for
+
+\end{itemize}
+
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Response Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
+
+\end{itemize}
+
+\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the domain's unique id
+
+\item {} 
+\sphinxstyleliteralstrong{title} (\sphinxstyleliteralemphasis{string}) -- the domain's title
+
+\item {} 
+\sphinxstyleliteralstrong{role\_id} (\sphinxstyleliteralemphasis{int}) -- the role the domain is related to
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Domains are listed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- Role is not found
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\subsection{Members}
 \label{\detokenize{resources/role:members}}
-Represents the members of a role.
+Represents the members of a role. See {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}} for a description of a single member.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -4938,9 +5074,9 @@ Unassign a partner from a role.
 
 
 
-\subsection{User}
-\label{\detokenize{resources/user::doc}}\label{\detokenize{resources/user:user}}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+\section{User}
+\label{\detokenize{resources/user::doc}}\label{\detokenize{resources/user:user}}\label{\detokenize{resources/user:id1}}
+Represents a user. A user is related to an {\hyperref[\detokenize{resources/organization:organization}]{\sphinxcrossref{\DUrole{std,std-ref}{Organization}}}} through a {\hyperref[\detokenize{resources/partner:partner}]{\sphinxcrossref{\DUrole{std,std-ref}{Partner}}}}.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -4959,14 +5095,14 @@ User
 Update the authenticated user.
 \\
 \hline&
-{\hyperref[\detokenize{resources/user:get--me}]{\emph{GET /me}}}
-&
-Retrieve the authenticated user.
-\\
-\hline&
 {\hyperref[\detokenize{resources/user:delete--me}]{\emph{DELETE /me}}}
 &
 Delete the authenticated user.
+\\
+\hline&
+{\hyperref[\detokenize{resources/user:get--me}]{\emph{GET /me}}}
+&
+Retrieve the authenticated user.
 \\
 \hline\end{tabulary}
 
@@ -5085,6 +5221,56 @@ application/x-www-form-urlencoded
 
 
 \begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/user:delete--me}}\pysigline{\sphinxbfcode{DELETE~}\sphinxbfcode{/me}}~
+Delete the authenticated user.
+
+This endpoint sets the authenticated user's account and partnerships
+with organizations to `inactive'. By signin-up again with the same
+google account, the user's account is reactivated. To rejoin an
+organization, a new invitation is needed.
+
+\sphinxstylestrong{Example request}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{DELETE} \PYG{n+nn}{/me} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Example response}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
+\end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
+
+\end{itemize}
+
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- User is deleted
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
+
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
+
+\end{itemize}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
 \phantomsection\label{\detokenize{resources/user:get--me}}\pysigline{\sphinxbfcode{GET~}\sphinxbfcode{/me}}~
 Retrieve the authenticated user.
 
@@ -5166,59 +5352,9 @@ Content\PYGZhy{}Type: application/json
 
 
 
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/user:delete--me}}\pysigline{\sphinxbfcode{DELETE~}\sphinxbfcode{/me}}~
-Delete the authenticated user.
-
-This endpoint sets the authenticated user's account and partnerships
-with organizations to `inactive'. By signin-up again with the same
-google account, the user's account is reactivated. To rejoin an
-organization, a new invitation is needed.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{DELETE} \PYG{n+nn}{/me} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{204} \PYG{n+ne}{No Content}
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.5}{204 No Content} -- User is deleted
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-
-\subsubsection{Organizations}
+\subsection{Organizations}
 \label{\detokenize{resources/user:organizations}}
-Represents the organizations of the authenticated user.
+Represents the organizations of the authenticated user. See {\hyperref[\detokenize{resources/organization:organization}]{\sphinxcrossref{\DUrole{std,std-ref}{Organization}}}} for a description of a single organization.
 
 \noindent\begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
@@ -5232,14 +5368,14 @@ Description
 \hline
 User Organizations
 &
-{\hyperref[\detokenize{resources/user:get--me-organizations}]{\emph{GET /me/organizations}}}
-&
-List the user's organizations.
-\\
-\hline&
 {\hyperref[\detokenize{resources/user:post--me-organizations}]{\emph{POST /me/organizations}}}
 &
 Create an organization.
+\\
+\hline&
+{\hyperref[\detokenize{resources/user:get--me-organizations}]{\emph{GET /me/organizations}}}
+&
+List the user's organizations.
 \\
 \hline\end{tabulary}
 
@@ -5247,77 +5383,6 @@ Create an organization.
 \begin{DUlineblock}{0em}
 \item[] 
 \end{DUlineblock}
-
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{resources/user:get--me-organizations}}\pysigline{\sphinxbfcode{GET~}\sphinxbfcode{/me/organizations}}~
-List organizations for the authenticated user.
-
-This endpoint only lists organizations that the authenticated user is
-allowed to operate on as a member or an admin.
-
-\sphinxstylestrong{Example request}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/me/organizations} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
-\end{sphinxVerbatim}
-
-\sphinxstylestrong{Example response}:
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-HTTP/1.1 200 OK
-Content\PYGZhy{}Type: application/json
-
-[
-    \PYGZob{}
-        \PYGZsq{}id\PYGZsq{}: 1,
-        \PYGZsq{}name\PYGZsq{}: \PYGZsq{}My Organization\PYGZsq{}
-    \PYGZcb{}
-]
-\end{sphinxVerbatim}
-\begin{quote}\begin{description}
-\item[{Request Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
-
-\end{itemize}
-
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
-
-\end{itemize}
-
-\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the organization's id
-
-\item {} 
-\sphinxstyleliteralstrong{name} (\sphinxstyleliteralemphasis{string}) -- the organization's name
-
-\end{itemize}
-
-\item[{Status Codes}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Organizations are listed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
-
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 
 \begin{fulllineitems}
@@ -5410,143 +5475,75 @@ application/x-www-form-urlencoded
 
 
 
-\section{Extending the API}
-\label{\detokenize{developers:extending-the-api}}\label{\detokenize{developers::doc}}
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{resources/user:get--me-organizations}}\pysigline{\sphinxbfcode{GET~}\sphinxbfcode{/me/organizations}}~
+List organizations for the authenticated user.
 
-\subsection{Project Structure}
-\label{\detokenize{developers:project-structure}}
-The main building blocks of the Swarm Intelligence App are resources and models. The following project structure shows the separation of different modules. Any resources are located in the \sphinxstyleemphasis{resources/} folder; any models in the \sphinxstyleemphasis{models/} folder. Helpers used accross the application are located in the \sphinxstyleemphasis{common/} folder. The app is configured in \sphinxstyleemphasis{config.py} and initialized in \sphinxstyleemphasis{app.py}, which is the main entry point of the application.
+This endpoint only lists organizations that the authenticated user is
+allowed to operate on as a member or an admin.
 
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{o}{/}         \PYG{c+c1}{\PYGZsh{} application root directory}
-    \PYG{n}{common}\PYG{o}{/}                     \PYG{c+c1}{\PYGZsh{} any helpers and utils}
-        \PYG{n}{\PYGZus{}\PYGZus{}init}\PYG{o}{.}\PYG{n}{py\PYGZus{}\PYGZus{}}
-        \PYG{n}{authentication}\PYG{o}{.}\PYG{n}{py}
-    \PYG{n}{docs}\PYG{o}{/}                       \PYG{c+c1}{\PYGZsh{} any documentation source files}
-    \PYG{n}{models}\PYG{o}{/}                     \PYG{c+c1}{\PYGZsh{} any models}
-        \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{accountability}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{circle}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{domain}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{invitation}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{organization}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{partner}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{policy}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{role}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{role\PYGZus{}member}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{user}\PYG{o}{.}\PYG{n}{py}
-    \PYG{n}{resources}\PYG{o}{/}                  \PYG{c+c1}{\PYGZsh{} any resources}
-        \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{accountability}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{circle}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{domain}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{invitation}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{organization}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{partner}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{policy}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{role}\PYG{o}{.}\PYG{n}{py}
-        \PYG{n}{user}\PYG{o}{.}\PYG{n}{py}
-    \PYG{n}{tests}\PYG{o}{/}                      \PYG{c+c1}{\PYGZsh{} any tests}
-    \PYG{n}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{py}
-    \PYG{n}{app}\PYG{o}{.}\PYG{n}{py}                      \PYG{c+c1}{\PYGZsh{} application entry point}
-    \PYG{n}{config}\PYG{o}{.}\PYG{n}{py}                   \PYG{c+c1}{\PYGZsh{} application configuration}
-\end{sphinxVerbatim}
-
-
-\subsection{Adding a Resource}
-\label{\detokenize{developers:adding-a-resource}}
-Resources are implemented with \href{http://flask-restful-cn.readthedocs.io/en/0.3.5/}{Flask-RESTful}, an extension for \href{http://flask.pocoo.org}{Flask} that adds support for building RESTful APIs. A basic CRUD resource can be defined in \sphinxstyleemphasis{resources/myresource.py} and looks like this:
+\sphinxstylestrong{Example request}:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{from} \PYG{n+nn}{flask\PYGZus{}restful} \PYG{k}{import} \PYG{n}{Resource}
-
-\PYG{k}{class} \PYG{n+nc}{MyResource}\PYG{p}{(}\PYG{n}{Resource}\PYG{p}{)}\PYG{p}{:}
-    \PYG{k}{def} \PYG{n+nf}{post}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}             \PYG{c+c1}{\PYGZsh{} create a new resource}
-        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} insert data}
-        \PYG{k}{return} \PYG{l+m+mi}{201}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 201 and JSON data}
-
-    \PYG{k}{def} \PYG{n+nf}{get}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}          \PYG{c+c1}{\PYGZsh{} read a resource}
-        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} query data}
-        \PYG{k}{return} \PYG{l+m+mi}{200}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 200 and JSON data}
-
-    \PYG{k}{def} \PYG{n+nf}{put}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}          \PYG{c+c1}{\PYGZsh{} update a resource}
-        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} update data}
-        \PYG{k}{return} \PYG{l+m+mi}{200}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}          \PYG{c+c1}{\PYGZsh{} return status 200 and JSON data}
-
-    \PYG{k}{def} \PYG{n+nf}{delete}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{id}\PYG{p}{)}\PYG{p}{:}       \PYG{c+c1}{\PYGZsh{} delete a resource}
-        \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}                     \PYG{c+c1}{\PYGZsh{} delete data}
-        \PYG{k}{return} \PYG{l+m+mi}{204}\PYG{p}{,} \PYG{k+kc}{None}        \PYG{c+c1}{\PYGZsh{} return status 204}
+\PYG{n+nf}{GET} \PYG{n+nn}{/me/organizations} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
+\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
+\PYG{n+na}{Authorization}\PYG{o}{:} \PYG{l}{Bearer \PYGZlt{}token\PYGZgt{}}
 \end{sphinxVerbatim}
 
-In \sphinxstyleemphasis{app.py} import your resource class
+\sphinxstylestrong{Example response}:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{resources}\PYG{n+nn}{.}\PYG{n+nn}{myresource} \PYG{k}{import} \PYG{n}{MyResource}
+HTTP/1.1 200 OK
+Content\PYGZhy{}Type: application/json
+
+[
+    \PYGZob{}
+        \PYGZsq{}id\PYGZsq{}: 1,
+        \PYGZsq{}name\PYGZsq{}: \PYGZsq{}My Organization\PYGZsq{}
+    \PYGZcb{}
+]
 \end{sphinxVerbatim}
+\begin{quote}\begin{description}
+\item[{Request Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7235\#section-4.2}{Authorization} -- JSON Web Token to authenticate
 
-and add it to the API object
+\end{itemize}
 
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k}{def} \PYG{n+nf}{create\PYGZus{}app}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
-    \PYG{n}{api}\PYG{o}{.}\PYG{n}{add\PYGZus{}resource}\PYG{p}{(}\PYG{n}{MyResource}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/myresource}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
-    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
-\end{sphinxVerbatim}
+\item[{Response Headers}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://tools.ietf.org/html/rfc7231\#section-3.1.1.5}{Content-Type} -- data is received as application/json
 
+\end{itemize}
 
-\subsection{Adding a Model}
-\label{\detokenize{developers:adding-a-model}}
-The Swarm Intelligence App uses \href{http://flask-sqlalchemy.pocoo.org/2.1/}{Flask-SQLAlchemy}, an extension that provides support for \href{http://www.sqlalchemy.org/}{SQLAlchemy}. SQLAlchemy is an SQL toolkit and Object Relational Mapper for Python. A simple model can be defined in \sphinxstyleemphasis{models/mymodel.py} and looks like this:
+\item[{Response JSON Array of Objects}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{id} (\sphinxstyleliteralemphasis{int}) -- the organization's id
 
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models} \PYG{k}{import} \PYG{n}{db}
+\item {} 
+\sphinxstyleliteralstrong{name} (\sphinxstyleliteralemphasis{string}) -- the organization's name
 
-\PYG{k}{class} \PYG{n+nc}{MyModel}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{)}\PYG{p}{:}
-    \PYG{n+nb}{id} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{Integer}\PYG{p}{,} \PYG{n}{primary\PYGZus{}key}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-    \PYG{n}{firstname} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{String}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{p}{,} \PYG{n}{nullable}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
-    \PYG{n}{lastname} \PYG{o}{=} \PYG{n}{db}\PYG{o}{.}\PYG{n}{Column}\PYG{p}{(}\PYG{n}{db}\PYG{o}{.}\PYG{n}{String}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{p}{,} \PYG{n}{nullable}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\end{itemize}
 
-    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{firstname}\PYG{p}{)}\PYG{p}{:}
-        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{firstname} \PYG{o}{=} \PYG{n}{firstname}
-        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lastname} \PYG{o}{=} \PYG{n}{lastname}
+\item[{Status Codes}] \leavevmode\begin{itemize}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- Organizations are listed
 
-    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
-        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZlt{}MyModel }\PYG{l+s+si}{\PYGZpc{}r}\PYG{l+s+s1}{\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{id}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.1}{400 Bad Request} -- Token is not well-formed
 
-    \PYG{n+nd}{@property}
-    \PYG{k}{def} \PYG{n+nf}{serialize}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
-        \PYG{k}{return} \PYG{p}{\PYGZob{}}
-            \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{firstname}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{firstname}\PYG{p}{,}
-            \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{lastname}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lastname}
-        \PYG{p}{\PYGZcb{}}
-\end{sphinxVerbatim}
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- Token has expired
 
-Import the SQLAlchemy object and your model class and use your model as follows:
+\item {} 
+\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.2}{401 Unauthorized} -- User is not authorized
 
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models} \PYG{k}{import} \PYG{n}{db}
-\PYG{k+kn}{from} \PYG{n+nn}{swarm\PYGZus{}intelligence\PYGZus{}app}\PYG{n+nn}{.}\PYG{n+nn}{models}\PYG{n+nn}{.}\PYG{n+nn}{mymodel} \PYG{k}{import} \PYG{n}{MyModel}
+\end{itemize}
 
-\PYG{k}{try}\PYG{p}{:}
-    \PYG{c+c1}{\PYGZsh{} insert data}
-    \PYG{n}{mymodel} \PYG{o}{=} \PYG{n}{MyModel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{John}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Doe}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
-    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{mymodel}\PYG{p}{)}
-    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{flush}\PYG{p}{(}\PYG{p}{)}
+\end{description}\end{quote}
 
-    \PYG{c+c1}{\PYGZsh{} query data}
-    \PYG{n}{mymodel} \PYG{o}{=} \PYG{n}{MyModel}\PYG{o}{.}\PYG{n}{query}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{mymodel}\PYG{o}{.}\PYG{n}{id}\PYG{p}{)}
+\end{fulllineitems}
 
-    \PYG{c+c1}{\PYGZsh{} update data}
-    \PYG{n}{mymodel}\PYG{o}{.}\PYG{n}{lastname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Smith}\PYG{l+s+s1}{\PYGZsq{}}
-
-    \PYG{c+c1}{\PYGZsh{} delete data}
-    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{delete}\PYG{p}{(}\PYG{n}{mymodel}\PYG{p}{)}
-
-    \PYG{c+c1}{\PYGZsh{} persist data}
-    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{commit}\PYG{p}{(}\PYG{p}{)}
-\PYG{k}{except}\PYG{p}{:}
-    \PYG{n}{db}\PYG{o}{.}\PYG{n}{session}\PYG{o}{.}\PYG{n}{rollback}\PYG{p}{(}\PYG{p}{)}
-\end{sphinxVerbatim}
 
 
 \renewcommand{\indexname}{HTTP Routing Table}

@@ -1,8 +1,7 @@
 .. _invitation:
 
-**********
 Invitation
-**********
+==========
 
 Represents an invitation.
 

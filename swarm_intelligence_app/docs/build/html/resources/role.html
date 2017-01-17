@@ -101,22 +101,107 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Role</td>
+<td><a class="reference external" href="#put--roles-(role_id)">PUT /roles/(role_id)</a></td>
+<td>Update a role.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#delete--roles-(role_id)">DELETE /roles/(role_id)</a></td>
 <td>Delete a role.</td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
+<tr class="row-even"><td>&nbsp;</td>
 <td><a class="reference external" href="#get--roles-(role_id)">GET /roles/(role_id)</a></td>
 <td>Retrieve a role.</td>
-</tr>
-<tr class="row-even"><td>&nbsp;</td>
-<td><a class="reference external" href="#put--roles-(role_id)">PUT /roles/(role_id)</a></td>
-<td>Update a role.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="put">
+<dt id="put--roles-(role_id)">
+<code class="descname">PUT </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--roles-(role_id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a role.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>PUT /roles/5 HTTP/1.1
+Host: example.com
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+    &#39;name&#39;: &#39;My Role&#39;s new name&#39;,
+    &#39;purpose&#39;: &#39;My Role&#39;s new purpose&#39;
+}
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    &#39;id&#39;: 5,
+    &#39;type&#39;: &#39;custom&#39;,
+    &#39;name&#39;: &#39;My Role&#39;s new name&#39;,
+    &#39;purpose&#39;: &#39;My Role&#39;s new purpose&#39;,
+    &#39;parent_role_id&#39;: 1,
+    &#39;organization_id&#39;: 1
+}
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role to update</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is sent as application/json or
+application/x-www-form-urlencoded</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Request JSON Object:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the role&#8217;s name</li>
+<li><strong>purpose</strong> (<em>string</em>) &#8211; the role&#8217;s purpose</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Response JSON Object:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>int</em>) &#8211; the role&#8217;s unique id</li>
+<li><strong>type</strong> (<em>string</em>) &#8211; the role&#8217;s type</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; the role&#8217;s name</li>
+<li><strong>purpose</strong> (<em>string</em>) &#8211; the role&#8217;s purpose</li>
+<li><strong>parent_role_id</strong> (<em>int</em>) &#8211; the parent role the role is related to</li>
+<li><strong>organization_id</strong> (<em>int</em>) &#8211; the organization the role is related to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Role is updated</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Parameters are missing</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="delete">
 <dt id="delete--roles-(role_id)">
 <code class="descname">DELETE </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--roles-(role_id)" title="Permalink to this definition">¶</a></dt>
@@ -230,91 +315,6 @@ Content-Type: application/json
 </table>
 </dd></dl>
 
-<dl class="put">
-<dt id="put--roles-(role_id)">
-<code class="descname">PUT </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--roles-(role_id)" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update a role.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>PUT /roles/5 HTTP/1.1
-Host: example.com
-Authorization: Bearer &lt;token&gt;
-Content-Type: application/json
-
-{
-    &#39;name&#39;: &#39;My Role&#39;s new name&#39;,
-    &#39;purpose&#39;: &#39;My Role&#39;s new purpose&#39;
-}
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    &#39;id&#39;: 5,
-    &#39;type&#39;: &#39;custom&#39;,
-    &#39;name&#39;: &#39;My Role&#39;s new name&#39;,
-    &#39;purpose&#39;: &#39;My Role&#39;s new purpose&#39;,
-    &#39;parent_role_id&#39;: 1,
-    &#39;organization_id&#39;: 1
-}
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role to update</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is sent as application/json or
-application/x-www-form-urlencoded</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Request JSON Object:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; the role&#8217;s name</li>
-<li><strong>purpose</strong> (<em>string</em>) &#8211; the role&#8217;s purpose</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Response Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Response JSON Object:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>int</em>) &#8211; the role&#8217;s unique id</li>
-<li><strong>type</strong> (<em>string</em>) &#8211; the role&#8217;s type</li>
-<li><strong>name</strong> (<em>string</em>) &#8211; the role&#8217;s name</li>
-<li><strong>purpose</strong> (<em>string</em>) &#8211; the role&#8217;s purpose</li>
-<li><strong>parent_role_id</strong> (<em>int</em>) &#8211; the parent role the role is related to</li>
-<li><strong>organization_id</strong> (<em>int</em>) &#8211; the organization the role is related to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Role is updated</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Parameters are missing</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <div class="section" id="accountabilities">
 <h2>Accountabilities<a class="headerlink" href="#accountabilities" title="Permalink to this headline">¶</a></h2>
 <p>Represents the accountabilities of a role. See <a class="reference internal" href="accountability.html#accountability"><span class="std std-ref">Accountability</span></a> for a description of a single accountability.</p>
@@ -332,83 +332,18 @@ application/x-www-form-urlencoded</li>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Role Accountabilities</td>
-<td><a class="reference external" href="#get--roles-(role_id)-accountabilities">GET /roles/(role_id)/accountabilities</a></td>
-<td>List accountabilities of a role.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#post--roles-(role_id)-accountabilities">POST /roles/(role_id)/accountabilities</a></td>
 <td>Add an accountability to a role.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#get--roles-(role_id)-accountabilities">GET /roles/(role_id)/accountabilities</a></td>
+<td>List accountabilities of a role.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="get">
-<dt id="get--roles-(role_id)-accountabilities">
-<code class="descname">GET </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/accountabilities</code><a class="headerlink" href="#get--roles-(role_id)-accountabilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>List accountabilities of a role.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/roles/1/accountabilities</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-    {
-        &#39;id&#39;: 1,
-        &#39;title&#39;: &#39;Accountability&#39;s title&#39;,
-        &#39;role_id&#39;: 1
-    }
-]
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the accountabilities are listed for</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>int</em>) &#8211; the accountability&#8217;s unique id</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; the accountability&#8217;s title</li>
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the accountability is related to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Accountabilities are listed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="post">
 <dt id="post--roles-(role_id)-accountabilities">
 <code class="descname">POST </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/accountabilities</code><a class="headerlink" href="#post--roles-(role_id)-accountabilities" title="Permalink to this definition">¶</a></dt>
@@ -486,6 +421,71 @@ application/x-www-form-urlencoded</li>
 </table>
 </dd></dl>
 
+<dl class="get">
+<dt id="get--roles-(role_id)-accountabilities">
+<code class="descname">GET </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/accountabilities</code><a class="headerlink" href="#get--roles-(role_id)-accountabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>List accountabilities of a role.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/roles/1/accountabilities</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        &#39;id&#39;: 1,
+        &#39;title&#39;: &#39;Accountability&#39;s title&#39;,
+        &#39;role_id&#39;: 1
+    }
+]
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the accountabilities are listed for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>int</em>) &#8211; the accountability&#8217;s unique id</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; the accountability&#8217;s title</li>
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the accountability is related to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Accountabilities are listed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="circle">
 <h2>Circle<a class="headerlink" href="#circle" title="Permalink to this headline">¶</a></h2>
@@ -504,18 +504,61 @@ application/x-www-form-urlencoded</li>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Role Circle</td>
-<td><a class="reference external" href="#delete--roles-(role_id)-circle">DELETE /roles/(role_id)/circle</a></td>
-<td>Remove circle properties from a role.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#put--roles-(role_id)-circle">PUT /roles/(role_id)/circle</a></td>
 <td>Add circle properties to a role.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#delete--roles-(role_id)-circle">DELETE /roles/(role_id)/circle</a></td>
+<td>Remove circle properties from a role.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="put">
+<dt id="put--roles-(role_id)-circle">
+<code class="descname">PUT </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/circle</code><a class="headerlink" href="#put--roles-(role_id)-circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add circle properties to a role.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">PUT</span> <span class="nn">/roles/5/circle</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role to add circle properties to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Circle properties are added to role</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Role type is other than custom</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="delete">
 <dt id="delete--roles-(role_id)-circle">
 <code class="descname">DELETE </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/circle</code><a class="headerlink" href="#delete--roles-(role_id)-circle" title="Permalink to this definition">¶</a></dt>
@@ -560,49 +603,6 @@ application/x-www-form-urlencoded</li>
 </table>
 </dd></dl>
 
-<dl class="put">
-<dt id="put--roles-(role_id)-circle">
-<code class="descname">PUT </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/circle</code><a class="headerlink" href="#put--roles-(role_id)-circle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add circle properties to a role.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">PUT</span> <span class="nn">/roles/5/circle</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role to add circle properties to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Circle properties are added to role</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Role type is other than custom</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="domains">
 <h2>Domains<a class="headerlink" href="#domains" title="Permalink to this headline">¶</a></h2>
@@ -621,83 +621,18 @@ application/x-www-form-urlencoded</li>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Role Domains</td>
-<td><a class="reference external" href="#get--roles-(role_id)-domains">GET /roles/(role_id)/domains</a></td>
-<td>List domains of a role.</td>
-</tr>
-<tr class="row-odd"><td>&nbsp;</td>
 <td><a class="reference external" href="#post--roles-(role_id)-domains">POST /roles/(role_id)/domains</a></td>
 <td>Add a domain to a role.</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td><a class="reference external" href="#get--roles-(role_id)-domains">GET /roles/(role_id)/domains</a></td>
+<td>List domains of a role.</td>
 </tr>
 </tbody>
 </table>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<dl class="get">
-<dt id="get--roles-(role_id)-domains">
-<code class="descname">GET </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/domains</code><a class="headerlink" href="#get--roles-(role_id)-domains" title="Permalink to this definition">¶</a></dt>
-<dd><p>List domains of a role.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/roles/1/domains</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-    {
-        &#39;id&#39;: 1,
-        &#39;title&#39;: &#39;Domain&#39;s title&#39;,
-        &#39;role_id&#39;: 1
-    }
-]
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the domains are listed for</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>id</strong> (<em>int</em>) &#8211; the domain&#8217;s unique id</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; the domain&#8217;s title</li>
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the domain is related to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Domains are listed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="post">
 <dt id="post--roles-(role_id)-domains">
 <code class="descname">POST </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/domains</code><a class="headerlink" href="#post--roles-(role_id)-domains" title="Permalink to this definition">¶</a></dt>
@@ -775,6 +710,71 @@ application/x-www-form-urlencoded</li>
 </table>
 </dd></dl>
 
+<dl class="get">
+<dt id="get--roles-(role_id)-domains">
+<code class="descname">GET </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/domains</code><a class="headerlink" href="#get--roles-(role_id)-domains" title="Permalink to this definition">¶</a></dt>
+<dd><p>List domains of a role.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/roles/1/domains</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        &#39;id&#39;: 1,
+        &#39;title&#39;: &#39;Domain&#39;s title&#39;,
+        &#39;role_id&#39;: 1
+    }
+]
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the domains are listed for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> &#8211; data is received as application/json</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Response JSON Array of Objects:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>int</em>) &#8211; the domain&#8217;s unique id</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; the domain&#8217;s title</li>
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the domain is related to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; Domains are listed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="members">
 <h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
@@ -797,12 +797,12 @@ application/x-www-form-urlencoded</li>
 <td>List members of a role.</td>
 </tr>
 <tr class="row-odd"><td>&nbsp;</td>
-<td><a class="reference external" href="#delete--roles-(role_id)-members-(partner_id)">DELETE /roles/(role_id)/members/(partner_id)</a></td>
-<td>Unassign a partner from a role.</td>
-</tr>
-<tr class="row-even"><td>&nbsp;</td>
 <td><a class="reference external" href="#put--roles-(role_id)-members-(partner_id)">PUT /roles/(role_id)/members/(partner_id)</a></td>
 <td>Assign a partner to a role.</td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td><a class="reference external" href="#delete--roles-(role_id)-members-(partner_id)">DELETE /roles/(role_id)/members/(partner_id)</a></td>
+<td>Unassign a partner from a role.</td>
 </tr>
 </tbody>
 </table>
@@ -887,50 +887,6 @@ related to</li>
 </table>
 </dd></dl>
 
-<dl class="delete">
-<dt id="delete--roles-(role_id)-members-(partner_id)">
-<code class="descname">DELETE </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/members/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--roles-(role_id)-members-(partner_id)" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unassign a partner from a role.</p>
-<p><strong>Example request</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/roles/5/members/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
-<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
-</pre></div>
-</div>
-<p><strong>Example response</strong>:</p>
-<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the partner is unassigned from</li>
-<li><strong>partner_id</strong> (<em>int</em>) &#8211; the partner who is unassigned from the role</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Partner is unassigned from role</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
-<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="put">
 <dt id="put--roles-(role_id)-members-(partner_id)">
 <code class="descname">PUT </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/members/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#put--roles-(role_id)-members-(partner_id)" title="Permalink to this definition">¶</a></dt>
@@ -969,6 +925,50 @@ related to</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
 <li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10">409 Conflict</a> &#8211; Role is not associated with partner&#8217;s organization</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--roles-(role_id)-members-(partner_id)">
+<code class="descname">DELETE </code><code class="descname">/roles/</code><span class="sig-paren">(</span><em>role_id</em><span class="sig-paren">)</span><code class="descname">/members/</code><span class="sig-paren">(</span><em>partner_id</em><span class="sig-paren">)</span><a class="headerlink" href="#delete--roles-(role_id)-members-(partner_id)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unassign a partner from a role.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/roles/5/members/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>role_id</strong> (<em>int</em>) &#8211; the role the partner is unassigned from</li>
+<li><strong>partner_id</strong> (<em>int</em>) &#8211; the partner who is unassigned from the role</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> &#8211; JSON Web Token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5">204 No Content</a> &#8211; Partner is unassigned from role</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> &#8211; Token is not well-formed</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; Token has expired</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> &#8211; User is not authorized</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Role is not found</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> &#8211; Partner is not found</li>
 </ul>
 </td>
 </tr>

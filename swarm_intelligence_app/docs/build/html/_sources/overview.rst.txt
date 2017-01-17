@@ -1,5 +1,6 @@
+********
 Overview
-========
+********
 
 The aim of this project is to develop an open-source platform that fits well to the Holacracy® constitution (http://www.holacracy.org/constitution).
 

@@ -4,6 +4,7 @@ Installation
 
 Getting Started using Ubuntu
 ============================
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 Prerequisites
@@ -51,6 +52,7 @@ You can now access the API at localhost:5000. Please not that accessing the API 
 
 Running the tests
 =================
+
 Normally our tests are run using Travis-CI. In order to run the tests locally, navigate to the /tests directory and run: ::
 
 	py.test
@@ -61,6 +63,7 @@ Our coding style is conform to flake8, except for some minor exceptions which ca
 
 Built With
 ==========
+
 * [PyCharm](https://www.jetbrains.com/pycharm/)
 * [Travis-CI](https://travis-ci.org/)
 * [Mariadb](https://mariadb.org/)
