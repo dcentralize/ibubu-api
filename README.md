@@ -42,6 +42,9 @@ Setting up the database:
 ```
 mysql -u root -e 'CREATE DATABASE swarm_intelligence'
 ```
+
+## Running backend
+
 Adding the directory 'swarm-intelligence' to your PYTHONPATH:
 ```
 export PYTHONPATH=$PYTHONPATH:/path/of/swarm-intelligence
@@ -53,6 +56,8 @@ python3 swarm_intelligence_app/app.py
 ```
 You can now access the API at localhost:5000.
 Please not that accessing the API via 127.0.0.1:5000 will not work.
+
+Initialise the database structure by browsing to: `http://localhost:5000/setup`
 
 ## Running frontend
 
