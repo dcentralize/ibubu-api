@@ -54,6 +54,12 @@ python3 swarm_intelligence_app/app.py
 You can now access the API at localhost:5000.
 Please not that accessing the API via 127.0.0.1:5000 will not work.
 
+## Running frontend
+
+cd si-frontend
+python3 -m http.server 63342
+Then, browse to: `http://localhost:63342` and signin using a Google account
+
 ## Running the tests <a name="tests"></a>
 Normally our tests are run using Travis-CI.
 In order to run the tests locally, navigate to the /tests directory and run:
